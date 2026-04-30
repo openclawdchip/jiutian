@@ -73,6 +73,11 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - APU-IR 原型。
 - 面向 Agentic 逻辑工作负载的 benchmark 框架。
 
+## 项目信息
+
+- GitHub：<https://github.com/openclawdchip/jiutian>
+- 联系方式：<dspwatch@gmail.com>
+
 ## 许可证
 
 除非子目录另有说明，软件、文档和示例默认采用 Apache-2.0 许可证。
