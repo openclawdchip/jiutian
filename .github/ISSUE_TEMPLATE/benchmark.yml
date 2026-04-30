@@ -1,0 +1,26 @@
+name: Benchmark proposal
+description: Propose a benchmark or evaluation method.
+title: "[bench] "
+labels: ["benchmark"]
+body:
+  - type: textarea
+    id: workload
+    attributes:
+      label: Workload
+      description: What workload should be measured?
+    validations:
+      required: true
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Baseline
+      description: What should JiuTian be compared against?
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Metrics
+      description: What metrics matter?
+    validations:
+      required: true
