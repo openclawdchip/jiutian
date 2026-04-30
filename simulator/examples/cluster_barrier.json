@@ -1,0 +1,54 @@
+{
+  "version": "0.1",
+  "name": "cluster_barrier",
+  "config": {
+    "host_bytes": 64,
+    "cluster_bytes": 1024,
+    "spm_bytes": 1024
+  },
+  "host_init": [
+    {"addr": 0, "value": 7}
+  ],
+  "dump_words": [0, 16],
+  "memory": [
+    {"name": "input", "space": "host", "base": 0, "bytes": 8, "access": "read"},
+    {"name": "output", "space": "host", "base": 16, "bytes": 8, "access": "write"}
+  ],
+  "barriers": [
+    {"name": "stage0", "participants": 2}
+  ],
+  "tasks": [
+    {
+      "name": "producer",
+      "placement": {"cluster": 0, "core": 0},
+      "capabilities": ["input"],
+      "budget": {"cycles": 64, "spm_bytes": 1024, "cluster_bytes": 1024},
+      "program": [
+        {"op": "dma_copy", "src_space": "host", "src": 0, "dst_space": "spm", "dst": 0, "bytes": 8},
+        {"op": "load", "dst": "r1", "space": "spm", "addr": 0},
+        {"op": "li", "dst": "r2", "imm": 2},
+        {"op": "add", "dst": "r3", "src1": "r1", "src2": "r2"},
+        {"op": "store", "src": "r3", "space": "cluster", "addr": 0},
+        {"op": "flush", "space": "cluster"},
+        {"op": "barrier", "name": "stage0"},
+        {"op": "halt"}
+      ]
+    },
+    {
+      "name": "consumer",
+      "placement": {"cluster": 0, "core": 1},
+      "capabilities": ["output"],
+      "budget": {"cycles": 64, "spm_bytes": 1024, "cluster_bytes": 1024},
+      "program": [
+        {"op": "barrier", "name": "stage0"},
+        {"op": "invalidate", "space": "cluster"},
+        {"op": "load", "dst": "r1", "space": "cluster", "addr": 0},
+        {"op": "li", "dst": "r2", "imm": 3},
+        {"op": "add", "dst": "r3", "src1": "r1", "src2": "r2"},
+        {"op": "store", "src": "r3", "space": "spm", "addr": 0},
+        {"op": "dma_copy", "src_space": "spm", "src": 0, "dst_space": "host", "dst": 16, "bytes": 8},
+        {"op": "halt"}
+      ]
+    }
+  ]
+}

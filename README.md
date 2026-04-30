@@ -38,9 +38,18 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 
 - `docs/` - 架构说明与设计依据。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。
+- `docs/glossary.md` - 项目术语表。
+- `docs/execution-model.md` - v0.1 执行模型。
+- `docs/benchmark-methodology.md` - benchmark 方法。
+- `docs/development-sequence.md` - 文档、规格、模拟器与 RTL 的推进顺序。
 - `specs/` - 版本化架构规格。
+- `specs/isa-v0.1.md` - Agent ISA v0.1 参考语义。
+- `specs/apu-ir-v0.1.md` - APU-IR v0.1 任务图格式。
+- `specs/task-model-v0.1.md` - 任务、capability、预算与异常模型。
 - `rtl/` - RTL 设计入口与未来硬件模块。
 - `simulator/` - ISA 与架构模拟器入口。
+- `simulator/jiutian_sim.py` - v0.1 功能模拟器。
+- `simulator/examples/` - APU-IR 示例程序。
 - `runtime/` - Agent 运行时、编译器 IR 与调度说明。
 - `benchmarks/` - 工作负载定义与 benchmark 方法。
 - `tools/` - 项目脚本与工具。
