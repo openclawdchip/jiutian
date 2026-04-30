@@ -66,6 +66,8 @@ class TaskState:
     regs: list[int] = field(default_factory=lambda: [0] * REGISTER_COUNT)
     halted: bool = False
     status: str = "created"
+    waiting_barrier: str | None = None
+    labels: dict[str, int] = field(default_factory=dict)
 
     def get_reg(self, name: str) -> int:
         index = parse_reg(name)
@@ -87,6 +89,7 @@ class Machine:
     cluster: bytearray
     spm: dict[tuple[int, int], bytearray]
     barriers: dict[str, int]
+    barrier_waiting: dict[str, set[str]] = field(default_factory=dict)
     trace: list[str] = field(default_factory=list)
 
     @classmethod
@@ -109,6 +112,7 @@ class Machine:
             cluster=bytearray(cluster_bytes),
             spm={},
             barriers=barriers,
+            barrier_waiting={name: set() for name in barriers},
         )
 
     def spm_for(self, task: TaskState) -> bytearray:
@@ -169,71 +173,73 @@ def build_labels(program: list[dict[str, Any]]) -> dict[str, int]:
     return labels
 
 
-def run_task(machine: Machine, task: TaskState) -> None:
-    labels = build_labels(task.program)
+def start_task(machine: Machine, task: TaskState) -> None:
+    task.labels = build_labels(task.program)
     task.status = "running"
     machine.trace.append(f"task {task.name} start cluster={task.cluster} core={task.core}")
 
-    try:
-        while not task.halted:
-            if task.budget_cycles <= 0:
-                raise SimTrap("cycle_budget_exhausted", task.name)
-            if task.pc < 0 or task.pc >= len(task.program):
-                raise SimTrap("pc_oob", str(task.pc))
 
-            inst = task.program[task.pc]
-            task.budget_cycles -= 1
-            machine.trace.append(f"{task.name} pc={task.pc} {inst}")
-            next_pc = task.pc + 1
-            op = inst["op"]
+def step_task(machine: Machine, task: TaskState, tasks_by_name: dict[str, TaskState]) -> bool:
+    if task.status != "running":
+        return False
+    if task.budget_cycles <= 0:
+        raise SimTrap("cycle_budget_exhausted", task.name)
+    if task.pc < 0 or task.pc >= len(task.program):
+        raise SimTrap("pc_oob", str(task.pc))
 
-            if op == "label":
-                pass
-            elif op == "li":
-                task.set_reg(inst["dst"], int(inst["imm"]))
-            elif op == "add":
-                task.set_reg(inst["dst"], task.get_reg(inst["src1"]) + task.get_reg(inst["src2"]))
-            elif op == "sub":
-                task.set_reg(inst["dst"], task.get_reg(inst["src1"]) - task.get_reg(inst["src2"]))
-            elif op == "jmp":
-                next_pc = labels[inst["label"]]
-            elif op == "beqz":
-                if task.get_reg(inst["src"]) == 0:
-                    next_pc = labels[inst["label"]]
-            elif op == "load":
-                space = inst["space"]
-                addr = int(inst["addr"])
-                validate_cap(task, "read", space, addr, WORD_BYTES)
-                task.set_reg(inst["dst"], read_u64(memory_for(machine, task, space), addr))
-            elif op == "store":
-                space = inst["space"]
-                addr = int(inst["addr"])
-                validate_cap(task, "write", space, addr, WORD_BYTES)
-                write_u64(memory_for(machine, task, space), addr, task.get_reg(inst["src"]))
-            elif op == "dma_copy":
-                execute_dma(machine, task, inst)
-            elif op == "dma_wait":
-                machine.trace.append(f"{task.name} dma_wait complete")
-            elif op == "barrier":
-                execute_barrier(machine, task, inst["name"])
-            elif op in {"flush", "invalidate", "fence"}:
-                machine.trace.append(f"{task.name} {op} {inst.get('space', '')}".rstrip())
-            elif op == "trap":
-                raise SimTrap("explicit_trap", inst.get("reason", "trap"))
-            elif op == "halt":
-                task.halted = True
-                task.status = "completed"
-            else:
-                raise SimTrap("bad_opcode", op)
+    inst = task.program[task.pc]
+    task.budget_cycles -= 1
+    machine.trace.append(f"{task.name} pc={task.pc} {inst}")
+    next_pc = task.pc + 1
+    op = inst["op"]
 
-            task.regs[0] = 0
-            task.pc = next_pc
-    except SimTrap as exc:
-        task.status = "trapped"
-        machine.trace.append(f"task {task.name} trap reason={exc.reason} detail={exc.detail}")
-        raise
+    if op == "label":
+        pass
+    elif op == "li":
+        task.set_reg(inst["dst"], int(inst["imm"]))
+    elif op == "add":
+        task.set_reg(inst["dst"], task.get_reg(inst["src1"]) + task.get_reg(inst["src2"]))
+    elif op == "sub":
+        task.set_reg(inst["dst"], task.get_reg(inst["src1"]) - task.get_reg(inst["src2"]))
+    elif op == "jmp":
+        next_pc = task.labels[inst["label"]]
+    elif op == "beqz":
+        if task.get_reg(inst["src"]) == 0:
+            next_pc = task.labels[inst["label"]]
+    elif op == "load":
+        space = inst["space"]
+        addr = int(inst["addr"])
+        validate_cap(task, "read", space, addr, WORD_BYTES)
+        task.set_reg(inst["dst"], read_u64(memory_for(machine, task, space), addr))
+    elif op == "store":
+        space = inst["space"]
+        addr = int(inst["addr"])
+        validate_cap(task, "write", space, addr, WORD_BYTES)
+        write_u64(memory_for(machine, task, space), addr, task.get_reg(inst["src"]))
+    elif op == "dma_copy":
+        execute_dma(machine, task, inst)
+    elif op == "dma_wait":
+        machine.trace.append(f"{task.name} dma_wait complete")
+    elif op == "barrier":
+        execute_barrier(machine, task, inst["name"], tasks_by_name)
+        task.regs[0] = 0
+        return True
+    elif op in {"flush", "invalidate", "fence"}:
+        machine.trace.append(f"{task.name} {op} {inst.get('space', '')}".rstrip())
+    elif op == "trap":
+        raise SimTrap("explicit_trap", inst.get("reason", "trap"))
+    elif op == "halt":
+        task.halted = True
+        task.pc = next_pc
+        task.status = "completed"
+        machine.trace.append(f"task {task.name} completed")
+    else:
+        raise SimTrap("bad_opcode", op)
 
-    machine.trace.append(f"task {task.name} completed")
+    task.regs[0] = 0
+    if task.status == "running":
+        task.pc = next_pc
+    return True
 
 
 def execute_dma(machine: Machine, task: TaskState, inst: dict[str, Any]) -> None:
@@ -252,11 +258,55 @@ def execute_dma(machine: Machine, task: TaskState, inst: dict[str, Any]) -> None
     machine.trace.append(f"{task.name} dma_copy {src_space}:{src} -> {dst_space}:{dst} bytes={size}")
 
 
-def execute_barrier(machine: Machine, task: TaskState, name: str) -> None:
+def execute_barrier(
+    machine: Machine,
+    task: TaskState,
+    name: str,
+    tasks_by_name: dict[str, TaskState],
+) -> None:
     if name not in machine.barriers:
         raise SimTrap("bad_barrier", name)
-    # v0.1 顺序模拟器不阻塞多任务，只记录到达。并发调度器会在下一阶段实现。
-    machine.trace.append(f"{task.name} barrier {name} participants={machine.barriers[name]}")
+    waiters = machine.barrier_waiting[name]
+    waiters.add(task.name)
+    task.status = "waiting"
+    task.waiting_barrier = name
+    machine.trace.append(
+        f"{task.name} barrier {name} arrived={len(waiters)}/{machine.barriers[name]}"
+    )
+    if len(waiters) >= machine.barriers[name]:
+        released = sorted(waiters)
+        waiters.clear()
+        for task_name in released:
+            waiting_task = tasks_by_name[task_name]
+            waiting_task.status = "running"
+            waiting_task.waiting_barrier = None
+            waiting_task.pc += 1
+        machine.trace.append(f"barrier {name} release {','.join(released)}")
+
+
+def run_tasks(machine: Machine, tasks: list[TaskState]) -> None:
+    tasks_by_name = {task.name: task for task in tasks}
+    for task in tasks:
+        start_task(machine, task)
+
+    try:
+        while True:
+            active = [task for task in tasks if task.status in {"running", "waiting"}]
+            if not active:
+                return
+            progressed = False
+            for task in tasks:
+                if task.status == "running":
+                    progressed = step_task(machine, task, tasks_by_name) or progressed
+            if not progressed:
+                waiting = [task.name for task in tasks if task.status == "waiting"]
+                raise SimTrap("deadlock", "waiting=" + ",".join(waiting))
+    except SimTrap as exc:
+        for task in tasks:
+            if task.status in {"running", "waiting"}:
+                task.status = "trapped"
+        machine.trace.append(f"scheduler trap reason={exc.reason} detail={exc.detail}")
+        raise
 
 
 def load_tasks(ir: dict[str, Any]) -> list[TaskState]:
@@ -280,8 +330,7 @@ def load_tasks(ir: dict[str, Any]) -> list[TaskState]:
 def run_ir(ir: dict[str, Any]) -> dict[str, Any]:
     machine = Machine.create(ir)
     tasks = load_tasks(ir)
-    for task in tasks:
-        run_task(machine, task)
+    run_tasks(machine, tasks)
     dump_words = ir.get("dump_words", [])
     return {
         "tasks": [{"name": t.name, "status": t.status, "pc": t.pc} for t in tasks],

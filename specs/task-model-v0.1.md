@@ -17,6 +17,8 @@ Task 是九天 v0.1 的最小调度、授权和异常边界。每个 task 包含
 
 ```text
 created -> admitted -> running -> completed
+                         |  |
+                         |  -> waiting -> running
                          |     -> trapped
                          |     -> timed_out
                          |     -> killed
@@ -27,6 +29,7 @@ created -> admitted -> running -> completed
 - `created`：IR 中声明，但尚未验证。
 - `admitted`：通过控制面验证，资源已预留。
 - `running`：已派发到 Agent core。
+- `waiting`：在 barrier、DMA 或未来同步对象上等待。
 - `completed`：执行 `halt` 正常结束。
 - `trapped`：非法访问、非法指令或显式 trap。
 - `timed_out`：周期预算耗尽。

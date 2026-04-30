@@ -24,6 +24,8 @@
 - host capability 检查
 - SPM / Cluster SRAM 边界检查
 - JSON trace 输出
+- round-robin 多任务调度
+- barrier 阻塞、释放与 deadlock 检测
 
 ## 运行示例
 
@@ -53,5 +55,8 @@ python -m unittest discover simulator
 
 ## 设计边界
 
-当前模拟器是顺序功能模型，不是周期精确模型。`barrier` 目前记录同步语义，
-但不实现真正的并发阻塞调度。下一阶段会加入 round-robin 多任务执行器。
+当前模拟器是 round-robin 功能模型，不是周期精确模型。每一轮调度器让
+所有 runnable task 各执行一条指令。`barrier` 会阻塞到达任务，并在参与者
+数量满足后释放；如果所有活跃任务都在等待且无法释放，模拟器报告 deadlock。
+
+下一阶段会加入异步 DMA 延迟、任务资源预算强制检查和更细粒度 trace。
