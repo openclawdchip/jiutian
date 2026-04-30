@@ -45,6 +45,28 @@ NoC 直接表达数据流和执行意图。
 
 深入阅读：[`docs/whitepaper.md`](docs/whitepaper.md)
 
+## 当前可运行路径
+
+```powershell
+python simulator\jiutian_sim.py simulator\examples\copy_add.json
+python -m unittest discover simulator
+```
+
+当前仓库优先保证 v0.1 功能模型可运行、规格可讨论、trace 可解释。完整硬件实现将在语义稳定后推进。
+
+## 文档导航
+
+- 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
+- 环境要求：[`docs/environment.md`](docs/environment.md)
+- 架构概览：[`docs/architecture.md`](docs/architecture.md)
+- 执行模型：[`docs/execution-model.md`](docs/execution-model.md)
+- 规格入口：[`specs/jiutian-apu-v0.1.md`](specs/jiutian-apu-v0.1.md)
+- 模拟器指南：[`docs/simulator-guide.md`](docs/simulator-guide.md)
+- 实现覆盖矩阵：[`specs/v0.1/implementation-coverage.md`](specs/v0.1/implementation-coverage.md)
+- 测试组织：[`docs/testcase-organization.md`](docs/testcase-organization.md)
+- Trace 与波形：[`docs/waveform-and-trace.md`](docs/waveform-and-trace.md)
+- 故障排查：[`docs/troubleshooting.md`](docs/troubleshooting.md)
+
 ## 定位
 
 九天是产品名，Honeycomb 是架构代号。
@@ -71,10 +93,16 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `docs/execution-model.md` - v0.1 执行模型。
 - `docs/benchmark-methodology.md` - benchmark 方法。
 - `docs/development-sequence.md` - 文档、规格、模拟器与 RTL 的推进顺序。
+- `docs/quick-start.md` - 最小运行路径。
+- `docs/environment.md` - 环境要求。
+- `docs/configuration-flow.md` - 配置与生成流程。
+- `docs/simulator-guide.md` - 模拟器使用说明。
+- `docs/testcase-organization.md` - 测试用例组织。
 - `specs/` - 版本化架构规格。
 - `specs/isa-v0.1.md` - Agent ISA v0.1 参考语义。
 - `specs/apu-ir-v0.1.md` - APU-IR v0.1 任务图格式。
 - `specs/task-model-v0.1.md` - 任务、capability、预算与异常模型。
+- `specs/v0.1/implementation-coverage.md` - v0.1 实现覆盖矩阵。
 - `rtl/` - RTL 设计入口与未来硬件模块。
 - `simulator/` - ISA 与架构模拟器入口。
 - `simulator/jiutian_sim.py` - v0.1 功能模拟器。
