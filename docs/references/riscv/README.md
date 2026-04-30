@@ -15,6 +15,10 @@
 | `RISC-V_External Debug_Support_TD003_V0.13.pdf` | RISC-V 外部调试参考 |
 | `RISC-V_Processor_Trace_TD010_V1.0.pdf` | RISC-V Processor Trace 参考 |
 
+## 中文译文
+
+中文正文译文稿位于 [`zh-cn/`](zh-cn/)。
+
 ## 在九天中的使用原则
 
 - 控制面优先保持 RISC-V 兼容性。
