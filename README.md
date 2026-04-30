@@ -16,6 +16,35 @@ Agent 生成的代码视为两类不同的执行域，并在硬件层面分别�
 工作负载缺失的执行层：这类代码分支复杂、按需生成、数据局部性强、
 高度并发，并且过于不规则，难以被传统加速器栈充分利用。
 
+![英伟达 Vera 与九天 APU Agent 原生效率对标](docs/assets/jiutian-efficiency-comparison.png)
+
+## 九天 vs. Vera：旧软件栈的极限，与 Agent 原生计算的起点
+
+英伟达 Grace/Vera 代表传统通用 CPU 架构在 AI 基础设施中的顶峰：强大的
+OoO 核心、成熟的软件生态、硬件缓存一致性和 CPU-GPU 协同能力。但它仍然
+服务于人类软件时代的基本假设：复杂 ABI、操作系统分层、动态分支预测、
+硬件 Cache 一致性和通用兼容性。
+
+九天 APU 选择另一条路：保留 8 个超大核作为 Linux、I/O、调度和安全监管的
+入口，把主要硅片资源交给 128 个 Agent 原生核。Agent 生成的代码不必伪装成
+传统软件，它可以通过 APU-IR、显式 SPM、显式 DMA、弱一致性和 Honeycomb
+NoC 直接表达数据流和执行意图。
+
+| 维度 | Nvidia Grace/Vera | 九天 APU |
+| :--- | :--- | :--- |
+| 核心目标 | 通用 CPU 与 AI 系统调度顶峰 | Agent 生成代码的原生执行层 |
+| 软件假设 | 人类编写、ABI 稳定、系统分层深 | Agent 生成、短生命周期、可显式调度 |
+| 核心组织 | 大量高性能通用 OoO 核 | 8 个 Clawd-Super + 128 个 Clawd-Agent |
+| 内存模型 | 层次化 Cache + 硬件一致性 | SPM + Cluster SRAM + 显式软一致性 |
+| 主要开销 | 分支预测、ROB、TLB、Snoop、一致性协议 | 把控制开销压缩，把面积让给执行与数据搬运 |
+| 擅长场景 | 传统软件、系统调度、CPU-GPU 协同 | Agentic 逻辑、短 JIT 片段、碎片化并发任务 |
+| 开放路线 | 封闭商业生态 | 开源规格、模拟器、APU-IR 与未来 RTL |
+
+九天的对标重点不是传统 SPEC 跑分，而是 Agentic workload：指令执行密度、
+单位能耗吞吐量、非规则访存延迟、任务调度开销和显式数据搬运效率。
+
+深入阅读：[`docs/whitepaper.md`](docs/whitepaper.md)
+
 ## 定位
 
 九天是产品名，Honeycomb 是架构代号。
