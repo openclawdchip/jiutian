@@ -57,10 +57,16 @@ python -m unittest discover simulator
 ## 文档导航
 
 - 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
+- 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
+- 数据手册框架：[`docs/datasheet-outline.md`](docs/datasheet-outline.md)
+- 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
 - 环境要求：[`docs/environment.md`](docs/environment.md)
 - 架构概览：[`docs/architecture.md`](docs/architecture.md)
 - 执行模型：[`docs/execution-model.md`](docs/execution-model.md)
 - 规格入口：[`specs/jiutian-apu-v0.1.md`](specs/jiutian-apu-v0.1.md)
+- 地址空间：[`specs/memory-map-v0.1.md`](specs/memory-map-v0.1.md)
+- 调试与 Trace：[`specs/debug-trace-v0.1.md`](specs/debug-trace-v0.1.md)
+- 最小外设模型：[`specs/peripheral-model-v0.1.md`](specs/peripheral-model-v0.1.md)
 - 模拟器指南：[`docs/simulator-guide.md`](docs/simulator-guide.md)
 - 实现覆盖矩阵：[`specs/v0.1/implementation-coverage.md`](specs/v0.1/implementation-coverage.md)
 - 测试组织：[`docs/testcase-organization.md`](docs/testcase-organization.md)
@@ -88,6 +94,9 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 ## 仓库结构
 
 - `docs/` - 架构说明与设计依据。
+- `docs/product-brief.md` - 产品简介。
+- `docs/datasheet-outline.md` - 数据手册框架。
+- `docs/documentation-map.md` - 文档地图。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。
 - `docs/glossary.md` - 项目术语表。
 - `docs/execution-model.md` - v0.1 执行模型。
@@ -102,6 +111,9 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `specs/isa-v0.1.md` - Agent ISA v0.1 参考语义。
 - `specs/apu-ir-v0.1.md` - APU-IR v0.1 任务图格式。
 - `specs/task-model-v0.1.md` - 任务、capability、预算与异常模型。
+- `specs/memory-map-v0.1.md` - 地址空间。
+- `specs/debug-trace-v0.1.md` - 调试与 Trace。
+- `specs/peripheral-model-v0.1.md` - 最小外设模型。
 - `specs/v0.1/implementation-coverage.md` - v0.1 实现覆盖矩阵。
 - `rtl/` - RTL 设计入口与未来硬件模块。
 - `simulator/` - ISA 与架构模拟器入口。
