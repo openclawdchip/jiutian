@@ -37,6 +37,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 ## 仓库结构
 
 - `docs/` - 架构说明与设计依据。
+- `docs/whitepaper.md` - 九天 APU 中文白皮书。
 - `specs/` - 版本化架构规格。
 - `rtl/` - RTL 设计入口与未来硬件模块。
 - `simulator/` - ISA 与架构模拟器入口。
