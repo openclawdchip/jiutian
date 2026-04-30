@@ -58,7 +58,7 @@ python -m unittest discover simulator
 
 - 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
 - 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
-- 数据手册框架：[`docs/datasheet-outline.md`](docs/datasheet-outline.md)
+- 数据手册：[`docs/datasheet.md`](docs/datasheet.md)
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
 - 环境要求：[`docs/environment.md`](docs/environment.md)
 - 架构概览：[`docs/architecture.md`](docs/architecture.md)
@@ -95,7 +95,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 
 - `docs/` - 架构说明与设计依据。
 - `docs/product-brief.md` - 产品简介。
-- `docs/datasheet-outline.md` - 数据手册框架。
+- `docs/datasheet.md` - v0.1 数据手册。
 - `docs/documentation-map.md` - 文档地图。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。
 - `docs/glossary.md` - 项目术语表。

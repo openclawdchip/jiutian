@@ -46,7 +46,7 @@
 | 文档族 | 状态 | 说明 |
 |---|---|---|
 | 产品简介 | 已建立 | 见 `docs/product-brief.md` |
-| 数据手册框架 | 已建立 | 见 `docs/datasheet-outline.md` |
+| 数据手册 | 已建立 | 见 `docs/datasheet.md` |
 | 地址空间 | 已建立 | 见 `specs/memory-map-v0.1.md` |
 | 调试与 Trace | 已建立 | 见 `specs/debug-trace-v0.1.md` |
 | 最小外设模型 | 已建立 | 见 `specs/peripheral-model-v0.1.md` |

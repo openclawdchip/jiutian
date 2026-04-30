@@ -6,6 +6,7 @@
 
 - `README.md`：项目首页、对标叙事、最快运行路径。
 - `docs/product-brief.md`：面向新读者的产品简介。
+- `docs/datasheet.md`：v0.1 数据手册。
 - `docs/whitepaper.md`：完整架构叙事与技术主张。
 
 ## 第二层：架构说明
