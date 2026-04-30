@@ -1,30 +1,27 @@
-# Security Model
+# 安全模型
 
-Generated code must not imply unrestricted hardware access.
+生成代码不应意味着不受限制的硬件访问。
 
-JiuTian treats each agent task as a bounded execution object with explicit
-capabilities.
+九天把每个 Agent 任务视为一个带显式 capability 的有界执行对象。
 
-## Required Controls
+## 必需控制
 
-- Capability tokens for memory, DMA, and device access.
-- Bounds checks for SPM, cluster SRAM, and DMA descriptors.
-- Per-task cycle budgets.
-- Per-task memory budgets.
-- Runtime-authorized code pages.
-- Fast task kill and cleanup.
-- SPM scrubbing after task termination when needed.
+- 面向内存、DMA 和设备访问的 capability token。
+- 对 SPM、Cluster SRAM 和 DMA descriptor 的边界检查。
+- 每任务 cycle budget。
+- 每任务 memory budget。
+- 运行时授权的代码页。
+- 快速任务 kill 与清理。
+- 必要时对 SPM 进行 scrub。
 
-## Fault Model
+## 故障模型
 
-Agent code may be incorrect, adversarial, or simply over-optimized. The
-architecture should assume generated code can:
+Agent 代码可能错误、恶意，或者只是被过度优化。架构应假设生成代码可能：
 
-- Access invalid addresses.
-- Loop indefinitely.
-- Violate synchronization contracts.
-- Overrun local memory.
-- Emit malformed DMA descriptors.
+- 访问非法地址。
+- 无限循环。
+- 违反同步契约。
+- 越界访问本地内存。
+- 发出格式错误的 DMA descriptor。
 
-The hardware and runtime must contain those failures within the task or cluster
-where possible.
+硬件与运行时必须尽可能把这些故障限制在任务或集群边界内。

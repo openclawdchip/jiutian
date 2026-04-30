@@ -1,15 +1,14 @@
-# Runtime
+# 运行时
 
-This directory will hold the agent runtime and APU-IR prototype.
+本目录将存放 Agent 运行时与 APU-IR 原型。
 
-Runtime responsibilities:
+运行时职责：
 
-- Accept generated task graphs.
-- Validate capabilities.
-- Allocate SPM and cluster SRAM regions.
-- Schedule agent tasks.
-- Program DMA descriptors.
-- Handle traps, timeouts, and task cleanup.
+- 接收生成的任务图。
+- 校验 capability。
+- 分配 SPM 与 Cluster SRAM 区域。
+- 调度 Agent 任务。
+- 编程 DMA descriptor。
+- 处理 trap、timeout 与任务清理。
 
-APU-IR should describe what the generated program needs without forcing it to
-pretend it is conventional human-written software.
+APU-IR 应描述生成程序需要什么，而不是强迫它伪装成传统人类软件。

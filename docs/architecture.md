@@ -1,40 +1,36 @@
-# Architecture Overview
+# 架构概览
 
-JiuTian APU uses a split execution model.
+九天 APU 采用分离式执行模型。
 
-## Control Plane
+## 控制面
 
-The control plane runs on a small number of high-performance super cores. It is
-responsible for:
+控制面运行在少量高性能超大核上，负责：
 
-- Boot and operating system execution.
-- Device management and I/O.
-- Runtime policy.
-- Agent-task admission control.
-- Memory protection and capability assignment.
-- Exception handling and task termination.
+- 启动与操作系统执行。
+- 设备管理与 I/O。
+- 运行时策略。
+- Agent 任务准入控制。
+- 内存保护与 capability 分配。
+- 异常处理与任务终止。
 
-The control plane favors compatibility, precise exceptions, mature tooling, and
-standard software semantics.
+控制面优先考虑兼容性、精确异常、成熟工具链和标准软件语义。
 
-## Agent Plane
+## Agent 执行面
 
-The agent plane runs on many simpler agent-native cores. It is responsible for:
+Agent 执行面运行在大量更简单的 Agent 原生核上，负责：
 
-- Short-lived generated logic.
-- High-concurrency task graphs.
-- Explicit SPM allocation.
-- Explicit DMA data movement.
-- Explicit synchronization.
-- Weak or software-managed coherency.
+- 短生命周期的生成逻辑。
+- 高并发任务图。
+- 显式 SPM 分配。
+- 显式 DMA 数据搬运。
+- 显式同步。
+- 弱一致性或软件管理一致性。
 
-The agent plane favors execution density, predictable local memory behavior, and
-low overhead task dispatch.
+Agent 执行面优先考虑执行密度、可预测的本地内存行为和低开销任务分发。
 
-## Why Split the Planes?
+## 为什么要分离执行面？
 
-Human-written software needs compatibility, debuggability, and stable
-interfaces. Agent-generated software can expose dataflow, lifetime, and memory
-placement information directly to the runtime and hardware.
+人类编写的软件需要兼容性、可调试性和稳定接口。Agent 生成的软件可以把
+数据流、生命周期和内存放置信息直接暴露给运行时与硬件。
 
-JiuTian treats that difference as a first-class architecture boundary.
+九天把这种差异作为一条一等架构边界。

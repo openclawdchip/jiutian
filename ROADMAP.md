@@ -1,37 +1,37 @@
-# Roadmap
+# 路线图
 
-## Phase 0: Architecture Seed
+## Phase 0：架构种子
 
-- Define JiuTian/Honeycomb terminology.
-- Draft v0.1 architecture specification.
-- Define the agent execution domain.
-- Define the control-plane and agent-plane boundary.
-- Establish benchmark categories.
+- 定义九天与 Honeycomb 的术语体系。
+- 起草 v0.1 架构规格。
+- 定义 Agent 执行域。
+- 定义控制面与 Agent 执行面的边界。
+- 建立 benchmark 分类。
 
-## Phase 1: Minimal Simulator
+## Phase 1：最小模拟器
 
-- Implement a functional simulator for a small cluster.
-- Model super-core task dispatch at a high level.
-- Model agent-core execution, SPM, DMA, barriers, and exceptions.
-- Add trace output for memory movement and synchronization.
+- 实现一个小型 Agent 集群的功能模拟器。
+- 以高层模型描述超大核任务分发。
+- 建模 Agent 核执行、SPM、DMA、Barrier 与异常。
+- 输出内存搬运与同步行为的 trace。
 
-## Phase 2: APU-IR Prototype
+## Phase 2：APU-IR 原型
 
-- Define an initial task graph IR.
-- Add memory placement annotations.
-- Add explicit DMA and barrier operations.
-- Lower simple kernels into simulator instructions.
+- 定义初始任务图 IR。
+- 加入内存放置标注。
+- 加入显式 DMA 与 Barrier 操作。
+- 将简单 kernel 降低为模拟器指令。
 
-## Phase 3: Hardware Microarchitecture Prototype
+## Phase 3：硬件微架构原型
 
-- Specify a single agent core.
-- Specify a cluster with local SRAM.
-- Add basic NoC packet format and routing behavior.
-- Create synthesizable RTL for selected modules.
+- 规格化单个 Agent 核。
+- 规格化带本地 SRAM 的集群。
+- 定义基础 NoC packet 格式与路由行为。
+- 为选定模块创建可综合 RTL。
 
-## Phase 4: Benchmark and Evaluation
+## Phase 4：Benchmark 与评估
 
-- Build agentic logic workloads.
-- Compare against conventional CPU baselines where fair.
-- Measure throughput, latency, memory traffic, and energy proxies.
-- Publish reproducible benchmark scripts and traces.
+- 构建 Agentic 逻辑工作负载。
+- 在公平条件下与传统 CPU baseline 对比。
+- 测量吞吐、延迟、内存流量和能耗 proxy。
+- 发布可复现的 benchmark 脚本与 trace。

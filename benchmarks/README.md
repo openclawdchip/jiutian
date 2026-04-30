@@ -1,24 +1,23 @@
-# Benchmarks
+# Benchmark
 
-Benchmarks should measure workloads where an agent-native architecture has a
-specific structural reason to win.
+Benchmark 应衡量 Agent 原生架构具备结构性优势的工作负载。
 
-Initial categories:
+初始分类：
 
-- Short-lived generated code fragments.
-- Rule engines and decision trees.
-- JSON or structured-data pipelines.
-- Graph and dependency traversal.
-- Agent tool orchestration.
-- Irregular memory access patterns.
+- 短生命周期生成代码片段。
+- 规则引擎与决策树。
+- JSON 或结构化数据流水线。
+- 图与依赖遍历。
+- Agent 工具调用编排。
+- 非规则内存访问模式。
 
-Each benchmark should report:
+每个 benchmark 应报告：
 
-- Workload definition.
-- Input size and distribution.
-- Baseline implementation.
-- Runtime configuration.
-- Throughput.
-- Latency.
-- Memory traffic.
-- Energy proxy or power measurement when available.
+- 工作负载定义。
+- 输入规模与分布。
+- Baseline 实现。
+- 运行时配置。
+- 吞吐。
+- 延迟。
+- 内存流量。
+- 可用时提供能耗 proxy 或功耗测量。

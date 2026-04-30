@@ -1,4 +1,4 @@
-# OS/editor
+# 操作系统 / 编辑器
 .DS_Store
 Thumbs.db
 *.swp
@@ -6,7 +6,7 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Build artifacts
+# 构建产物
 build/
 dist/
 out/
@@ -31,7 +31,7 @@ npm-debug.log*
 pnpm-lock.yaml
 yarn.lock
 
-# Hardware/simulation
+# 硬件 / 仿真
 *.vcd
 *.fst
 *.ghw
@@ -44,7 +44,7 @@ yarn.lock
 work/
 sim_build/
 
-# Local notes
+# 本地配置与笔记
 .env
 .env.*
 local/

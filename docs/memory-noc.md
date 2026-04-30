@@ -1,45 +1,43 @@
-# Memory and NoC Model
+# Memory 与 NoC 模型
 
-The Honeycomb architecture uses explicit local memory and clustered transport
-instead of assuming one fully coherent shared memory fabric for all cores.
+Honeycomb 架构使用显式本地内存与集群化传输，而不是假设所有核心共享一套
+完全硬件一致的内存结构。
 
-## Memory Tiers
+## 存储层级
 
-1. Per-core scratchpad memory (SPM).
-2. Shared cluster SRAM.
-3. Distributed on-chip SRAM slices.
-4. External memory such as HBM or host-attached DRAM.
+1. 每核 Scratchpad Memory（SPM）。
+2. 共享 Cluster SRAM。
+3. 分布式片上 SRAM 切片。
+4. HBM 或主机连接 DRAM 等外部内存。
 
-## Programming Model
+## 编程模型
 
-Agent tasks should describe:
+Agent 任务应描述：
 
-- Input and output regions.
-- Local working-set size.
-- Placement preferences.
-- DMA transfer schedule.
-- Barrier and dependency points.
-- Lifetime of temporary data.
+- 输入与输出区域。
+- 本地工作集大小。
+- 放置偏好。
+- DMA 传输计划。
+- Barrier 与依赖点。
+- 临时数据生命周期。
 
-## Coherency
+## 一致性
 
-The super-core domain may use conventional hardware coherency. The agent domain
-uses explicit coherency operations by default:
+超大核域可以使用传统硬件一致性。Agent 域默认使用显式一致性操作：
 
-- `flush` publishes written data.
-- `invalidate` discards stale local copies.
-- `barrier` establishes ordering among tasks.
-- `fence` establishes ordering for DMA and memory-visible effects.
+- `flush` 发布已写入数据。
+- `invalidate` 丢弃本地陈旧副本。
+- `barrier` 在任务之间建立顺序。
+- `fence` 为 DMA 与内存可见副作用建立顺序。
 
-## NoC Direction
+## NoC 方向
 
-The NoC should support separate traffic classes:
+NoC 应支持分离的流量类别：
 
-- Control messages.
-- DMA transfers.
-- Agent-to-agent messages.
-- External memory traffic.
-- Exceptions and kill signals.
+- 控制消息。
+- DMA 传输。
+- Agent 到 Agent 消息。
+- 外部内存流量。
+- 异常与 kill 信号。
 
-Control traffic must be able to preempt data traffic so the runtime can always
-retain supervision over generated code.
+控制流量必须能够抢占数据流量，从而保证运行时始终保有对生成代码的监管权。

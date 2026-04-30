@@ -1,17 +1,16 @@
 # RTL
 
-This directory will hold synthesizable hardware modules once the v0.1
-architecture is stable enough to implement.
+当 v0.1 架构稳定到足以实现时，本目录将存放可综合硬件模块。
 
-Planned modules:
+计划模块：
 
-- Agent core frontend.
-- Agent core execution pipeline.
-- Scratchpad memory.
-- DMA engine.
-- Barrier unit.
-- Cluster SRAM interface.
-- NoC packet interface.
-- Capability and bounds-check unit.
+- Agent 核前端。
+- Agent 核执行流水线。
+- Scratchpad Memory。
+- DMA 引擎。
+- Barrier 单元。
+- Cluster SRAM 接口。
+- NoC packet 接口。
+- Capability 与边界检查单元。
 
-Until then, architecture behavior should be prototyped in `simulator/`.
+在此之前，架构行为应优先在 `simulator/` 中原型化。

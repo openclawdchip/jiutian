@@ -1,26 +1,26 @@
-name: Benchmark proposal
-description: Propose a benchmark or evaluation method.
+name: Benchmark 提案
+description: 提出一个 benchmark 或评估方法。
 title: "[bench] "
 labels: ["benchmark"]
 body:
   - type: textarea
     id: workload
     attributes:
-      label: Workload
-      description: What workload should be measured?
+      label: 工作负载
+      description: 应该测量什么工作负载？
     validations:
       required: true
   - type: textarea
     id: baseline
     attributes:
       label: Baseline
-      description: What should JiuTian be compared against?
+      description: 九天应该与什么进行对比？
     validations:
       required: true
   - type: textarea
     id: metrics
     attributes:
-      label: Metrics
-      description: What metrics matter?
+      label: 指标
+      description: 哪些指标重要？
     validations:
       required: true

@@ -1,35 +1,35 @@
-# Contributing to JiuTian APU
+# 为九天 APU 贡献
 
-JiuTian is an architecture-stage project. The best contributions are precise,
-testable, and tied to a concrete design question.
+九天目前处于架构阶段。最有价值的贡献应当清晰、可验证，并且对应一个
+具体的设计问题。
 
-## Contribution Areas
+## 贡献方向
 
-- Architecture specification and terminology.
-- APU-IR semantics.
-- Agent-core ISA and execution model.
-- Scratchpad memory and DMA programming model.
-- NoC topology, routing, and QoS.
-- Security model for generated code.
-- Simulator prototypes and benchmark harnesses.
-- RTL modules once the v0.1 spec stabilizes.
+- 架构规格与术语定义。
+- APU-IR 语义。
+- Agent 核 ISA 与执行模型。
+- Scratchpad Memory 与 DMA 编程模型。
+- NoC 拓扑、路由与 QoS。
+- 面向生成代码的安全模型。
+- 模拟器原型与 benchmark 框架。
+- v0.1 规格稳定后的 RTL 模块。
 
-## Ground Rules
+## 基本原则
 
-- Prefer measurable claims over broad marketing language.
-- Separate assumptions from verified results.
-- Keep compatibility and agent-native execution as distinct domains.
-- Include benchmark methodology with performance claims.
-- Avoid introducing global cache-coherent SMP semantics into the agent plane
-  unless the tradeoff is explicitly justified.
+- 用可测量的技术主张替代宽泛宣传。
+- 区分假设、推导与已验证结果。
+- 明确区分兼容执行域与 Agent 原生执行域。
+- 涉及性能主张时同时给出 benchmark 方法。
+- 除非明确说明收益与代价，否则不要把全局缓存一致 SMP 语义引入
+  Agent 执行面。
 
-## Pull Requests
+## Pull Request
 
-Before opening a pull request, please include:
+提交 Pull Request 前，请说明：
 
-- The problem being solved.
-- The design choice or implementation change.
-- Alternatives considered.
-- Any tests, simulations, or validation steps.
+- 要解决的问题。
+- 设计选择或实现变更。
+- 考虑过的替代方案。
+- 测试、模拟或验证步骤。
 
-Small, focused pull requests are easier to review than sweeping rewrites.
+小而聚焦的 Pull Request 通常比大规模重写更容易评审。

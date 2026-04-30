@@ -1,14 +1,14 @@
-# Code of Conduct
+# 行为准则
 
-This project aims to be rigorous, open, and welcoming.
+本项目追求严谨、开放和友善的协作氛围。
 
-Participants are expected to:
+参与者应当：
 
-- Discuss ideas with technical clarity and respect.
-- Critique designs, not people.
-- Credit prior work and related architectures.
-- Keep claims evidence-based.
-- Help newcomers understand the architecture without gatekeeping.
+- 用技术清晰度和尊重来讨论问题。
+- 批评设计，而不是攻击个人。
+- 标注已有工作和相关架构的来源。
+- 让主张建立在证据之上。
+- 帮助新参与者理解架构，而不是制造门槛。
 
-Unacceptable behavior includes harassment, personal attacks, and knowingly
-misrepresenting benchmark or implementation results.
+不可接受的行为包括骚扰、人身攻击，以及明知不实地描述 benchmark 或
+实现结果。

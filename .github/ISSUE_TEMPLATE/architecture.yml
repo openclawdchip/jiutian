@@ -1,26 +1,26 @@
-name: Architecture proposal
-description: Propose or refine a JiuTian APU architecture decision.
+name: 架构提案
+description: 提出或细化一项九天 APU 架构决策。
 title: "[arch] "
 labels: ["architecture"]
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Problem
-      description: What architecture problem does this address?
+      label: 问题
+      description: 这项提案要解决什么架构问题？
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
-      label: Proposal
-      description: Describe the proposed design.
+      label: 提案
+      description: 描述拟议设计。
     validations:
       required: true
   - type: textarea
     id: tradeoffs
     attributes:
-      label: Tradeoffs
-      description: What alternatives or costs should reviewers consider?
+      label: 权衡
+      description: 评审者需要考虑哪些替代方案或代价？
     validations:
       required: true

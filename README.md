@@ -1,82 +1,79 @@
-# JiuTian APU
+# 九天 APU
 
-JiuTian APU is an open, agent-native processor architecture project.
+九天 APU 是一个开源的 Agent 原生处理器架构项目。
 
-It explores a post-Von-Neumann software model where human-written software and
-agent-generated code are treated as different execution domains:
+它探索一种后冯·诺依曼时代的软件执行模型：把人类编写的软件与
+Agent 生成的代码视为两类不同的执行域，并在硬件层面分别优化。
 
-- 8 super cores run the operating system, compatibility layer, runtime,
-  scheduling, safety supervision, and human-facing software.
-- 128 agent cores run high-throughput agent-generated logic streams with
-  explicit memory placement, explicit synchronization, and weak coherency.
-- 256 agent hardware threads target fragmented, dynamic, short-lived workloads
-  that sit between conventional CPU control flow and GPU tensor throughput.
+- 8 个超大核负责运行操作系统、兼容层、运行时、调度、安全监管和
+  面向人类的软件。
+- 128 个 Agent 核负责运行高吞吐的 Agent 生成逻辑流，采用显式内存
+  放置、显式同步和弱一致性模型。
+- 256 个 Agent 硬件线程面向碎片化、动态、短生命周期的工作负载，
+  填补传统 CPU 控制流与 GPU 张量吞吐之间的空白。
 
-The project goal is not to replace CPUs, GPUs, or NPUs. It is to define and
-prototype the missing execution tier for agentic workloads: code that is
-branchy, generated on demand, data-local, highly concurrent, and too irregular
-for traditional accelerator stacks.
+这个项目的目标不是替代 CPU、GPU 或 NPU，而是定义并原型化 Agentic
+工作负载缺失的执行层：这类代码分支复杂、按需生成、数据局部性强、
+高度并发，并且过于不规则，难以被传统加速器栈充分利用。
 
-## Positioning
+## 定位
 
-JiuTian is the product name. Honeycomb is the architecture codename.
+九天是产品名，Honeycomb 是架构代号。
 
 ```text
-Human software
+人类软件
     |
-8x JiuTian Super cores
-Linux / runtime / safety / scheduling
+8x 九天超大核
+Linux / 运行时 / 安全 / 调度
     |
-APU-IR compiler and agent runtime
+APU-IR 编译器与 Agent 运行时
     |
-128x JiuTian Agent cores
-SPM / explicit DMA / weak coherency / mesh NoC
+128x 九天 Agent 核
+SPM / 显式 DMA / 弱一致性 / Mesh NoC
     |
-Distributed SRAM / HBM / host memory
+分布式 SRAM / HBM / 主机内存
 ```
 
-## Repository Layout
+## 仓库结构
 
-- `docs/` - Architecture notes and design rationale.
-- `specs/` - Versioned architecture specifications.
-- `rtl/` - RTL design entry point and future hardware modules.
-- `simulator/` - ISA and architecture simulator entry point.
-- `runtime/` - Agent runtime, compiler IR, and scheduling notes.
-- `benchmarks/` - Workload definitions and benchmark methodology.
-- `tools/` - Project scripts and utilities.
+- `docs/` - 架构说明与设计依据。
+- `specs/` - 版本化架构规格。
+- `rtl/` - RTL 设计入口与未来硬件模块。
+- `simulator/` - ISA 与架构模拟器入口。
+- `runtime/` - Agent 运行时、编译器 IR 与调度说明。
+- `benchmarks/` - 工作负载定义与 benchmark 方法。
+- `tools/` - 项目脚本与工具。
 
-## Initial Design Targets
+## 初始设计目标
 
-- Open architecture for research and implementation.
-- RISC-V-compatible control plane.
-- Agent-native execution plane with explicit scratchpad memory.
-- Clustered 128-core topology with distributed SRAM slices.
-- Software-controlled coherency for agent domains.
-- Hardware-enforced sandboxing, task budgets, and DMA bounds.
-- APU-IR as the stable contract between agents and silicon.
+- 面向研究与实现的开放架构。
+- 兼容 RISC-V 的控制面。
+- 采用显式 Scratchpad Memory 的 Agent 原生执行面。
+- 128 核集群化拓扑与分布式 SRAM 切片。
+- Agent 域内的软件控制一致性。
+- 硬件强制的沙箱、任务预算和 DMA 边界检查。
+- 以 APU-IR 作为 Agent 与硅片之间的稳定契约。
 
-## Non-Goals
+## 非目标
 
-- Running arbitrary legacy software on all cores.
-- Recreating CUDA, POSIX, or full cache-coherent SMP semantics.
-- Optimizing only synthetic peak FLOPS.
-- Claiming universal replacement of existing accelerators.
+- 让所有核心运行任意传统软件。
+- 复刻 CUDA、POSIX 或完整缓存一致 SMP 语义。
+- 只优化合成峰值 FLOPS。
+- 宣称可以普遍替代现有加速器。
 
-## Current Status
+## 当前状态
 
-This repository is at architecture seed stage. The first milestone is a
-minimal, simulatable v0.1 architecture:
+本仓库处于架构种子阶段。第一个里程碑是一个可模拟的 v0.1 最小架构：
 
-- 1-2 super cores.
-- 8-16 agent cores.
-- Per-core scratchpad memory.
-- Shared cluster SRAM.
-- Explicit DMA and barriers.
-- APU-IR prototype.
-- Benchmark harness for agentic logic workloads.
+- 1-2 个超大核。
+- 8-16 个 Agent 核。
+- 每核 Scratchpad Memory。
+- 共享 Cluster SRAM。
+- 显式 DMA 与 Barrier。
+- APU-IR 原型。
+- 面向 Agentic 逻辑工作负载的 benchmark 框架。
 
-## License
+## 许可证
 
-Software, documentation, and examples are licensed under Apache-2.0 unless a
-subdirectory states otherwise. Hardware-specific licensing may be refined when
-RTL is introduced.
+除非子目录另有说明，软件、文档和示例默认采用 Apache-2.0 许可证。
+当 RTL 引入后，硬件相关授权方式可能进一步细化。

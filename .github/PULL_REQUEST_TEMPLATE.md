@@ -1,7 +1,7 @@
-## Summary
+## 摘要
 
-## Design or Implementation Notes
+## 设计或实现说明
 
-## Validation
+## 验证
 
-## Open Questions
+## 开放问题

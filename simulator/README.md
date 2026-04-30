@@ -1,14 +1,13 @@
-# Simulator
+# 模拟器
 
-This directory will contain the functional simulator for the JiuTian APU v0.1
-target.
+本目录将包含九天 APU v0.1 目标的功能模拟器。
 
-Initial simulator goals:
+初始模拟器目标：
 
-- Model an agent cluster.
-- Execute a minimal instruction set.
-- Track SPM and cluster SRAM accesses.
-- Model DMA latency abstractly.
-- Emit traces for memory movement, barriers, and task scheduling.
+- 建模一个 Agent 集群。
+- 执行最小指令集。
+- 跟踪 SPM 与 Cluster SRAM 访问。
+- 抽象建模 DMA 延迟。
+- 输出内存搬运、Barrier 和任务调度 trace。
 
-The simulator is the first executable artifact of the project.
+模拟器是本项目的第一个可执行产物。
