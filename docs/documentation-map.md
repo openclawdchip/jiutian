@@ -49,3 +49,4 @@
 - `docs/porting-guide.md`：移植指南。
 - `docs/troubleshooting.md`：故障排查。
 - `docs/waveform-and-trace.md`：trace 与波形。
+- `docs/references/riscv/`：RISC-V 开放规范参考。

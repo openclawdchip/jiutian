@@ -72,6 +72,7 @@ python -m unittest discover simulator
 - 测试组织：[`docs/testcase-organization.md`](docs/testcase-organization.md)
 - Trace 与波形：[`docs/waveform-and-trace.md`](docs/waveform-and-trace.md)
 - 故障排查：[`docs/troubleshooting.md`](docs/troubleshooting.md)
+- RISC-V 开放规范参考：[`docs/references/riscv/`](docs/references/riscv/)
 
 ## 定位
 
@@ -122,6 +123,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `runtime/` - Agent 运行时、编译器 IR 与调度说明。
 - `benchmarks/` - 工作负载定义与 benchmark 方法。
 - `tools/` - 项目脚本与工具。
+- `docs/references/riscv/` - RISC-V 开放规范 PDF 镜像。
 
 ## 初始设计目标
 
