@@ -63,6 +63,8 @@ NoC 直接表达数据流和执行意图。
 
 网页导读：[`docs/textbook-agent-cpu-architecture.html`](docs/textbook-agent-cpu-architecture.html)
 
+GitHub Pages：<https://openclawdchip.github.io/jiutian/textbook-agent-cpu-architecture.html>
+
 完整正文：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 
 ## 当前可运行路径

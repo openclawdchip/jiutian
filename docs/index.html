@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>九天 APU | Agent CPU 体系结构教材</title>
+  <meta name="description" content="九天 APU GitHub Pages 文档入口，包含《Agent CPU 体系结构》完整在线教材。">
+  <style>
+    :root {
+      --ink: #171513;
+      --paper: #f7f3ec;
+      --carbon: #252728;
+      --gold: #b98b45;
+      --red: #a41622;
+      --line: rgba(23, 21, 19, 0.16);
+      --serif: "Noto Serif SC", "Songti SC", "SimSun", Georgia, serif;
+      --sans: "LXGW WenKai", "Microsoft YaHei UI", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(185, 139, 69, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(23, 21, 19, 0.05) 1px, transparent 1px),
+        var(--paper);
+      background-size: 56px 56px, 56px 56px, auto;
+      font-family: var(--sans);
+      line-height: 1.7;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: end;
+      background:
+        linear-gradient(90deg, rgba(9, 9, 8, 0.88), rgba(9, 9, 8, 0.48) 48%, rgba(9, 9, 8, 0.16)),
+        linear-gradient(0deg, rgba(9, 9, 8, 0.86), rgba(9, 9, 8, 0.08) 46%),
+        url("assets/agent-cpu-textbook-cover.png") center right / cover no-repeat;
+    }
+
+    .inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 84px 0 68px;
+      color: #fffaf1;
+    }
+
+    .seal {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      padding: 4px 12px;
+      background: var(--red);
+      border-left: 4px solid #ead7ae;
+      font-weight: 800;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 24px 0 16px;
+      font-family: var(--serif);
+      font-size: clamp(50px, 9vw, 108px);
+      line-height: 0.98;
+    }
+
+    p {
+      max-width: 720px;
+      margin: 0 0 26px;
+      color: rgba(255, 250, 241, 0.88);
+      font-size: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+    }
+
+    a.primary {
+      background: #fffaf1;
+      color: #671019;
+      border-color: #fffaf1;
+    }
+
+    .strip {
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .strip-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0;
+      color: #3e3a34;
+    }
+
+    .strip-inner p {
+      margin: 0;
+      color: #3e3a34;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <section class="inner">
+      <span class="seal">九天 APU 文档入口</span>
+      <h1>Agent CPU 体系结构</h1>
+      <p>《Agent CPU 体系结构：基于多智能体方法的深度解析》完整在线教材，包含封面、第一章插图、章节目录和完整正文。</p>
+      <div class="actions">
+        <a class="primary" href="textbook-agent-cpu-architecture.html">打开完整网页教材</a>
+        <a href="textbook-agent-cpu-architecture.md">阅读 Markdown 正文</a>
+        <a href="../README.md">项目 README</a>
+      </div>
+    </section>
+  </main>
+  <aside class="strip">
+    <div class="strip-inner">
+      <p>如果 GitHub Pages 已启用，本页对应地址为 https://openclawdchip.github.io/jiutian/ 。</p>
+    </div>
+  </aside>
+</body>
+</html>
