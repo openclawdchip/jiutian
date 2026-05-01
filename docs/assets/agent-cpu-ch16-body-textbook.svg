@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">从教材概念到研究计划的推进路径</title>
+  <desc id="desc">从教材概念到研究计划的推进路径</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="94" y="256" width="188" height="76"/>
+    <rect class="light" x="88" y="250" width="188" height="76"/>
+    <text class="label" x="182" y="295" text-anchor="middle">教材抽象</text>
+  </g>
+<g>
+    <rect class="shadow" x="324" y="256" width="188" height="76"/>
+    <rect class="light" x="318" y="250" width="188" height="76"/>
+    <text class="label" x="412" y="295" text-anchor="middle">机制问题</text>
+  </g>
+<g>
+    <rect class="shadow" x="554" y="256" width="188" height="76"/>
+    <rect class="light" x="548" y="250" width="188" height="76"/>
+    <text class="label" x="642" y="295" text-anchor="middle">原型实现</text>
+  </g>
+<g>
+    <rect class="shadow" x="784" y="256" width="188" height="76"/>
+    <rect class="light" x="778" y="250" width="188" height="76"/>
+    <text class="label" x="872" y="295" text-anchor="middle">benchmark</text>
+  </g>
+<g>
+    <rect class="shadow" x="1014" y="256" width="188" height="76"/>
+    <rect class="light" x="1008" y="250" width="188" height="76"/>
+    <text class="label" x="1102" y="295" text-anchor="middle">论文方向</text>
+  </g>
+<path class="line" d="M 276 288 L 318 288"/>
+<path class="line" d="M 506 288 L 548 288"/>
+<path class="line" d="M 736 288 L 778 288"/>
+<path class="line" d="M 966 288 L 1008 288"/>
+<g>
+    <rect class="shadow" x="302" y="118" width="180" height="72"/>
+    <rect class="light" x="296" y="112" width="180" height="72"/>
+    <text class="label" x="386" y="155" text-anchor="middle">IR / 编译</text>
+  </g>
+<g>
+    <rect class="shadow" x="554" y="118" width="180" height="72"/>
+    <rect class="light" x="548" y="112" width="180" height="72"/>
+    <text class="label" x="638" y="155" text-anchor="middle">Memory / NoC</text>
+  </g>
+<g>
+    <rect class="shadow" x="806" y="118" width="180" height="72"/>
+    <rect class="light" x="800" y="112" width="180" height="72"/>
+    <text class="label" x="890" y="155" text-anchor="middle">Recovery / Security</text>
+  </g>
+<path class="line" d="M 386 184 L 412 250"/>
+<path class="line" d="M 638 184 L 642 250"/>
+<path class="line" d="M 890 184 L 872 250"/>
+<g>
+    <rect class="shadow" x="276" y="618" width="860" height="72"/>
+    <rect class="light" x="270" y="612" width="860" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">从课程项目走向研究问题，需要把抽象、原型和 benchmark 连成一条路径</text>
+  </g>
+</svg>

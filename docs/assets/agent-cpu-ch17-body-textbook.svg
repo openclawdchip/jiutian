@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Agent CPU 体系结构的学科结构</title>
+  <desc id="desc">Agent CPU 体系结构的学科结构</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="544" y="290" width="324" height="88"/>
+    <rect class="light" x="538" y="284" width="324" height="88"/>
+    <text class="label" x="700" y="335" text-anchor="middle">Agent CPU 体系结构</text>
+  </g>
+<g>
+    <rect class="shadow" x="138" y="118" width="246" height="86"/>
+    <rect class="box" x="132" y="112" width="246" height="86"/>
+    <text class="title" x="255" y="154" text-anchor="middle">本科课程</text>
+    <text class="note" x="255" y="190" text-anchor="middle">导论 / 实验 / 课程项目</text>
+  </g>
+<g>
+    <rect class="shadow" x="1028" y="118" width="246" height="86"/>
+    <rect class="box" x="1022" y="112" width="246" height="86"/>
+    <text class="title" x="1145" y="154" text-anchor="middle">研究生课程</text>
+    <text class="note" x="1145" y="190" text-anchor="middle">IR / Memory / 恢复 / 安全</text>
+  </g>
+<g>
+    <rect class="shadow" x="138" y="476" width="246" height="86"/>
+    <rect class="box" x="132" y="470" width="246" height="86"/>
+    <text class="title" x="255" y="512" text-anchor="middle">实验室方向</text>
+    <text class="note" x="255" y="548" text-anchor="middle">架构 / 编译 / 运行时 / Benchmark</text>
+  </g>
+<g>
+    <rect class="shadow" x="1028" y="476" width="246" height="86"/>
+    <rect class="box" x="1022" y="470" width="246" height="86"/>
+    <text class="title" x="1145" y="512" text-anchor="middle">原型平台</text>
+    <text class="note" x="1145" y="548" text-anchor="middle">RTL / FPGA / simulator / trace</text>
+  </g>
+<g>
+    <rect class="shadow" x="562" y="564" width="288" height="86"/>
+    <rect class="box" x="556" y="558" width="288" height="86"/>
+    <text class="title" x="700" y="600" text-anchor="middle">学科宣言</text>
+    <text class="note" x="700" y="636" text-anchor="middle">重新定义程序与机器的边界</text>
+  </g>
+<path class="line" d="M 378 198 L 600 284"/>
+<path class="line" d="M 1022 198 L 800 284"/>
+<path class="line" d="M 378 512 L 600 372"/>
+<path class="line" d="M 1022 512 L 800 372"/>
+<path class="line" d="M 700 558 L 700 372"/>
+<g>
+    <rect class="shadow" x="396" y="618" width="620" height="72"/>
+    <rect class="light" x="390" y="612" width="620" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">课程、研究、原型和 benchmark 共同构成学科基础</text>
+  </g>
+</svg>

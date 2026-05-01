@@ -1,119 +1,114 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">科研助手多轮执行闭环</title>
-  <desc id="desc">用教材式流程图展示科研助手在三轮循环中通过模型推理、工具调用和记忆更新生成报告草稿。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">科研助手任务的多轮执行闭环</title>
+  <desc id="desc">三轮执行中的模型推理、工具调用和记忆状态。</desc>
   <defs>
     <marker id="arrow-ra" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
     </marker>
     <style>
       .bg { fill: #fff; }
-      .shadow { fill: #999; }
-      .box { fill: #ececec; stroke: #4a4a4a; stroke-width: 2; }
-      .head { fill: #f6f6f6; stroke: #4a4a4a; stroke-width: 1.8; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .head { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
       .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-ra); }
-      .dash { fill: none; stroke: #555; stroke-width: 1.5; stroke-dasharray: 8 6; marker-end: url(#arrow-ra); }
-      .label { font: 700 26px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
-      .body { font: 400 20px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
-      .small { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow-ra); }
+      .row { font: 400 22px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 20px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
     </style>
   </defs>
 
-  <rect class="bg" width="1600" height="900"/>
+  <rect class="bg" width="1400" height="820"/>
 
   <g>
-    <rect class="shadow" x="245" y="62" width="1110" height="74"/>
-    <rect class="box" x="238" y="55" width="1110" height="74"/>
-    <text class="body" x="793" y="102" text-anchor="middle">目标：比较三种图像分类模型在小样本数据集上的表现，并形成一页报告草稿</text>
+    <rect class="shadow" x="208" y="58" width="984" height="68"/>
+    <rect class="box" x="200" y="50" width="984" height="68"/>
+    <text class="label" x="692" y="92" text-anchor="middle">目标：比较三种模型在小样本数据集上的表现，并形成一页报告</text>
   </g>
 
-  <text class="body" x="150" y="224">模型推理</text>
-  <text class="body" x="132" y="404">工具调用</text>
-  <text class="body" x="118" y="584">记忆 / 上下文</text>
+  <text class="row" x="88" y="248">模型推理</text>
+  <text class="row" x="88" y="468">工具调用</text>
+  <text class="row" x="68" y="688">记忆 / 上下文</text>
 
   <g>
-    <rect class="shadow" x="314" y="163" width="268" height="46"/>
-    <rect class="head" x="308" y="157" width="268" height="46"/>
-    <text class="body" x="442" y="187" text-anchor="middle">第 1 轮</text>
+    <rect class="shadow" x="288" y="152" width="244" height="52"/>
+    <rect class="head" x="282" y="146" width="244" height="52"/>
+    <text class="title" x="404" y="180" text-anchor="middle">第 1 轮</text>
 
-    <rect class="shadow" x="657" y="163" width="268" height="46"/>
-    <rect class="head" x="651" y="157" width="268" height="46"/>
-    <text class="body" x="785" y="187" text-anchor="middle">第 2 轮</text>
+    <rect class="shadow" x="620" y="152" width="244" height="52"/>
+    <rect class="head" x="614" y="146" width="244" height="52"/>
+    <text class="title" x="736" y="180" text-anchor="middle">第 2 轮</text>
 
-    <rect class="shadow" x="1000" y="163" width="268" height="46"/>
-    <rect class="head" x="994" y="157" width="268" height="46"/>
-    <text class="body" x="1128" y="187" text-anchor="middle">第 3 轮</text>
-  </g>
-
-  <g>
-    <rect class="shadow" x="318" y="238" width="260" height="92"/>
-    <rect class="box" x="312" y="232" width="260" height="92"/>
-    <text class="body" x="442" y="273" text-anchor="middle">理解任务边界</text>
-    <text class="small" x="442" y="304" text-anchor="middle">模型、数据集、指标、报告形式</text>
-
-    <rect class="shadow" x="661" y="238" width="260" height="92"/>
-    <rect class="box" x="655" y="232" width="260" height="92"/>
-    <text class="body" x="785" y="273" text-anchor="middle">判断缺失指标影响比较</text>
-    <text class="small" x="785" y="304" text-anchor="middle">决定补算 F1 分数</text>
-
-    <rect class="shadow" x="1004" y="238" width="260" height="92"/>
-    <rect class="box" x="998" y="232" width="260" height="92"/>
-    <text class="body" x="1128" y="273" text-anchor="middle">比较精度、稳定性与成本</text>
-    <text class="small" x="1128" y="304" text-anchor="middle">形成结论候选</text>
+    <rect class="shadow" x="952" y="152" width="244" height="52"/>
+    <rect class="head" x="946" y="146" width="244" height="52"/>
+    <text class="title" x="1068" y="180" text-anchor="middle">第 3 轮</text>
   </g>
 
   <g>
-    <rect class="shadow" x="318" y="418" width="260" height="92"/>
-    <rect class="box" x="312" y="412" width="260" height="92"/>
-    <text class="body" x="442" y="453" text-anchor="middle">读取实验记录</text>
-    <text class="small" x="442" y="484" text-anchor="middle">提取表格、日志、混淆矩阵</text>
+    <rect class="shadow" x="288" y="242" width="244" height="112"/>
+    <rect class="box" x="282" y="236" width="244" height="112"/>
+    <text class="title" x="404" y="284" text-anchor="middle">理解任务边界</text>
+    <text class="note" x="404" y="321" text-anchor="middle">模型、数据集、指标</text>
 
-    <rect class="shadow" x="661" y="418" width="260" height="92"/>
-    <rect class="box" x="655" y="412" width="260" height="92"/>
-    <text class="body" x="785" y="453" text-anchor="middle">调用计算工具</text>
-    <text class="small" x="785" y="484" text-anchor="middle">根据混淆矩阵重新计算 F1</text>
+    <rect class="shadow" x="620" y="242" width="244" height="112"/>
+    <rect class="box" x="614" y="236" width="244" height="112"/>
+    <text class="title" x="736" y="284" text-anchor="middle">判断缺失影响比较</text>
+    <text class="note" x="736" y="321" text-anchor="middle">决定补算 F1</text>
 
-    <rect class="shadow" x="1004" y="418" width="260" height="92"/>
-    <rect class="box" x="998" y="412" width="260" height="92"/>
-    <text class="body" x="1128" y="453" text-anchor="middle">核对一致性与篇幅要求</text>
-    <text class="small" x="1128" y="484" text-anchor="middle">完成自检</text>
+    <rect class="shadow" x="952" y="242" width="244" height="112"/>
+    <rect class="box" x="946" y="236" width="244" height="112"/>
+    <text class="title" x="1068" y="284" text-anchor="middle">比较精度、稳定性、成本</text>
+    <text class="note" x="1068" y="321" text-anchor="middle">形成结论候选</text>
   </g>
 
   <g>
-    <rect class="shadow" x="318" y="598" width="260" height="92"/>
-    <rect class="box" x="312" y="592" width="260" height="92"/>
-    <text class="body" x="442" y="633" text-anchor="middle">记录任务约束与中间结果</text>
-    <text class="small" x="442" y="664" text-anchor="middle">发现“某模型缺少 F1”</text>
+    <rect class="shadow" x="288" y="462" width="244" height="112"/>
+    <rect class="box" x="282" y="456" width="244" height="112"/>
+    <text class="title" x="404" y="504" text-anchor="middle">读取实验记录</text>
+    <text class="note" x="404" y="541" text-anchor="middle">表格、日志、混淆矩阵</text>
 
-    <rect class="shadow" x="661" y="598" width="260" height="92"/>
-    <rect class="box" x="655" y="592" width="260" height="92"/>
-    <text class="body" x="785" y="633" text-anchor="middle">写回新指标</text>
-    <text class="small" x="785" y="664" text-anchor="middle">状态从“缺失”变为“可比较”</text>
+    <rect class="shadow" x="620" y="462" width="244" height="112"/>
+    <rect class="box" x="614" y="456" width="244" height="112"/>
+    <text class="title" x="736" y="504" text-anchor="middle">调用计算工具</text>
+    <text class="note" x="736" y="541" text-anchor="middle">重新计算 F1</text>
 
-    <rect class="shadow" x="1004" y="598" width="260" height="92"/>
-    <rect class="box" x="998" y="592" width="260" height="92"/>
-    <text class="body" x="1128" y="633" text-anchor="middle">保存自检结论</text>
-    <text class="small" x="1128" y="664" text-anchor="middle">输出报告草稿</text>
+    <rect class="shadow" x="952" y="462" width="244" height="112"/>
+    <rect class="box" x="946" y="456" width="244" height="112"/>
+    <text class="title" x="1068" y="504" text-anchor="middle">核对一致性与篇幅</text>
+    <text class="note" x="1068" y="541" text-anchor="middle">完成自检</text>
   </g>
-
-  <path class="line" d="M 578 278 L 655 278"/>
-  <path class="line" d="M 921 278 L 998 278"/>
-  <path class="line" d="M 578 458 L 655 458"/>
-  <path class="line" d="M 921 458 L 998 458"/>
-  <path class="line" d="M 578 638 L 655 638"/>
-  <path class="line" d="M 921 638 L 998 638"/>
-  <path class="line" d="M 442 330 L 442 412"/>
-  <path class="line" d="M 442 510 L 442 592"/>
-  <path class="line" d="M 785 324 L 785 412"/>
-  <path class="line" d="M 785 510 L 785 592"/>
-  <path class="line" d="M 1128 324 L 1128 412"/>
-  <path class="line" d="M 1128 510 L 1128 592"/>
-  <path class="dash" d="M 1128 690 C 1040 760 860 790 650 756"/>
 
   <g>
-    <rect class="shadow" x="1271" y="598" width="170" height="92"/>
-    <rect class="box" x="1265" y="592" width="170" height="92"/>
-    <text class="body" x="1350" y="633" text-anchor="middle">报告草稿</text>
-    <text class="small" x="1350" y="664" text-anchor="middle">一页可交付结果</text>
+    <rect class="shadow" x="288" y="682" width="244" height="112"/>
+    <rect class="box" x="282" y="676" width="244" height="112"/>
+    <text class="title" x="404" y="724" text-anchor="middle">记录中间结果</text>
+    <text class="note" x="404" y="761" text-anchor="middle">发现“缺少 F1”</text>
+
+    <rect class="shadow" x="620" y="682" width="244" height="112"/>
+    <rect class="box" x="614" y="676" width="244" height="112"/>
+    <text class="title" x="736" y="724" text-anchor="middle">写回新指标</text>
+    <text class="note" x="736" y="761" text-anchor="middle">状态变为“可比较”</text>
+
+    <rect class="shadow" x="952" y="682" width="244" height="112"/>
+    <rect class="box" x="946" y="676" width="244" height="112"/>
+    <text class="title" x="1068" y="724" text-anchor="middle">输出报告草稿</text>
+    <text class="note" x="1068" y="761" text-anchor="middle">一页可交付结果</text>
   </g>
-  <path class="line" d="M 1258 638 L 1265 638"/>
+
+  <path class="line" d="M 526 292 L 614 292"/>
+  <path class="line" d="M 858 292 L 946 292"/>
+  <path class="line" d="M 526 512 L 614 512"/>
+  <path class="line" d="M 858 512 L 946 512"/>
+  <path class="line" d="M 526 732 L 614 732"/>
+  <path class="line" d="M 858 732 L 946 732"/>
+
+  <path class="line" d="M 404 348 L 404 456"/>
+  <path class="line" d="M 736 348 L 736 456"/>
+  <path class="line" d="M 1068 348 L 1068 456"/>
+  <path class="line" d="M 404 568 L 404 676"/>
+  <path class="line" d="M 736 568 L 736 676"/>
+  <path class="line" d="M 1068 568 L 1068 676"/>
+
+  <path class="dash" d="M 946 786 C 835 835 640 836 526 786"/>
 </svg>

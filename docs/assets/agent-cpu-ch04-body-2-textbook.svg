@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">APU-IR：Agent 与硬件之间的契约 的扇出关系</title>
+  <desc id="desc">APU-IR：Agent 与硬件之间的契约 的扇出关系</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+  <rect class="shadow" x="506" y="52" width="400" height="74"/>
+  <rect class="light" x="500" y="46" width="400" height="74"/>
+  <text class="label" x="700" y="88" text-anchor="middle">APU-IR</text>
+  <text class="small" x="700" y="122" text-anchor="middle">Agent与硬件之间的契约</text>
+</g>
+<g>
+  <rect class="shadow" x="170" y="284" width="320" height="118"/>
+  <rect class="light" x="164" y="278" width="320" height="118"/>
+  <text class="label" x="324" y="344" text-anchor="middle">从ISA到APU-IR</text>
+</g>
+<g>
+  <rect class="shadow" x="926" y="112" width="314" height="98"/>
+  <rect class="box" x="920" y="106" width="314" height="98"/>
+  <text class="title" x="1077" y="148" text-anchor="middle">任务图</text>
+  <text class="note" x="1077" y="182" text-anchor="middle">从线性调用到可调度结构</text>
+</g>
+<path class="line" d="M 484 338 C 640 268 776 154 920 154"/>
+<g>
+  <rect class="shadow" x="926" y="250" width="314" height="98"/>
+  <rect class="box" x="920" y="244" width="314" height="98"/>
+  <text class="title" x="1077" y="286" text-anchor="middle">权限</text>
+  <text class="note" x="1077" y="320" text-anchor="middle">把能力变成可检查边界</text>
+</g>
+<path class="line" d="M 484 338 C 640 316 776 292 920 292"/>
+<g>
+  <rect class="shadow" x="926" y="388" width="314" height="98"/>
+  <rect class="box" x="920" y="382" width="314" height="98"/>
+  <text class="title" x="1077" y="424" text-anchor="middle">预算</text>
+  <text class="note" x="1077" y="458" text-anchor="middle">让开放任务具备工程边界</text>
+</g>
+<path class="line" d="M 484 338 C 640 364 776 430 920 430"/>
+<g>
+  <rect class="shadow" x="926" y="526" width="314" height="98"/>
+  <rect class="box" x="920" y="520" width="314" height="98"/>
+  <text class="title" x="1077" y="562" text-anchor="middle">任务图</text>
+  <text class="note" x="1077" y="596" text-anchor="middle">从线性调用到可调度结构</text>
+</g>
+<path class="line" d="M 484 338 C 640 412 776 568 920 568"/>
+<g>
+  <rect class="shadow" x="456" y="624" width="500" height="72"/>
+  <rect class="light" x="450" y="618" width="500" height="72"/>
+  <text class="label" x="700" y="661" text-anchor="middle">APU-IR：Agent 与硬件之间的契约 的扇出关系</text>
+</g>
+</svg>

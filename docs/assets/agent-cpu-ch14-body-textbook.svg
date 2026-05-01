@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Agentic Benchmark 的方法流程</title>
+  <desc id="desc">Agentic Benchmark 的方法流程</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="78" y="242" width="188" height="76"/>
+    <rect class="light" x="72" y="236" width="188" height="76"/>
+    <text class="label" x="166" y="281" text-anchor="middle">定义 workload</text>
+  </g>
+<g>
+    <rect class="shadow" x="292" y="242" width="188" height="76"/>
+    <rect class="light" x="286" y="236" width="188" height="76"/>
+    <text class="label" x="380" y="281" text-anchor="middle">选择 baseline</text>
+  </g>
+<g>
+    <rect class="shadow" x="506" y="242" width="188" height="76"/>
+    <rect class="light" x="500" y="236" width="188" height="76"/>
+    <text class="label" x="594" y="281" text-anchor="middle">配置约束</text>
+  </g>
+<g>
+    <rect class="shadow" x="720" y="242" width="188" height="76"/>
+    <rect class="light" x="714" y="236" width="188" height="76"/>
+    <text class="label" x="808" y="281" text-anchor="middle">运行实验</text>
+  </g>
+<g>
+    <rect class="shadow" x="934" y="242" width="188" height="76"/>
+    <rect class="light" x="928" y="236" width="188" height="76"/>
+    <text class="label" x="1022" y="281" text-anchor="middle">记录 trace</text>
+  </g>
+<g>
+    <rect class="shadow" x="1148" y="242" width="188" height="76"/>
+    <rect class="light" x="1142" y="236" width="188" height="76"/>
+    <text class="label" x="1236" y="281" text-anchor="middle">评分报告</text>
+  </g>
+<path class="line" d="M 260 274 L 286 274"/>
+<path class="line" d="M 474 274 L 500 274"/>
+<path class="line" d="M 688 274 L 714 274"/>
+<path class="line" d="M 902 274 L 928 274"/>
+<path class="line" d="M 1116 274 L 1142 274"/>
+<g>
+    <rect class="shadow" x="612" y="114" width="176" height="72"/>
+    <rect class="light" x="606" y="108" width="176" height="72"/>
+    <text class="label" x="694" y="151" text-anchor="middle">微基准</text>
+  </g>
+<g>
+    <rect class="shadow" x="820" y="114" width="176" height="72"/>
+    <rect class="light" x="814" y="108" width="176" height="72"/>
+    <text class="label" x="902" y="151" text-anchor="middle">宏基准</text>
+  </g>
+<path class="line" d="M 694 180 L 792 236"/>
+<path class="line" d="M 902 180 L 824 236"/>
+<g>
+    <rect class="shadow" x="266" y="618" width="880" height="72"/>
+    <rect class="light" x="260" y="612" width="880" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">方法流程比单一吞吐数字更重要：负载、基线、trace 和评分必须一起定义</text>
+  </g>
+</svg>

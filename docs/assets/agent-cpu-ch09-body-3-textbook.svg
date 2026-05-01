@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">从 ISA 到 APU-IR 的关键概念对应</title>
+  <desc id="desc">从 ISA 到 APU-IR 的关键概念对应</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+  <rect class="shadow" x="506" y="52" width="400" height="74"/>
+  <rect class="light" x="500" y="46" width="400" height="74"/>
+  <text class="label" x="700" y="90" text-anchor="middle">从ISA到APU-IR</text>
+</g>
+<g>
+  <rect class="shadow" x="178" y="186" width="486" height="118"/>
+  <rect class="box" x="172" y="180" width="486" height="118"/>
+  <text class="title" x="415" y="246" text-anchor="middle">ISA作为软硬件契约</text>
+</g>
+<g>
+  <rect class="shadow" x="748" y="186" width="486" height="118"/>
+  <rect class="box" x="742" y="180" width="486" height="118"/>
+  <text class="title" x="985" y="222" text-anchor="middle">APU-IR承载高层任务</text>
+  <text class="note" x="985" y="256" text-anchor="middle">语义</text>
+</g>
+<g>
+  <rect class="shadow" x="178" y="368" width="486" height="118"/>
+  <rect class="box" x="172" y="362" width="486" height="118"/>
+  <text class="title" x="415" y="428" text-anchor="middle">APU-IR的位置</text>
+</g>
+<g>
+  <rect class="shadow" x="748" y="368" width="486" height="118"/>
+  <rect class="box" x="742" y="362" width="486" height="118"/>
+  <text class="title" x="985" y="404" text-anchor="middle">从RISC-V扩展思想到</text>
+  <text class="note" x="985" y="438" text-anchor="middle">APU-IR扩展</text>
+</g>
+<path class="dash" d="M 658 239 L 742 239"/>
+<path class="dash" d="M 658 421 L 742 421"/>
+<path class="dash" d="M 415 298 L 415 362"/>
+<path class="dash" d="M 985 298 L 985 362"/>
+<g>
+  <rect class="shadow" x="426" y="624" width="560" height="72"/>
+  <rect class="light" x="420" y="618" width="560" height="72"/>
+  <text class="label" x="700" y="661" text-anchor="middle">从 ISA 到 APU-IR 的关键概念对应</text>
+</g>
+</svg>

@@ -1,95 +1,103 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">CPU、GPU、NPU 协同分工</title>
-  <desc id="desc">用教材式方框图展示 Agentic workload 的任务流以及 CPU、GPU、NPU 和共享状态平面的协作关系。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">CPU、GPU、NPU 在 Agentic workload 中的协同分工</title>
+  <desc id="desc">以灰阶教材框图展示任务流与 CPU、GPU、NPU、共享状态平面的对应关系，以及典型性能瓶颈。</desc>
   <defs>
     <marker id="arrow-hw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
     </marker>
     <style>
       .bg { fill: #fff; }
-      .shadow { fill: #999; }
-      .box { fill: #ececec; stroke: #4a4a4a; stroke-width: 2; }
-      .line { fill: none; stroke: #444; stroke-width: 2; marker-end: url(#arrow-hw); }
-      .thin { fill: none; stroke: #555; stroke-width: 1.6; }
-      .label { font: 700 28px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
-      .body { font: 400 20px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
-      .small { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-hw); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 22px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
     </style>
   </defs>
 
-  <rect class="bg" width="1600" height="900"/>
+  <rect class="bg" width="1400" height="780"/>
 
-  <text class="body" x="180" y="110">任务流</text>
-  <line class="thin" x1="178" y1="120" x2="360" y2="120"/>
-
-  <g>
-    <rect class="shadow" x="199" y="142" width="180" height="68"/>
-    <rect class="box" x="192" y="135" width="180" height="68"/>
-    <text class="body" x="282" y="178" text-anchor="middle">检索 / 解析</text>
-
-    <rect class="shadow" x="471" y="142" width="180" height="68"/>
-    <rect class="box" x="464" y="135" width="180" height="68"/>
-    <text class="body" x="554" y="178" text-anchor="middle">大模型推理</text>
-
-    <rect class="shadow" x="743" y="142" width="180" height="68"/>
-    <rect class="box" x="736" y="135" width="180" height="68"/>
-    <text class="body" x="826" y="178" text-anchor="middle">工具执行</text>
-
-    <rect class="shadow" x="1015" y="142" width="200" height="68"/>
-    <rect class="box" x="1008" y="135" width="200" height="68"/>
-    <text class="body" x="1108" y="178" text-anchor="middle">边缘 / 低功耗推理</text>
-
-    <rect class="shadow" x="1307" y="142" width="160" height="68"/>
-    <rect class="box" x="1300" y="135" width="160" height="68"/>
-    <text class="body" x="1380" y="178" text-anchor="middle">验证 / 调度</text>
-  </g>
-
-  <path class="line" d="M 372 169 L 464 169"/>
-  <path class="line" d="M 644 169 L 736 169"/>
-  <path class="line" d="M 916 169 L 1008 169"/>
-  <path class="line" d="M 1208 169 L 1300 169"/>
+  <text class="note" x="136" y="86">任务流</text>
+  <line class="rule" x1="134" y1="96" x2="284" y2="96"/>
 
   <g>
-    <rect class="shadow" x="178" y="405" width="260" height="250"/>
-    <rect class="box" x="170" y="397" width="260" height="250"/>
-    <text class="label" x="300" y="448" text-anchor="middle">CPU</text>
-    <text class="small" x="210" y="492">• 通用控制与调度</text>
-    <text class="small" x="210" y="528">• 工具执行与数据预处理</text>
-    <text class="small" x="210" y="564">• 会话状态维护与权限检查</text>
-    <text class="small" x="210" y="600">• 多分支、小粒度、I/O 密集步骤</text>
+    <rect class="shadow" x="134" y="118" width="180" height="64"/>
+    <rect class="light" x="128" y="112" width="180" height="64"/>
+    <text class="note" x="218" y="151" text-anchor="middle">检索 / 控制</text>
 
-    <rect class="shadow" x="500" y="405" width="260" height="250"/>
-    <rect class="box" x="492" y="397" width="260" height="250"/>
-    <text class="label" x="622" y="448" text-anchor="middle">GPU</text>
-    <text class="small" x="532" y="492">• 语言模型与多模态模型推理</text>
-    <text class="small" x="532" y="528">• 大规模矩阵乘法与注意力计算</text>
-    <text class="small" x="532" y="564">• 批量请求下的吞吐与显存约束</text>
-    <text class="small" x="532" y="600">• 高并发智能体服务的核心算力</text>
+    <rect class="shadow" x="384" y="118" width="180" height="64"/>
+    <rect class="light" x="378" y="112" width="180" height="64"/>
+    <text class="note" x="468" y="151" text-anchor="middle">大模型推理</text>
 
-    <rect class="shadow" x="822" y="405" width="260" height="250"/>
-    <rect class="box" x="814" y="397" width="260" height="250"/>
-    <text class="label" x="944" y="448" text-anchor="middle">NPU</text>
-    <text class="small" x="854" y="492">• 神经网络专用推理优化</text>
-    <text class="small" x="854" y="528">• 低延迟、低功耗、本地部署</text>
-    <text class="small" x="854" y="564">• 语音识别、意图理解、小模型推理</text>
-    <text class="small" x="854" y="600">• 靠近数据产生位置的智能能力</text>
+    <rect class="shadow" x="634" y="118" width="220" height="64"/>
+    <rect class="light" x="628" y="112" width="220" height="64"/>
+    <text class="note" x="738" y="151" text-anchor="middle">边缘 / 低功耗推理</text>
 
-    <rect class="shadow" x="1144" y="405" width="286" height="250"/>
-    <rect class="box" x="1136" y="397" width="286" height="250"/>
-    <text class="label" x="1279" y="448" text-anchor="middle">共享状态平面</text>
-    <text class="small" x="1170" y="492">• 上下文窗口与长期记忆</text>
-    <text class="small" x="1170" y="528">• 外部存储、网络、运行时</text>
-    <text class="small" x="1170" y="564">• 工具返回结果与状态读写</text>
-    <text class="small" x="1170" y="600">• 调度排队与数据搬运开销</text>
+    <rect class="shadow" x="924" y="118" width="240" height="64"/>
+    <rect class="light" x="918" y="112" width="240" height="64"/>
+    <text class="note" x="1038" y="151" text-anchor="middle">验证 / 调度 / 读写</text>
   </g>
 
-  <path class="line" d="M 282 203 L 282 397"/>
-  <path class="line" d="M 554 203 L 622 397"/>
-  <path class="line" d="M 826 203 L 300 397"/>
-  <path class="line" d="M 826 203 L 1279 397"/>
-  <path class="line" d="M 1108 203 L 944 397"/>
-  <path class="line" d="M 1380 203 L 300 397"/>
-  <path class="line" d="M 1380 203 L 1279 397"/>
+  <path class="line" d="M 308 144 L 378 144"/>
+  <path class="line" d="M 558 144 L 628 144"/>
+  <path class="line" d="M 848 144 L 918 144"/>
 
-  <text class="body" x="180" y="745">典型瓶颈：推理计算、上下文搬运、工具等待、存储检索、调度排队</text>
+  <g>
+    <rect class="shadow" x="104" y="292" width="244" height="118"/>
+    <rect class="box" x="98" y="286" width="244" height="118"/>
+    <text class="title" x="220" y="334" text-anchor="middle">CPU</text>
+    <text class="note" x="220" y="366" text-anchor="middle">控制、调度、工具执行</text>
+    <text class="note" x="220" y="392" text-anchor="middle">I/O、状态维护、权限检查</text>
+
+    <rect class="shadow" x="394" y="292" width="244" height="118"/>
+    <rect class="box" x="388" y="286" width="244" height="118"/>
+    <text class="title" x="510" y="334" text-anchor="middle">GPU</text>
+    <text class="note" x="510" y="366" text-anchor="middle">大规模模型推理</text>
+    <text class="note" x="510" y="392" text-anchor="middle">吞吐、显存、互连约束</text>
+
+    <rect class="shadow" x="684" y="292" width="244" height="118"/>
+    <rect class="box" x="678" y="286" width="244" height="118"/>
+    <text class="title" x="800" y="334" text-anchor="middle">NPU</text>
+    <text class="note" x="800" y="366" text-anchor="middle">低功耗本地推理</text>
+    <text class="note" x="800" y="392" text-anchor="middle">边缘设备与小模型</text>
+
+    <rect class="shadow" x="974" y="292" width="286" height="118"/>
+    <rect class="box" x="968" y="286" width="286" height="118"/>
+    <text class="title" x="1111" y="334" text-anchor="middle">共享状态平面</text>
+    <text class="note" x="1111" y="366" text-anchor="middle">上下文、记忆、存储、网络</text>
+    <text class="note" x="1111" y="392" text-anchor="middle">结果读写与数据搬运</text>
+  </g>
+
+  <path class="line" d="M 218 176 L 218 286"/>
+  <path class="line" d="M 468 176 L 510 286"/>
+  <path class="line" d="M 738 176 L 800 286"/>
+  <path class="line" d="M 1038 176 L 1111 286"/>
+
+  <text class="note" x="700" y="514" text-anchor="middle">典型瓶颈</text>
+  <line class="rule" x1="594" y1="524" x2="806" y2="524"/>
+
+  <g>
+    <rect class="shadow" x="104" y="556" width="184" height="58"/>
+    <rect class="light" x="98" y="550" width="184" height="58"/>
+    <text class="note" x="190" y="586" text-anchor="middle">推理计算</text>
+
+    <rect class="shadow" x="344" y="556" width="184" height="58"/>
+    <rect class="light" x="338" y="550" width="184" height="58"/>
+    <text class="note" x="430" y="586" text-anchor="middle">上下文搬运</text>
+
+    <rect class="shadow" x="584" y="556" width="184" height="58"/>
+    <rect class="light" x="578" y="550" width="184" height="58"/>
+    <text class="note" x="670" y="586" text-anchor="middle">工具等待</text>
+
+    <rect class="shadow" x="824" y="556" width="184" height="58"/>
+    <rect class="light" x="818" y="550" width="184" height="58"/>
+    <text class="note" x="910" y="586" text-anchor="middle">存储检索</text>
+
+    <rect class="shadow" x="1064" y="556" width="184" height="58"/>
+    <rect class="light" x="1058" y="550" width="184" height="58"/>
+    <text class="note" x="1150" y="586" text-anchor="middle">调度排队</text>
+  </g>
 </svg>

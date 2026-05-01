@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">任务型 Agent 的执行模型 的展开路径</title>
+  <desc id="desc">任务型 Agent 的执行模型 的展开路径</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+  <rect class="shadow" x="506" y="52" width="400" height="74"/>
+  <rect class="light" x="500" y="46" width="400" height="74"/>
+  <text class="label" x="700" y="90" text-anchor="middle">任务型Agent的执行模型</text>
+</g>
+<g>
+  <rect class="shadow" x="90" y="254" width="210" height="116"/>
+  <rect class="box" x="84" y="248" width="210" height="116"/>
+  <text class="title" x="189" y="290" text-anchor="middle">任务型Agent是什</text>
+  <text class="note" x="189" y="324" text-anchor="middle">么</text>
+</g>
+<path class="line" d="M 294 306 L 406 306"/>
+<g>
+  <rect class="shadow" x="412" y="254" width="210" height="116"/>
+  <rect class="box" x="406" y="248" width="210" height="116"/>
+  <text class="title" x="511" y="313" text-anchor="middle">执行循环的基本构成</text>
+</g>
+<path class="line" d="M 616 306 L 728 306"/>
+<g>
+  <rect class="shadow" x="734" y="254" width="210" height="116"/>
+  <rect class="box" x="728" y="248" width="210" height="116"/>
+  <text class="title" x="833" y="290" text-anchor="middle">目标</text>
+  <text class="note" x="833" y="324" text-anchor="middle">执行循环的方向</text>
+</g>
+<path class="line" d="M 938 306 L 1050 306"/>
+<g>
+  <rect class="shadow" x="1056" y="254" width="210" height="116"/>
+  <rect class="box" x="1050" y="248" width="210" height="116"/>
+  <text class="title" x="1155" y="290" text-anchor="middle">上下文</text>
+  <text class="note" x="1155" y="324" text-anchor="middle">执行所依赖的工作空间</text>
+</g>
+<g>
+  <rect class="shadow" x="456" y="624" width="500" height="72"/>
+  <rect class="light" x="450" y="618" width="500" height="72"/>
+  <text class="label" x="700" y="661" text-anchor="middle">任务型 Agent 的执行模型 的展开路径</text>
+</g>
+</svg>

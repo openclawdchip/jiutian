@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">SPEC、MLPerf 与 Agentic Benchmark 的关系</title>
+  <desc id="desc">SPEC、MLPerf 与 Agentic Benchmark 的关系</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="152" y="170" width="220" height="84"/>
+    <rect class="light" x="146" y="164" width="220" height="84"/>
+    <text class="label" x="256" y="213" text-anchor="middle">SPEC</text>
+  </g>
+<g>
+    <rect class="shadow" x="152" y="356" width="220" height="84"/>
+    <rect class="light" x="146" y="350" width="220" height="84"/>
+    <text class="label" x="256" y="399" text-anchor="middle">MLPerf</text>
+  </g>
+<g>
+    <rect class="shadow" x="536" y="242" width="340" height="124"/>
+    <rect class="box" x="530" y="236" width="340" height="124"/>
+    <text class="title" x="700" y="278" text-anchor="middle">Agentic Benchmark</text>
+    <text class="note" x="700" y="314" text-anchor="middle">微基准 + 长任务宏基准</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="124" width="190" height="72"/>
+    <rect class="light" x="1038" y="118" width="190" height="72"/>
+    <text class="label" x="1133" y="161" text-anchor="middle">正确性</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="228" width="190" height="72"/>
+    <rect class="light" x="1038" y="222" width="190" height="72"/>
+    <text class="label" x="1133" y="265" text-anchor="middle">安全</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="332" width="190" height="72"/>
+    <rect class="light" x="1038" y="326" width="190" height="72"/>
+    <text class="label" x="1133" y="369" text-anchor="middle">恢复</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="436" width="190" height="72"/>
+    <rect class="light" x="1038" y="430" width="190" height="72"/>
+    <text class="label" x="1133" y="473" text-anchor="middle">资源</text>
+  </g>
+<g>
+    <rect class="shadow" x="526" y="506" width="166" height="72"/>
+    <rect class="light" x="520" y="500" width="166" height="72"/>
+    <text class="label" x="603" y="543" text-anchor="middle">微基准</text>
+  </g>
+<g>
+    <rect class="shadow" x="720" y="506" width="166" height="72"/>
+    <rect class="light" x="714" y="500" width="166" height="72"/>
+    <text class="label" x="797" y="543" text-anchor="middle">宏基准</text>
+  </g>
+<path class="line" d="M 366 206 L 530 270"/>
+<path class="line" d="M 366 392 L 530 328"/>
+<path class="line" d="M 870 272 L 1038 154"/>
+<path class="line" d="M 870 288 L 1038 258"/>
+<path class="line" d="M 870 308 L 1038 362"/>
+<path class="line" d="M 870 326 L 1038 466"/>
+<path class="line" d="M 632 360 L 604 500"/>
+<path class="line" d="M 768 360 L 796 500"/>
+<g>
+    <rect class="shadow" x="276" y="618" width="860" height="72"/>
+    <rect class="light" x="270" y="612" width="860" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">Agentic Benchmark 继承传统 benchmark 思想，但把正确性、安全与恢复并列纳入</text>
+  </g>
+</svg>

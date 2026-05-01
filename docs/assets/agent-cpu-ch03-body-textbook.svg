@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">双域架构中的职责分工与交互路径</title>
+  <desc id="desc">双域架构中的职责分工与交互路径</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="552" y="60" width="308" height="74"/>
+    <rect class="light" x="546" y="54" width="308" height="74"/>
+    <text class="label" x="700" y="98" text-anchor="middle">双域架构</text>
+  </g>
+<g>
+    <rect class="shadow" x="120" y="190" width="356" height="170"/>
+    <rect class="box" x="114" y="184" width="356" height="170"/>
+    <text class="title" x="292" y="226" text-anchor="middle">Super Domain</text>
+    <text class="note" x="292" y="262" text-anchor="middle">兼容接口 / 资源监管</text>
+    <text class="note" x="292" y="288" text-anchor="middle">审核提交 / 真实副作用</text>
+  </g>
+<g>
+    <rect class="shadow" x="936" y="190" width="356" height="170"/>
+    <rect class="box" x="930" y="184" width="356" height="170"/>
+    <text class="title" x="1108" y="226" text-anchor="middle">Agent Domain</text>
+    <text class="note" x="1108" y="262" text-anchor="middle">任务执行 / 候选结果</text>
+    <text class="note" x="1108" y="288" text-anchor="middle">有界工具 / 可恢复状态</text>
+  </g>
+<g>
+    <rect class="shadow" x="586" y="170" width="240" height="64"/>
+    <rect class="light" x="580" y="164" width="240" height="64"/>
+    <text class="label" x="700" y="203" text-anchor="middle">派发任务</text>
+  </g>
+<g>
+    <rect class="shadow" x="586" y="254" width="240" height="64"/>
+    <rect class="light" x="580" y="248" width="240" height="64"/>
+    <text class="label" x="700" y="287" text-anchor="middle">返回候选</text>
+  </g>
+<g>
+    <rect class="shadow" x="586" y="338" width="240" height="64"/>
+    <rect class="light" x="580" y="332" width="240" height="64"/>
+    <text class="label" x="700" y="371" text-anchor="middle">审核 / 提交</text>
+  </g>
+<g>
+    <rect class="shadow" x="586" y="422" width="240" height="64"/>
+    <rect class="light" x="580" y="416" width="240" height="64"/>
+    <text class="label" x="700" y="455" text-anchor="middle">trap / 异常</text>
+  </g>
+<path class="line" d="M 470 216 L 580 196"/>
+<path class="line" d="M 820 196 L 930 216"/>
+<path class="line" d="M 930 280 L 820 280"/>
+<path class="line" d="M 580 280 L 470 280"/>
+<path class="line" d="M 930 364 L 820 364"/>
+<path class="line" d="M 580 364 L 470 364"/>
+<path class="line" d="M 930 448 L 820 448"/>
+<path class="line" d="M 580 448 L 470 448"/>
+<g>
+    <rect class="shadow" x="326" y="618" width="760" height="72"/>
+    <rect class="light" x="320" y="612" width="760" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">Super Domain 负责真实世界边界，Agent Domain 负责有界任务执行</text>
+  </g>
+</svg>

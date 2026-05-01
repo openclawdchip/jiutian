@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">任务型 Agent 的执行循环</title>
+  <desc id="desc">任务型 Agent 的执行循环</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="562" y="290" width="288" height="88"/>
+    <rect class="light" x="556" y="284" width="288" height="88"/>
+    <text class="label" x="700" y="335" text-anchor="middle">任务型 Agent</text>
+  </g>
+<g>
+    <rect class="shadow" x="566" y="96" width="210" height="70"/>
+    <rect class="light" x="560" y="90" width="210" height="70"/>
+    <text class="label" x="665" y="132" text-anchor="middle">目标</text>
+  </g>
+<g>
+    <rect class="shadow" x="214" y="266" width="228" height="70"/>
+    <rect class="light" x="208" y="260" width="228" height="70"/>
+    <text class="label" x="322" y="302" text-anchor="middle">上下文</text>
+  </g>
+<g>
+    <rect class="shadow" x="944" y="266" width="228" height="70"/>
+    <rect class="light" x="938" y="260" width="228" height="70"/>
+    <text class="label" x="1052" y="302" text-anchor="middle">计划</text>
+  </g>
+<g>
+    <rect class="shadow" x="936" y="464" width="246" height="70"/>
+    <rect class="light" x="930" y="458" width="246" height="70"/>
+    <text class="label" x="1053" y="500" text-anchor="middle">工具 / 观察</text>
+  </g>
+<g>
+    <rect class="shadow" x="220" y="464" width="246" height="70"/>
+    <rect class="light" x="214" y="458" width="246" height="70"/>
+    <text class="label" x="337" y="500" text-anchor="middle">状态更新</text>
+  </g>
+<path class="line" d="M 664 160 C 842 170 950 208 1046 260"/>
+<path class="line" d="M 1166 330 C 1180 392 1114 444 1054 458"/>
+<path class="line" d="M 930 528 C 830 598 568 598 460 528"/>
+<path class="line" d="M 214 458 C 132 432 120 360 208 330"/>
+<path class="line" d="M 208 260 C 310 208 430 170 560 146"/>
+<g>
+    <rect class="shadow" x="426" y="618" width="560" height="72"/>
+    <rect class="light" x="420" y="612" width="560" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">目标给方向，状态变化让执行进展变得可见</text>
+  </g>
+</svg>

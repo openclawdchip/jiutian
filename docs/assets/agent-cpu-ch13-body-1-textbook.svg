@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">从 SPEC 到 Agentic Benchmark 的对照关系</title>
+  <desc id="desc">从 SPEC 到 Agentic Benchmark 的对照关系</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+  <rect class="shadow" x="506" y="52" width="400" height="74"/>
+  <rect class="light" x="500" y="46" width="400" height="74"/>
+  <text class="label" x="700" y="88" text-anchor="middle">从SPEC到Agentic</text>
+  <text class="small" x="700" y="122" text-anchor="middle">Benchmark</text>
+</g>
+<g>
+  <rect class="shadow" x="124" y="252" width="300" height="132"/>
+  <rect class="box" x="118" y="246" width="300" height="132"/>
+  <text class="title" x="268" y="288" text-anchor="middle">Benchmark是体</text>
+  <text class="note" x="268" y="322" text-anchor="middle">系结构的语言</text>
+</g>
+<g>
+  <rect class="shadow" x="988" y="252" width="300" height="132"/>
+  <rect class="box" x="982" y="246" width="300" height="132"/>
+  <text class="title" x="1132" y="288" text-anchor="middle">指标</text>
+  <text class="note" x="1132" y="322" text-anchor="middle">正确性、安全与恢复同等</text>
+  <text class="note" x="1132" y="346" text-anchor="middle">重要</text>
+</g>
+<g>
+  <rect class="shadow" x="522" y="138" width="368" height="102"/>
+  <rect class="light" x="516" y="132" width="368" height="102"/>
+  <text class="label" x="700" y="174" text-anchor="middle">SPEC与MLPerf的</text>
+  <text class="note" x="700" y="208" text-anchor="middle">启发和局限</text>
+</g>
+<g>
+  <rect class="shadow" x="522" y="402" width="368" height="102"/>
+  <rect class="light" x="516" y="396" width="368" height="102"/>
+  <text class="label" x="700" y="438" text-anchor="middle">宏基准</text>
+  <text class="note" x="700" y="472" text-anchor="middle">端到端的长任务</text>
+</g>
+<path class="line" d="M 418 292 L 516 190"/>
+<path class="line" d="M 884 190 L 982 292"/>
+<path class="line" d="M 418 332 L 516 446"/>
+<path class="line" d="M 884 446 L 982 332"/>
+<g>
+  <rect class="shadow" x="456" y="624" width="500" height="72"/>
+  <rect class="light" x="450" y="618" width="500" height="72"/>
+  <text class="label" x="700" y="661" text-anchor="middle">从 SPEC 到 Agentic Benchmark 的对照关系</text>
+</g>
+</svg>

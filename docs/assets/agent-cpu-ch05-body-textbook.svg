@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">状态对象在 Memory 与 NoC 中的数据移动</title>
+  <desc id="desc">状态对象在 Memory 与 NoC 中的数据移动</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="98" y="126" width="180" height="72"/>
+    <rect class="light" x="92" y="120" width="180" height="72"/>
+    <text class="label" x="182" y="163" text-anchor="middle">context</text>
+  </g>
+<g>
+    <rect class="shadow" x="98" y="220" width="180" height="72"/>
+    <rect class="light" x="92" y="214" width="180" height="72"/>
+    <text class="label" x="182" y="257" text-anchor="middle">ledger</text>
+  </g>
+<g>
+    <rect class="shadow" x="98" y="314" width="180" height="72"/>
+    <rect class="light" x="92" y="308" width="180" height="72"/>
+    <text class="label" x="182" y="351" text-anchor="middle">artifact</text>
+  </g>
+<g>
+    <rect class="shadow" x="98" y="408" width="180" height="72"/>
+    <rect class="light" x="92" y="402" width="180" height="72"/>
+    <text class="label" x="182" y="445" text-anchor="middle">trace</text>
+  </g>
+<g>
+    <rect class="shadow" x="520" y="292" width="372" height="84"/>
+    <rect class="light" x="514" y="286" width="372" height="84"/>
+    <text class="label" x="700" y="335" text-anchor="middle">NoC / 数据道路</text>
+  </g>
+<g>
+    <rect class="shadow" x="520" y="108" width="172" height="72"/>
+    <rect class="light" x="514" y="102" width="172" height="72"/>
+    <text class="label" x="600" y="145" text-anchor="middle">Agent Core</text>
+  </g>
+<g>
+    <rect class="shadow" x="706" y="108" width="172" height="72"/>
+    <rect class="light" x="700" y="102" width="172" height="72"/>
+    <text class="label" x="786" y="145" text-anchor="middle">DMA</text>
+  </g>
+<g>
+    <rect class="shadow" x="892" y="108" width="172" height="72"/>
+    <rect class="light" x="886" y="102" width="172" height="72"/>
+    <text class="label" x="972" y="145" text-anchor="middle">Cluster</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="220" width="210" height="72"/>
+    <rect class="light" x="1038" y="214" width="210" height="72"/>
+    <text class="label" x="1143" y="257" text-anchor="middle">SPM</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="314" width="210" height="72"/>
+    <rect class="light" x="1038" y="308" width="210" height="72"/>
+    <text class="label" x="1143" y="351" text-anchor="middle">Cluster SRAM</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="408" width="210" height="72"/>
+    <rect class="light" x="1038" y="402" width="210" height="72"/>
+    <text class="label" x="1143" y="445" text-anchor="middle">HBM / DRAM</text>
+  </g>
+<g>
+    <rect class="shadow" x="1044" y="502" width="210" height="72"/>
+    <rect class="light" x="1038" y="496" width="210" height="72"/>
+    <text class="label" x="1143" y="539" text-anchor="middle">Storage / Net</text>
+  </g>
+<path class="line" d="M 272 156 L 514 306"/>
+<path class="line" d="M 272 250 L 514 322"/>
+<path class="line" d="M 272 344 L 514 338"/>
+<path class="line" d="M 272 438 L 514 354"/>
+<path class="line" d="M 700 286 L 600 174"/>
+<path class="line" d="M 700 286 L 786 174"/>
+<path class="line" d="M 700 286 L 972 174"/>
+<path class="line" d="M 886 328 L 1038 250"/>
+<path class="line" d="M 886 328 L 1038 344"/>
+<path class="line" d="M 886 328 L 1038 438"/>
+<path class="line" d="M 886 328 L 1038 532"/>
+<g>
+    <rect class="shadow" x="356" y="618" width="700" height="72"/>
+    <rect class="light" x="350" y="612" width="700" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">状态对象通过 NoC 在计算单元与存储层次之间显式移动</text>
+  </g>
+</svg>

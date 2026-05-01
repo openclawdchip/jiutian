@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">任务、证据与投影的关系</title>
+  <desc id="desc">以春游地点选择为例，展示任务如何约束证据筛选，并基于同一份材料形成不同投影。</desc>
+  <defs>
+    <marker id="arrow-tep" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-tep); }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1400" height="780"/>
+
+  <g>
+    <rect class="shadow" x="124" y="88" width="312" height="116"/>
+    <rect class="box" x="118" y="82" width="312" height="116"/>
+    <text class="title" x="274" y="128" text-anchor="middle">任务</text>
+    <text class="note" x="274" y="162" text-anchor="middle">目标：选择春游地点</text>
+    <text class="note" x="274" y="188" text-anchor="middle">优先：预算 / 安全 / 教学</text>
+
+    <rect class="shadow" x="124" y="356" width="312" height="132"/>
+    <rect class="box" x="118" y="350" width="312" height="132"/>
+    <text class="title" x="274" y="398" text-anchor="middle">原始材料</text>
+    <text class="note" x="274" y="432" text-anchor="middle">天气、费用、交通、安全</text>
+    <text class="note" x="274" y="458" text-anchor="middle">兴趣、开放时间、场馆主题</text>
+
+    <rect class="shadow" x="552" y="226" width="312" height="132"/>
+    <rect class="box" x="546" y="220" width="312" height="132"/>
+    <text class="title" x="702" y="268" text-anchor="middle">证据筛选</text>
+    <text class="note" x="702" y="302" text-anchor="middle">相关性</text>
+    <text class="note" x="702" y="328" text-anchor="middle">可靠性 / 时效性</text>
+
+    <rect class="shadow" x="984" y="82" width="246" height="98"/>
+    <rect class="light" x="978" y="76" width="246" height="98"/>
+    <text class="label" x="1101" y="118" text-anchor="middle">预算优先视图</text>
+    <text class="note" x="1101" y="148" text-anchor="middle">门票 / 车费 / 总成本</text>
+
+    <rect class="shadow" x="984" y="246" width="246" height="98"/>
+    <rect class="light" x="978" y="240" width="246" height="98"/>
+    <text class="label" x="1101" y="282" text-anchor="middle">安全优先视图</text>
+    <text class="note" x="1101" y="312" text-anchor="middle">距离 / 风险 / 医疗条件</text>
+
+    <rect class="shadow" x="984" y="410" width="246" height="98"/>
+    <rect class="light" x="978" y="404" width="246" height="98"/>
+    <text class="label" x="1101" y="446" text-anchor="middle">教学优先视图</text>
+    <text class="note" x="1101" y="476" text-anchor="middle">主题 / 学习资源</text>
+  </g>
+
+  <path class="line" d="M 430 140 C 500 164 550 194 594 238"/>
+  <path class="line" d="M 430 416 C 492 396 544 366 594 336"/>
+  <path class="line" d="M 858 286 L 978 128"/>
+  <path class="line" d="M 858 286 L 978 288"/>
+  <path class="line" d="M 858 286 L 978 452"/>
+
+  <g>
+    <rect class="shadow" x="444" y="604" width="520" height="74"/>
+    <rect class="light" x="438" y="598" width="520" height="74"/>
+    <text class="label" x="698" y="642" text-anchor="middle">同一份材料因任务不同形成不同投影</text>
+  </g>
+</svg>

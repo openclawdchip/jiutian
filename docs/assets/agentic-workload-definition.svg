@@ -1,75 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Agentic workload 定义框架</title>
-  <desc id="desc">以教材式框图展示任务目标、上下文、行动和反馈之间的循环关系，以及底部四项体系结构特征。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Agentic workload 的四个基本要素与体系结构特征</title>
+  <desc id="desc">以灰阶教材框图展示任务目标、上下文状态、行动选择、反馈更新的循环关系，以及四个体系结构特征。</desc>
   <defs>
     <marker id="arrow-def" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
     </marker>
     <style>
       .bg { fill: #fff; }
-      .shadow { fill: #999; }
-      .box { fill: #e9e9e9; stroke: #4a4a4a; stroke-width: 2; }
-      .light { fill: #f6f6f6; stroke: #4a4a4a; stroke-width: 1.8; }
-      .line { fill: none; stroke: #444; stroke-width: 2; marker-end: url(#arrow-def); }
-      .dash { fill: none; stroke: #555; stroke-width: 1.6; stroke-dasharray: 8 6; }
-      .title { font: 700 34px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
-      .label { font: 700 28px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
-      .body { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
-      .small { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-def); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 22px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 19px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
     </style>
   </defs>
 
-  <rect class="bg" width="1600" height="900"/>
+  <rect class="bg" width="1400" height="780"/>
 
   <g>
-    <rect class="shadow" x="657" y="303" width="286" height="96"/>
-    <rect class="box" x="648" y="294" width="286" height="96"/>
-    <text class="title" x="791" y="352" text-anchor="middle">Agentic workload</text>
+    <rect class="shadow" x="586" y="276" width="240" height="82"/>
+    <rect class="box" x="580" y="270" width="240" height="82"/>
+    <text class="title" x="700" y="320" text-anchor="middle">Agentic workload</text>
   </g>
 
   <g>
-    <rect class="shadow" x="651" y="118" width="250" height="72"/>
-    <rect class="box" x="644" y="111" width="250" height="72"/>
-    <text class="label" x="769" y="156" text-anchor="middle">任务目标</text>
+    <rect class="shadow" x="596" y="96" width="212" height="70"/>
+    <rect class="box" x="590" y="90" width="212" height="70"/>
+    <text class="label" x="696" y="134" text-anchor="middle">任务目标</text>
 
-    <rect class="shadow" x="1098" y="319" width="228" height="72"/>
-    <rect class="box" x="1091" y="312" width="228" height="72"/>
-    <text class="label" x="1205" y="357" text-anchor="middle">行动选择</text>
+    <rect class="shadow" x="936" y="276" width="212" height="70"/>
+    <rect class="box" x="930" y="270" width="212" height="70"/>
+    <text class="label" x="1036" y="314" text-anchor="middle">行动选择</text>
 
-    <rect class="shadow" x="657" y="532" width="250" height="72"/>
-    <rect class="box" x="650" y="525" width="250" height="72"/>
-    <text class="label" x="775" y="570" text-anchor="middle">反馈更新</text>
+    <rect class="shadow" x="596" y="456" width="212" height="70"/>
+    <rect class="box" x="590" y="450" width="212" height="70"/>
+    <text class="label" x="696" y="494" text-anchor="middle">反馈更新</text>
 
-    <rect class="shadow" x="256" y="319" width="228" height="72"/>
-    <rect class="box" x="249" y="312" width="228" height="72"/>
-    <text class="label" x="363" y="357" text-anchor="middle">上下文状态</text>
+    <rect class="shadow" x="256" y="276" width="212" height="70"/>
+    <rect class="box" x="250" y="270" width="212" height="70"/>
+    <text class="label" x="356" y="314" text-anchor="middle">上下文状态</text>
   </g>
 
-  <path class="line" d="M 769 183 C 925 190 1030 240 1110 312"/>
-  <path class="line" d="M 1205 384 C 1180 468 1035 529 900 555"/>
-  <path class="line" d="M 650 555 C 520 529 380 470 363 384"/>
-  <path class="line" d="M 249 348 C 330 240 470 177 644 147"/>
-  <path class="dash" d="M 594 345 C 625 345 640 345 648 345"/>
-  <path class="dash" d="M 934 345 C 1000 345 1045 345 1091 345"/>
+  <path class="line" d="M 702 160 C 850 168 968 212 1034 270"/>
+  <path class="line" d="M 1036 340 C 1012 410 910 472 800 488"/>
+  <path class="line" d="M 590 488 C 476 471 376 410 352 340"/>
+  <path class="line" d="M 356 270 C 422 210 540 166 590 150"/>
+  <path class="dash" d="M 462 305 L 580 305"/>
+  <path class="dash" d="M 820 305 L 930 305"/>
 
-  <text class="body" x="655" y="678">体系结构视角下的关键特征</text>
-  <line x1="650" y1="688" x2="1040" y2="688" stroke="#444" stroke-width="1.6"/>
+  <text class="note" x="700" y="610" text-anchor="middle">体系结构特征</text>
+  <line class="rule" x1="548" y1="620" x2="852" y2="620"/>
 
   <g>
-    <rect class="shadow" x="188" y="738" width="270" height="62"/>
-    <rect class="light" x="182" y="732" width="270" height="62"/>
-    <text class="body" x="317" y="772" text-anchor="middle">动态控制流</text>
+    <rect class="shadow" x="168" y="654" width="220" height="62"/>
+    <rect class="light" x="162" y="648" width="220" height="62"/>
+    <text class="note" x="272" y="687" text-anchor="middle">动态控制流</text>
 
-    <rect class="shadow" x="496" y="738" width="270" height="62"/>
-    <rect class="light" x="490" y="732" width="270" height="62"/>
-    <text class="body" x="625" y="772" text-anchor="middle">分层状态</text>
+    <rect class="shadow" x="428" y="654" width="220" height="62"/>
+    <rect class="light" x="422" y="648" width="220" height="62"/>
+    <text class="note" x="532" y="687" text-anchor="middle">分层状态</text>
 
-    <rect class="shadow" x="804" y="738" width="270" height="62"/>
-    <rect class="light" x="798" y="732" width="270" height="62"/>
-    <text class="body" x="933" y="772" text-anchor="middle">复合性能</text>
+    <rect class="shadow" x="688" y="654" width="220" height="62"/>
+    <rect class="light" x="682" y="648" width="220" height="62"/>
+    <text class="note" x="792" y="687" text-anchor="middle">复合性能</text>
 
-    <rect class="shadow" x="1112" y="738" width="270" height="62"/>
-    <rect class="light" x="1106" y="732" width="270" height="62"/>
-    <text class="body" x="1241" y="772" text-anchor="middle">过程约束</text>
+    <rect class="shadow" x="948" y="654" width="220" height="62"/>
+    <rect class="light" x="942" y="648" width="220" height="62"/>
+    <text class="note" x="1052" y="687" text-anchor="middle">过程约束</text>
   </g>
 </svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Candidate Commit 的提交边界</title>
+  <desc id="desc">Candidate Commit 的提交边界</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="110" y="250" width="220" height="84"/>
+    <rect class="light" x="104" y="244" width="220" height="84"/>
+    <text class="label" x="214" y="293" text-anchor="middle">Agent Domain</text>
+  </g>
+<g>
+    <rect class="shadow" x="390" y="250" width="220" height="84"/>
+    <rect class="light" x="384" y="244" width="220" height="84"/>
+    <text class="label" x="494" y="293" text-anchor="middle">生成候选</text>
+  </g>
+<g>
+    <rect class="shadow" x="670" y="220" width="240" height="144"/>
+    <rect class="box" x="664" y="214" width="240" height="144"/>
+    <text class="title" x="784" y="256" text-anchor="middle">Candidate Buffer</text>
+    <text class="note" x="784" y="292" text-anchor="middle">候选 patch / ledger delta</text>
+    <text class="note" x="784" y="318" text-anchor="middle">candidate-only side effect</text>
+  </g>
+<g>
+    <rect class="shadow" x="970" y="250" width="220" height="84"/>
+    <rect class="light" x="964" y="244" width="220" height="84"/>
+    <text class="label" x="1074" y="293" text-anchor="middle">Super Domain 审核</text>
+  </g>
+<g>
+    <rect class="shadow" x="1194" y="250" width="120" height="84"/>
+    <rect class="light" x="1188" y="244" width="120" height="84"/>
+    <text class="label" x="1248" y="293" text-anchor="middle">提交</text>
+  </g>
+<g>
+    <rect class="shadow" x="970" y="436" width="220" height="84"/>
+    <rect class="light" x="964" y="430" width="220" height="84"/>
+    <text class="label" x="1074" y="479" text-anchor="middle">回滚 / 丢弃</text>
+  </g>
+<path class="line" d="M 324 286 L 384 286"/>
+<path class="line" d="M 604 286 L 664 286"/>
+<path class="line" d="M 904 286 L 964 286"/>
+<path class="line" d="M 1184 286 L 1188 286"/>
+<path class="line" d="M 1074 328 L 1074 430"/>
+<g>
+    <rect class="shadow" x="396" y="618" width="620" height="72"/>
+    <rect class="light" x="390" y="612" width="620" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">真实副作用只在提交后可见，候选阶段必须保持可撤回</text>
+  </g>
+</svg>

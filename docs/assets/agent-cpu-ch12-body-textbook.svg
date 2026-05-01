@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Task-State Recovery 的基本路径</title>
+  <desc id="desc">Task-State Recovery 的基本路径</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="122" y="126" width="220" height="76"/>
+    <rect class="light" x="116" y="120" width="220" height="76"/>
+    <text class="label" x="226" y="165" text-anchor="middle">Task Predictor</text>
+  </g>
+<g>
+    <rect class="shadow" x="444" y="126" width="220" height="76"/>
+    <rect class="light" x="438" y="120" width="220" height="76"/>
+    <text class="label" x="548" y="165" text-anchor="middle">TFQ / 轨迹</text>
+  </g>
+<g>
+    <rect class="shadow" x="766" y="126" width="220" height="76"/>
+    <rect class="light" x="760" y="120" width="220" height="76"/>
+    <text class="label" x="870" y="165" text-anchor="middle">执行路径</text>
+  </g>
+<g>
+    <rect class="shadow" x="1088" y="126" width="220" height="76"/>
+    <rect class="light" x="1082" y="120" width="220" height="76"/>
+    <text class="label" x="1192" y="165" text-anchor="middle">命中继续</text>
+  </g>
+<g>
+    <rect class="shadow" x="802" y="298" width="184" height="76"/>
+    <rect class="light" x="796" y="292" width="184" height="76"/>
+    <text class="label" x="888" y="337" text-anchor="middle">验证失败</text>
+  </g>
+<g>
+    <rect class="shadow" x="476" y="468" width="268" height="88"/>
+    <rect class="box" x="470" y="462" width="268" height="88"/>
+    <text class="title" x="604" y="504" text-anchor="middle">Recovery Anchor</text>
+    <text class="note" x="604" y="540" text-anchor="middle">可恢复任务状态</text>
+  </g>
+<g>
+    <rect class="shadow" x="824" y="468" width="220" height="76"/>
+    <rect class="light" x="818" y="462" width="220" height="76"/>
+    <text class="label" x="928" y="507" text-anchor="middle">task redirect</text>
+  </g>
+<path class="line" d="M 336 158 L 438 158"/>
+<path class="line" d="M 658 158 L 760 158"/>
+<path class="line" d="M 980 158 L 1082 158"/>
+<path class="line" d="M 870 196 L 890 292"/>
+<path class="line" d="M 796 330 L 604 462"/>
+<path class="line" d="M 738 506 L 818 500"/>
+<path class="line" d="M 818 500 C 770 420 708 340 548 196"/>
+<g>
+    <rect class="shadow" x="396" y="618" width="620" height="72"/>
+    <rect class="light" x="390" y="612" width="620" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">恢复对象从指令地址扩展为任务状态与恢复锚点</text>
+  </g>
+</svg>

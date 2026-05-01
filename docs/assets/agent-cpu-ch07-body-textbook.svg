@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Ledger、Compact 与 Recovery Anchor 的关系</title>
+  <desc id="desc">Ledger、Compact 与 Recovery Anchor 的关系</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
+      .light { fill: #f9f9f9; stroke: #4a4a4a; stroke-width: 1.8; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #666; stroke-width: 1.4; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+      .rule { fill: none; stroke: #666; stroke-width: 1.4; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 21px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 16px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" width="1400" height="780"/>
+  <g>
+    <rect class="shadow" x="554" y="70" width="308" height="72"/>
+    <rect class="light" x="548" y="64" width="308" height="72"/>
+    <text class="label" x="702" y="107" text-anchor="middle">长期任务</text>
+  </g>
+<g>
+    <rect class="shadow" x="134" y="238" width="236" height="92"/>
+    <rect class="box" x="128" y="232" width="236" height="92"/>
+    <text class="title" x="246" y="274" text-anchor="middle">当前上下文</text>
+    <text class="note" x="246" y="310" text-anchor="middle">本轮可见工作集</text>
+  </g>
+<g>
+    <rect class="shadow" x="516" y="220" width="310" height="156"/>
+    <rect class="box" x="510" y="214" width="310" height="156"/>
+    <text class="title" x="665" y="256" text-anchor="middle">Ledger</text>
+    <text class="note" x="665" y="292" text-anchor="middle">目标 / 约束 / 已验证证据</text>
+    <text class="note" x="665" y="318" text-anchor="middle">任务状态 / 候选记录</text>
+  </g>
+<g>
+    <rect class="shadow" x="1028" y="154" width="228" height="92"/>
+    <rect class="box" x="1022" y="148" width="228" height="92"/>
+    <text class="title" x="1136" y="190" text-anchor="middle">Compact 事务</text>
+    <text class="note" x="1136" y="226" text-anchor="middle">压缩低价值细节</text>
+  </g>
+<g>
+    <rect class="shadow" x="1028" y="322" width="228" height="92"/>
+    <rect class="box" x="1022" y="316" width="228" height="92"/>
+    <text class="title" x="1136" y="358" text-anchor="middle">Recovery Anchor</text>
+    <text class="note" x="1136" y="394" text-anchor="middle">保存一致恢复点</text>
+  </g>
+<g>
+    <rect class="shadow" x="562" y="520" width="288" height="82"/>
+    <rect class="box" x="556" y="514" width="288" height="82"/>
+    <text class="title" x="700" y="556" text-anchor="middle">恢复执行</text>
+    <text class="note" x="700" y="592" text-anchor="middle">中断后继续</text>
+  </g>
+<path class="line" d="M 364 278 L 510 278"/>
+<path class="line" d="M 820 244 L 1022 194"/>
+<path class="line" d="M 820 324 L 1022 362"/>
+<path class="line" d="M 1136 408 L 700 514"/>
+<path class="line" d="M 700 514 L 246 324"/>
+<g>
+    <rect class="shadow" x="296" y="618" width="820" height="72"/>
+    <rect class="light" x="290" y="612" width="820" height="72"/>
+    <text class="label" x="700" y="655" text-anchor="middle">Ledger 保存长期状态，Compact 与 Recovery Anchor 支撑长任务继续推进</text>
+  </g>
+</svg>

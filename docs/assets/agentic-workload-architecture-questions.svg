@@ -1,83 +1,64 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">五类体系结构问题</title>
-  <desc id="desc">以教材式关系图展示第一章引出的五类 Agent CPU 基础体系结构问题。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">第一章引出的五类基础体系结构问题</title>
+  <desc id="desc">以灰阶教材框图展示控制流表示、状态管理、调度与资源分配、推测与回滚、可验证性五类问题与 Agent CPU 的关系。</desc>
   <defs>
     <marker id="arrow-q" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
     </marker>
     <style>
       .bg { fill: #fff; }
-      .shadow { fill: #999; }
-      .box { fill: #ececec; stroke: #4a4a4a; stroke-width: 2; }
+      .shadow { fill: #9a9a9a; }
+      .box { fill: #efefef; stroke: #4a4a4a; stroke-width: 2; }
       .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-q); }
-      .label { font: 700 26px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
-      .body { font: 400 20px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
-      .small { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
-      .num { font: 700 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #fff; }
+      .title { font: 400 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .label { font: 400 22px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .note { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
     </style>
   </defs>
 
-  <rect class="bg" width="1600" height="900"/>
+  <rect class="bg" width="1400" height="780"/>
 
   <g>
-    <rect class="shadow" x="625" y="350" width="356" height="112"/>
-    <rect class="box" x="618" y="343" width="356" height="112"/>
-    <text class="label" x="796" y="392" text-anchor="middle">Agent CPU</text>
-    <text class="body" x="796" y="430" text-anchor="middle">体系结构问题空间</text>
+    <rect class="shadow" x="546" y="300" width="308" height="94"/>
+    <rect class="box" x="540" y="294" width="308" height="94"/>
+    <text class="title" x="694" y="340" text-anchor="middle">Agent CPU</text>
+    <text class="note" x="694" y="372" text-anchor="middle">体系结构问题空间</text>
   </g>
 
   <g>
-    <circle cx="275" cy="202" r="34" fill="#666"/>
-    <text class="num" x="275" y="211" text-anchor="middle">1</text>
-    <rect class="shadow" x="331" y="144" width="310" height="114"/>
-    <rect class="box" x="324" y="137" width="310" height="114"/>
-    <text class="label" x="479" y="184" text-anchor="middle">控制流表示</text>
-    <text class="small" x="479" y="221" text-anchor="middle">检索、调用、验证、提交</text>
-    <text class="small" x="479" y="247" text-anchor="middle">如何成为可调度执行单元</text>
+    <rect class="shadow" x="188" y="104" width="286" height="102"/>
+    <rect class="box" x="182" y="98" width="286" height="102"/>
+    <text class="label" x="325" y="144" text-anchor="middle">控制流表示</text>
+    <text class="note" x="325" y="176" text-anchor="middle">检索、调用、验证如何成为</text>
+    <text class="note" x="325" y="200" text-anchor="middle">可调度执行单元</text>
+
+    <rect class="shadow" x="926" y="104" width="286" height="102"/>
+    <rect class="box" x="920" y="98" width="286" height="102"/>
+    <text class="label" x="1063" y="144" text-anchor="middle">状态管理</text>
+    <text class="note" x="1063" y="176" text-anchor="middle">上下文、记忆、工具结果如何</text>
+    <text class="note" x="1063" y="200" text-anchor="middle">分层组织与清理</text>
+
+    <rect class="shadow" x="188" y="520" width="286" height="102"/>
+    <rect class="box" x="182" y="514" width="286" height="102"/>
+    <text class="label" x="325" y="560" text-anchor="middle">推测与回滚</text>
+    <text class="note" x="325" y="592" text-anchor="middle">错误路径与外部副作用如何</text>
+    <text class="note" x="325" y="616" text-anchor="middle">恢复与撤回</text>
+
+    <rect class="shadow" x="557" y="612" width="286" height="102"/>
+    <rect class="box" x="551" y="606" width="286" height="102"/>
+    <text class="label" x="694" y="652" text-anchor="middle">可验证性</text>
+    <text class="note" x="694" y="684" text-anchor="middle">来源、权限、轨迹、结果校验</text>
+
+    <rect class="shadow" x="926" y="520" width="304" height="102"/>
+    <rect class="box" x="920" y="514" width="304" height="102"/>
+    <text class="label" x="1072" y="560" text-anchor="middle">调度与资源分配</text>
+    <text class="note" x="1072" y="592" text-anchor="middle">CPU、GPU、NPU、网络、存储</text>
+    <text class="note" x="1072" y="616" text-anchor="middle">如何协同并权衡成本</text>
   </g>
 
-  <g>
-    <circle cx="1315" cy="202" r="34" fill="#666"/>
-    <text class="num" x="1315" y="211" text-anchor="middle">2</text>
-    <rect class="shadow" x="971" y="144" width="310" height="114"/>
-    <rect class="box" x="964" y="137" width="310" height="114"/>
-    <text class="label" x="1119" y="184" text-anchor="middle">状态管理</text>
-    <text class="small" x="1119" y="221" text-anchor="middle">上下文、长期记忆、工具结果</text>
-    <text class="small" x="1119" y="247" text-anchor="middle">应如何分层放置与清理</text>
-  </g>
-
-  <g>
-    <circle cx="1315" cy="690" r="34" fill="#666"/>
-    <text class="num" x="1315" y="699" text-anchor="middle">3</text>
-    <rect class="shadow" x="971" y="634" width="330" height="114"/>
-    <rect class="box" x="964" y="627" width="330" height="114"/>
-    <text class="label" x="1129" y="674" text-anchor="middle">调度与资源分配</text>
-    <text class="small" x="1129" y="711" text-anchor="middle">CPU、GPU、NPU、网络、存储</text>
-    <text class="small" x="1129" y="737" text-anchor="middle">之间如何权衡延迟、吞吐与成本</text>
-  </g>
-
-  <g>
-    <circle cx="275" cy="690" r="34" fill="#666"/>
-    <text class="num" x="275" y="699" text-anchor="middle">4</text>
-    <rect class="shadow" x="331" y="634" width="320" height="114"/>
-    <rect class="box" x="324" y="627" width="320" height="114"/>
-    <text class="label" x="484" y="674" text-anchor="middle">推测与回滚</text>
-    <text class="small" x="484" y="711" text-anchor="middle">错误路径如何撤回，</text>
-    <text class="small" x="484" y="737" text-anchor="middle">外部副作用如何处理</text>
-  </g>
-
-  <g>
-    <circle cx="800" cy="812" r="34" fill="#666"/>
-    <text class="num" x="800" y="821" text-anchor="middle">5</text>
-    <rect class="shadow" x="603" y="706" width="394" height="114"/>
-    <rect class="box" x="596" y="699" width="394" height="114"/>
-    <text class="label" x="793" y="746" text-anchor="middle">可验证性</text>
-    <text class="small" x="793" y="783" text-anchor="middle">来源标注、权限控制、执行轨迹、结果校验</text>
-  </g>
-
-  <path class="line" d="M 634 250 C 670 280 700 315 720 343"/>
-  <path class="line" d="M 964 250 C 930 278 900 313 874 343"/>
-  <path class="line" d="M 964 627 C 930 590 895 540 865 455"/>
-  <path class="line" d="M 644 627 C 676 590 708 542 735 455"/>
-  <path class="line" d="M 793 699 L 793 455"/>
+  <path class="line" d="M 468 192 C 530 230 580 262 610 294"/>
+  <path class="line" d="M 920 192 C 860 228 814 260 782 294"/>
+  <path class="line" d="M 468 514 C 530 478 576 434 616 388"/>
+  <path class="line" d="M 920 514 C 860 478 814 434 770 388"/>
+  <path class="line" d="M 694 606 L 694 388"/>
 </svg>
