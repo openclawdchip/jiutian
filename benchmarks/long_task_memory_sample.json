@@ -1,0 +1,289 @@
+{
+  "schema": "jiutian.benchmark.long_task_memory.v0.1",
+  "name": "long_task_memory_small_001",
+  "description": "长期任务记忆小规模样例，覆盖 compact 前后、ledger delta、context projection 与 recovery anchor。",
+  "config": {
+    "host_bytes": 262144,
+    "cluster_bytes": 131072,
+    "spm_bytes": 65536,
+    "token_budget": 12000,
+    "max_refs": 16
+  },
+  "transcript_windows": [
+    {
+      "id": "tw:0001",
+      "range": {"start_turn": 1, "end_turn": 5},
+      "state": "before_compact",
+      "parent_window": null,
+      "summary": "用户要求只补 benchmark 示例和数据，不修改模拟器核心。已确认工作目录和现有 benchmark 入口。",
+      "turn_refs": ["turn:1", "turn:2", "turn:3", "turn:4", "turn:5"]
+    },
+    {
+      "id": "tw:0002",
+      "range": {"start_turn": 6, "end_turn": 8},
+      "state": "after_compact",
+      "parent_window": "tw:0001",
+      "compact": {
+        "id": "compact:0001",
+        "input_window": "tw:0001",
+        "output_window": "tw:0002",
+        "kept_refs": ["goal:g:001", "plan:p:002", "artifact:benchmarks:readme", "trace:t:014"],
+        "dropped_from_projection": ["artifact:old-note:001"],
+        "retained_in_ledger": ["artifact:old-note:001"]
+      },
+      "summary": "compact 后保留目标、禁止事项、当前计划和最近证据，继续生成长期任务记忆 benchmark 样例。",
+      "turn_refs": ["turn:6", "turn:7", "turn:8"]
+    }
+  ],
+  "ledgers": {
+    "goal": {
+      "version": "goal:7",
+      "entries": [
+        {
+          "id": "goal:g:001",
+          "text": "创建或完善 benchmarks 下的长期任务记忆 benchmark 文档和输入样例。",
+          "constraints": [
+            "不修改 simulator 核心实现。",
+            "不回滚其他线程的改动。",
+            "不写入禁用来源字样。"
+          ]
+        }
+      ]
+    },
+    "plan": {
+      "version": "plan:13",
+      "steps": [
+        {"id": "plan:p:001", "text": "检查 benchmarks 目录。", "status": "done"},
+        {"id": "plan:p:002", "text": "补充长期任务记忆 benchmark 文档。", "status": "active"},
+        {"id": "plan:p:003", "text": "补充 JSON 输入样例并校验格式。", "status": "pending"}
+      ]
+    },
+    "evidence": {
+      "version": "evidence:21",
+      "entries": [
+        {"id": "artifact:benchmarks:readme", "kind": "file_preview", "path": "benchmarks/README.md", "sha256": "preview-sha256-001"},
+        {"id": "artifact:spec:apu-ir", "kind": "file_preview", "path": "specs/apu-ir-v0.1.md", "sha256": "preview-sha256-002"},
+        {"id": "trace:t:014", "kind": "tool_trace", "summary": "读取 benchmark 入口和长期记忆任务字段。"}
+      ]
+    },
+    "decision": {
+      "version": "decision:5",
+      "entries": [
+        {
+          "id": "decision:d:001",
+          "summary": "新增 benchmark 数据文件而不是修改模拟器核心。",
+          "evidence": ["goal:g:001", "artifact:benchmarks:readme"]
+        }
+      ]
+    },
+    "recovery": {
+      "version": "recovery:4",
+      "entries": [
+        {
+          "id": "recovery:r:001",
+          "last_safe_point": "trace:t:014",
+          "dirty_state": ["benchmarks/long_task_memory.md", "benchmarks/long_task_memory_sample.json"],
+          "next_action": "校验 JSON 格式并扫描禁用词。"
+        }
+      ]
+    }
+  },
+  "artifact_previews": [
+    {
+      "id": "artifact:benchmarks:readme",
+      "path": "benchmarks/README.md",
+      "kind": "markdown_preview",
+      "allowed": "summary_only",
+      "summary": "benchmark 目录说明已有通用报告字段。"
+    },
+    {
+      "id": "artifact:spec:apu-ir",
+      "path": "specs/apu-ir-v0.1.md",
+      "kind": "markdown_preview",
+      "allowed": "summary_only",
+      "summary": "APU-IR 草案包含 context_projection、ledger_delta_extract 和 recovery_anchor_select。"
+    },
+    {
+      "id": "artifact:docs:methodology",
+      "path": "docs/benchmark-methodology.md",
+      "kind": "markdown_preview",
+      "allowed": "summary_only",
+      "summary": "长期任务记忆报告需要记录 compact 次数、ledger 版本、delta 数量、投影引用和恢复测试。"
+    }
+  ],
+  "ir": {
+    "version": "0.1",
+    "name": "long_task_memory_small_001",
+    "memory": [
+      {"name": "transcript_window", "space": "host", "base": 0, "bytes": 32768, "access": "read", "kind": "transcript"},
+      {"name": "artifact_previews", "space": "host", "base": 32768, "bytes": 32768, "access": "read", "kind": "artifact_preview"},
+      {"name": "goal_ledger", "space": "host", "base": 65536, "bytes": 8192, "access": "read", "kind": "ledger", "ledger_type": "goal"},
+      {"name": "plan_ledger", "space": "host", "base": 73728, "bytes": 8192, "access": "read", "kind": "ledger", "ledger_type": "plan"},
+      {"name": "evidence_ledger", "space": "host", "base": 81920, "bytes": 8192, "access": "read", "kind": "ledger", "ledger_type": "evidence"},
+      {"name": "decision_ledger", "space": "host", "base": 90112, "bytes": 8192, "access": "read", "kind": "ledger", "ledger_type": "decision"},
+      {"name": "recovery_ledger", "space": "host", "base": 98304, "bytes": 8192, "access": "read", "kind": "ledger", "ledger_type": "recovery"},
+      {"name": "ledger_delta_out", "space": "host", "base": 131072, "bytes": 32768, "access": "write", "kind": "candidate"},
+      {"name": "context_out", "space": "host", "base": 163840, "bytes": 32768, "access": "write", "kind": "projection"},
+      {"name": "recovery_candidate_out", "space": "host", "base": 196608, "bytes": 32768, "access": "write", "kind": "candidate"}
+    ],
+    "tasks": [
+      {
+        "name": "extract_ledger_delta",
+        "placement": {"cluster": 0, "core": 0},
+        "capabilities": ["transcript_window", "artifact_previews", "goal_ledger", "plan_ledger", "evidence_ledger", "decision_ledger", "recovery_ledger", "ledger_delta_out"],
+        "budget": {"cycles": 4000, "spm_bytes": 65536, "cluster_bytes": 131072, "max_refs": 16, "max_ledger_delta_bytes": 32768},
+        "op_class": "ledger_delta_extract",
+        "ledger_delta": {
+          "base_versions": {
+            "goal": "goal:7",
+            "plan": "plan:13",
+            "evidence": "evidence:21",
+            "decision": "decision:5",
+            "recovery": "recovery:4"
+          },
+          "inputs": ["transcript_window", "artifact_previews"],
+          "output": "ledger_delta_out"
+        },
+        "program": []
+      },
+      {
+        "name": "pack_next_context",
+        "placement": {"cluster": 0, "core": 1},
+        "capabilities": ["goal_ledger", "plan_ledger", "evidence_ledger", "decision_ledger", "recovery_ledger", "context_out"],
+        "budget": {"cycles": 2000, "spm_bytes": 65536, "cluster_bytes": 65536, "max_refs": 16},
+        "op_class": "context_projection",
+        "projection": {
+          "token_budget": 12000,
+          "include": ["active_goal", "current_phase", "pending_steps", "recent_evidence", "last_safe_point"],
+          "output": "context_out"
+        },
+        "program": []
+      },
+      {
+        "name": "select_recovery_anchor",
+        "placement": {"cluster": 0, "core": 2},
+        "capabilities": ["transcript_window", "artifact_previews", "goal_ledger", "plan_ledger", "evidence_ledger", "decision_ledger", "recovery_ledger", "recovery_candidate_out"],
+        "budget": {"cycles": 2000, "spm_bytes": 32768, "cluster_bytes": 65536, "max_refs": 16},
+        "op_class": "recovery_anchor_select",
+        "recovery": {
+          "strategy": "minimal_replay",
+          "include": ["latest_clean_diff", "last_valid_check", "active_goal"],
+          "output": "recovery_candidate_out"
+        },
+        "program": []
+      }
+    ]
+  },
+  "expected_outputs": {
+    "ledger_delta": {
+      "schema": "jiutian.ledger_delta.v0.1",
+      "task": "extract_ledger_delta",
+      "base_versions": {
+        "goal": "goal:7",
+        "plan": "plan:13",
+        "evidence": "evidence:21",
+        "decision": "decision:5",
+        "recovery": "recovery:4"
+      },
+      "deltas": [
+        {
+          "ledger": "plan",
+          "op": "mark_done",
+          "path": "/steps/1",
+          "evidence": ["artifact:benchmarks:readme", "trace:t:014"]
+        },
+        {
+          "ledger": "plan",
+          "op": "replace_summary",
+          "path": "/steps/2",
+          "value": "长期任务记忆 benchmark 文档已生成候选内容。",
+          "evidence": ["turn:7", "artifact:docs:methodology"]
+        },
+        {
+          "ledger": "evidence",
+          "op": "append",
+          "value": {"id": "artifact:benchmark:memory-doc", "path": "benchmarks/long_task_memory.md", "kind": "file_preview"},
+          "evidence": ["turn:7"]
+        },
+        {
+          "ledger": "evidence",
+          "op": "append",
+          "value": {"id": "artifact:benchmark:memory-json", "path": "benchmarks/long_task_memory_sample.json", "kind": "file_preview"},
+          "evidence": ["turn:8"]
+        },
+        {
+          "ledger": "decision",
+          "op": "append",
+          "value": {
+            "summary": "benchmark 样例保持为离线数据契约，避免触碰模拟器核心。",
+            "evidence": ["goal:g:001", "decision:d:001"]
+          },
+          "evidence": ["goal:g:001", "decision:d:001"]
+        },
+        {
+          "ledger": "recovery",
+          "op": "append",
+          "value": {
+            "id": "recovery:r:002",
+            "last_safe_point": "trace:t:020",
+            "resume_from": {"compact": "compact:0001", "window": "tw:0002"},
+            "next_action": "运行 JSON 解析和禁用词扫描。"
+          },
+          "evidence": ["trace:t:020", "artifact:benchmark:memory-json"]
+        }
+      ]
+    },
+    "context_projection": {
+      "schema": "jiutian.context_projection.v0.1",
+      "goal": "完善 benchmarks 下长期任务记忆 benchmark 文档和输入样例。",
+      "current_phase": "校验样例数据并记录使用说明。",
+      "active_evidence": [
+        {"ref": "goal:g:001", "reason": "当前用户目标和约束。"},
+        {"ref": "artifact:benchmarks:readme", "reason": "benchmark 入口需要索引新增样例。"},
+        {"ref": "artifact:spec:apu-ir", "reason": "三个记忆 op_class 的字段来源。"},
+        {"ref": "artifact:docs:methodology", "reason": "长期任务记忆报告指标。"},
+        {"ref": "recovery:r:001", "reason": "compact 后的恢复点。"}
+      ],
+      "rejected_paths": [
+        "不修改 simulator 核心实现。",
+        "不读取未授权 artifact 正文。",
+        "不把候选 delta 直接提交到长期 ledger。"
+      ],
+      "next_actions": [
+        "解析 JSON 样例。",
+        "扫描新增文件中的禁用词。",
+        "列出修改文件和使用说明。"
+      ],
+      "budget": {"tokens": 12000, "refs": 16}
+    },
+    "recovery_anchor": {
+      "schema": "jiutian.recovery_anchor.v0.1",
+      "id": "recovery:r:002",
+      "strategy": "minimal_replay",
+      "resume_from": {
+        "compact": "compact:0001",
+        "transcript_window": "tw:0002",
+        "ledger_versions": {
+          "goal": "goal:7",
+          "plan": "plan:13",
+          "evidence": "evidence:21",
+          "decision": "decision:5",
+          "recovery": "recovery:4"
+        },
+        "trace": "trace:t:020"
+      },
+      "required_refs": ["goal:g:001", "plan:p:002", "artifact:benchmark:memory-doc", "artifact:benchmark:memory-json"],
+      "next_action": "运行 JSON 解析和禁用词扫描。",
+      "deterministic": true
+    }
+  },
+  "metrics_expectation": {
+    "compact_count": 1,
+    "boundary_valid": true,
+    "delta_count_by_ledger": {"goal": 0, "plan": 2, "evidence": 2, "decision": 1, "recovery": 1},
+    "projection_refs": 5,
+    "dropped_refs_retained": 1,
+    "recovery_deterministic": true,
+    "unauthorized_source_count": 0
+  }
+}

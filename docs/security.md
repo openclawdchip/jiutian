@@ -180,6 +180,57 @@ v0.1 不允许 Agent 任务直接任意访问 MMIO。未来如果加入 `mmio_lo
 
 trace 本身也要受预算限制。恶意任务不能通过制造海量 trace 让控制面失去响应。
 
+## 长期记忆安全
+
+长期任务记忆是九天面向 Agent runtime 的关键能力，但它也是安全边界最容易被误解的地方。九天不允许 Agent Domain 直接拥有“记忆所有权”。Agent Domain 只能处理被授权的视图，生成候选 delta；真正的提交、覆盖、删除和持久化必须由 Super Domain 完成。
+
+### 记忆对象的信任分级
+
+| 对象 | 所属域 | Agent Domain 权限 | 风险 |
+| :--- | :--- | :--- | :--- |
+| transcript 原文 | Super Domain | 只读窗口，按 capability 授权 | 泄露用户历史、破坏 parent 链 |
+| artifact 正文 | Super Domain | 默认不可读，需单独授权 | 泄露大型日志、密钥、隐私数据 |
+| artifact preview | Super Domain 生成 | 可读 metadata 和短 preview | 摘要误导、引用错配 |
+| 已提交 ledger | Super Domain | 只读 | 目标篡改、计划污染 |
+| ledger delta 候选 | Agent Domain 生成 | 可写候选区 | 注入错误状态 |
+| ContextProjection | Agent Domain 生成，Super Domain 审核 | 可写候选区 | 把被禁止路径重新带回上下文 |
+
+### 提交规则
+
+长期记忆提交必须遵守：
+
+- Agent Domain 不得直接修改已提交 ledger。
+- 每个 ledger delta 必须携带 `base_version`。
+- 每个关键 delta 必须携带 evidence 引用，不能只给自然语言理由。
+- Super Domain 必须检查 evidence 是否存在、是否在授权范围内、是否与 delta 类型匹配。
+- 如果 compact boundary 与 transcript parent 链不一致，必须拒绝本轮 delta。
+- 如果用户在当前轮修改目标或禁忌约束，旧 projection 必须降级为候选上下文，不能覆盖新目标。
+
+### 隐私与最小暴露
+
+长期记忆任务默认读取 artifact preview，而不是 artifact 正文。只有当 preview 不足以判断状态时，Super Domain 才能授权读取正文片段。
+
+推荐策略：
+
+- trace 记录 hash、引用、大小和 reason code，默认不记录完整正文。
+- SPM 中处理过的 transcript 片段和 artifact preview 在任务结束后清理。
+- ledger 中保存证据引用和短摘要，不复制大型原始内容。
+- ContextProjection 只包含下一步需要的最小工作视图。
+
+### 记忆污染防护
+
+Agent 可能因为模型幻觉、错误工具输出或恶意输入产生错误 delta。九天需要把这种错误限制为“候选状态”，而不是立刻污染长期记忆。
+
+防护规则：
+
+- 对 `GoalLedger` 的修改优先级最高，必须能回指用户消息或控制面确认。
+- 对 `PlanLedger` 的 `mark_done` 必须能回指工具结果、测试结果或人工确认。
+- 对 `EvidenceLedger` 的新增必须引用真实 artifact、trace 或文件片段。
+- 对 `DecisionLedger` 的拒绝路径必须说明原因和证据。
+- 对 `RecoveryLedger` 的恢复点必须通过可解析性检查。
+
+如果上述检查失败，Super Domain 应拒绝提交，并把失败写入 trace。Agent 可以重新生成 delta，但不能绕过审核。
+
 ## 与模拟器的关系
 
 模拟器是安全模型的第一条可执行规格。任何安全规则如果不能在模拟器里表达，就不应急着进入 RTL。

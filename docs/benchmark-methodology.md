@@ -101,6 +101,28 @@ Agent 在多个工具、状态和约束之间做高并发调度的逻辑。
 - compact 前后 transcript 链可恢复性。
 - session memory delta 提取的误删率和重复率。
 
+### 场景 B3：长任务账本更新与断点恢复
+
+输入是一段跨越多个 compact boundary 的长任务事件流，包括用户目标修正、工具调用、文件修改、测试输出、失败重试、被拒绝方案和子 Agent 结果。目标是验证九天能否在模型上下文被压缩后，仍然恢复出正确的当前任务状态。
+
+九天路径：
+
+1. Super Domain 提供 transcript window、artifact preview、已提交 ledger 版本和 compact boundary。
+2. Agent Domain 执行 `ledger_delta_extract`，生成 Goal/Plan/Evidence/Decision/Recovery 的候选 delta。
+3. Agent Domain 执行 `recovery_anchor_select`，选择最小可恢复证据集。
+4. Agent Domain 执行 `context_budget_pack`，生成下一轮 `ContextProjection`。
+5. Super Domain 审核 delta、提交 ledger，并把投影送回模型。
+
+指标：
+
+- compact 后当前阶段恢复准确率。
+- 已完成步骤误删率。
+- 被拒绝方案重复尝试率。
+- evidence ref 可解析率。
+- recovery anchor 可恢复率。
+- 每 1000 条工具事件的 ledger delta 生成延迟。
+- projection 在固定 token 预算下保留关键约束的比例。
+
 ### 场景 C：权限规则与危险命令预筛
 
 输入是 shell、文件写入、网络或 MCP 调用 descriptor。目标是先给出 allow、ask、deny 或 passthrough 建议。
@@ -160,3 +182,14 @@ Agent 在多个工具、状态和约束之间做高并发调度的逻辑。
 - 九天模拟器：验证 Agent plane 执行模型。
 
 等模拟器稳定后，再引入更具体的 CPU/GPU/NPU 对比。
+
+## 长期任务记忆报告格式
+
+涉及长期记忆的 benchmark 还应额外报告：
+
+- compact 次数和每次 compact 前后的 transcript 边界。
+- ledger 基线版本和提交后的版本。
+- Goal/Plan/Evidence/Decision/Recovery 五类 ledger 的 delta 数量。
+- 被投影进上下文的引用数量。
+- 被丢弃但保留在 ledger 中的引用数量。
+- 恢复测试：从任意 compact 后启动，是否能继续执行正确下一步。

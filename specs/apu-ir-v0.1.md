@@ -115,18 +115,43 @@ v0.1 中，APU-IR 的 `program` 可以直接包含 Agent ISA JSON 指令。后�
 - `decision`：路线选择和拒绝理由。
 - `recovery`：last safe point、回滚引用和 dirty state。
 
-### Memory Projection Task
+### Context Budget Pack Task
 
 ```json
 {
   "name": "pack_next_context",
   "placement": {"cluster": 0, "core": 0},
-  "capabilities": ["goal_ledger", "plan_ledger", "evidence_ledger", "context_out"],
-  "budget": {"cycles": 2000, "spm_bytes": 65536, "cluster_bytes": 65536},
-  "op_class": "context_projection",
-  "projection": {
+  "capabilities": [
+    "transcript_window",
+    "goal_ledger_read",
+    "plan_ledger_read",
+    "evidence_ledger_read",
+    "artifact_previews",
+    "context_out"
+  ],
+  "budget": {
+    "cycles": 2000,
+    "spm_bytes": 65536,
+    "cluster_bytes": 65536,
     "token_budget": 50000,
+    "max_refs": 64,
+    "max_sections": 12
+  },
+  "op_class": "context_budget_pack",
+  "context_pack": {
+    "base_versions": {
+      "goal": "goal:12",
+      "plan": "plan:42",
+      "evidence": "evidence:87",
+      "decision": "decision:15",
+      "recovery": "recovery:9"
+    },
+    "inputs": ["transcript_window", "goal_ledger_read", "plan_ledger_read", "evidence_ledger_read", "artifact_previews"],
     "include": ["active_goal", "current_phase", "pending_steps", "recent_evidence", "last_safe_point"],
+    "must_keep": ["active_goal", "user_constraints", "unsafe_to_drop_refs"],
+    "drop_policy": "oldest_low_confidence_first",
+    "ordering": "goal_plan_evidence_recovery",
+    "output_schema": "jiutian.context_projection.v0.1",
     "output": "context_out"
   },
   "program": []
@@ -134,6 +159,116 @@ v0.1 中，APU-IR 的 `program` 可以直接包含 Agent ISA JSON 指令。后�
 ```
 
 该任务只产生模型可见投影和引用列表，不直接改写长期 memory。长期 ledger 的提交由 Super Domain 完成。
+
+字段约束：
+
+- `base_versions`：可选但推荐。出现时必须覆盖被读取的 ledger 类型，并指向已提交版本。
+- `inputs`：只能引用 task capability 中授权的 transcript、ledger 或 artifact preview 区域。
+- `include`：声明允许进入投影的语义段，未知段必须触发 `bad_context_section`。
+- `must_keep`：声明预算不足时仍不可丢弃的语义段。若预算无法容纳，必须触发 `projection_budget_exhausted`。
+- `drop_policy`：v0.1 支持 `oldest_low_confidence_first`、`lowest_priority_first`、`reject_on_overflow`。
+- `ordering`：v0.1 支持 `goal_plan_evidence_recovery` 或 `source_order`。
+- `output_schema`：必须是 `jiutian.context_projection.v0.1`。
+- `output`：必须指向具备 `context_projection_write` 语义的候选输出区。
+
+模拟器可先不执行自然语言压缩，但必须能验证字段、预算和 capability，并在 trace 中记录 `context_budget_pack_start` 与 `context_projection_emit`。
+
+### Ledger Delta Task
+
+```json
+{
+  "name": "extract_ledger_delta",
+  "placement": {"cluster": 0, "core": 1},
+  "capabilities": [
+    "transcript_window",
+    "artifact_previews",
+    "plan_ledger_read",
+    "ledger_delta_out"
+  ],
+  "budget": {
+    "cycles": 4000,
+    "spm_bytes": 65536,
+    "cluster_bytes": 131072,
+    "max_refs": 128,
+    "max_ledger_delta_bytes": 32768
+  },
+  "op_class": "ledger_delta_extract",
+  "ledger_delta": {
+    "schema": "jiutian.ledger_delta.v0.1",
+    "base_versions": {
+      "goal": "goal:12",
+      "plan": "plan:42",
+      "evidence": "evidence:87",
+      "decision": "decision:15",
+      "recovery": "recovery:9"
+    },
+    "inputs": ["transcript_window", "artifact_previews"],
+    "allowed_ledgers": ["goal", "plan", "evidence", "decision", "recovery"],
+    "allowed_ops": ["append", "mark_done", "replace_summary", "add_ref", "drop_candidate"],
+    "require_evidence_for": ["append", "mark_done", "replace_summary", "add_ref"],
+    "conflict_policy": "reject_on_base_mismatch",
+    "output": "ledger_delta_out"
+  },
+  "program": []
+}
+```
+
+该任务生成候选 delta。运行时验证时必须确认：
+
+- `base_versions` 指向已提交 ledger。
+- `output` 只指向候选 delta 区域。
+- 输入 artifact 只能是授权 preview，除非 capability 显式允许正文片段。
+- 每个新增 evidence 必须携带可解析引用。
+- `allowed_ledgers` 只能包含已知 ledger 类型。
+- `allowed_ops` 只能包含 v0.1 版本化操作。
+- `require_evidence_for` 中列出的操作如果没有 evidence，必须触发 `missing_required_evidence`。
+- 候选 delta 大小超过预算时必须触发 `ledger_delta_too_large`，不得截断后继续成功。
+- `conflict_policy` 为 `reject_on_base_mismatch` 时，任何 base version 与提交版本不一致都必须触发 `ledger_base_version_mismatch`。
+
+### Recovery Anchor Task
+
+```json
+{
+  "name": "select_recovery_anchor",
+  "placement": {"cluster": 0, "core": 2},
+  "capabilities": [
+    "trace_window",
+    "artifact_previews",
+    "ledger_read",
+    "recovery_candidate_out"
+  ],
+  "budget": {"cycles": 2000, "spm_bytes": 32768, "cluster_bytes": 65536},
+  "op_class": "recovery_anchor_select",
+  "recovery": {
+    "strategy": "minimal_replay",
+    "base_versions": {
+      "plan": "plan:42",
+      "evidence": "evidence:87",
+      "recovery": "recovery:9"
+    },
+    "inputs": ["trace_window", "artifact_previews", "ledger_read"],
+    "include": ["latest_clean_diff", "last_valid_test", "active_goal"],
+    "required_refs": ["transcript", "trace", "ledger"],
+    "dirty_state_policy": "declare_or_reject",
+    "next_action_policy": "single_deterministic_step",
+    "output": "recovery_candidate_out"
+  },
+  "program": []
+}
+```
+
+恢复点不是普通摘要。它必须能说明从哪个 transcript、artifact、trace 和 ledger 版本恢复，且恢复后下一步动作应保持确定。
+
+字段约束：
+
+- `strategy`：v0.1 支持 `minimal_replay`、`latest_verified`、`manual_checkpoint`。
+- `base_versions`：必须覆盖恢复判断依赖的 ledger 类型。
+- `inputs`：只能引用 task capability 中授权的 trace、artifact preview 或 ledger view。
+- `include`：未知恢复段必须触发 `bad_recovery_section`。
+- `required_refs`：v0.1 支持 `transcript`、`trace`、`artifact`、`ledger`。输出候选缺少必需引用时触发 `missing_recovery_ref`。
+- `dirty_state_policy` 为 `declare_or_reject` 时，存在未提交候选、未验证文件状态或未完成工具结果却未声明，必须触发 `dirty_state_ambiguous`。
+- `next_action_policy` 为 `single_deterministic_step` 时，输出必须给出唯一下一步动作；多分支或空动作触发 `ambiguous_next_action`。
+- `output` 必须指向具备 `recovery_candidate_write` 语义的候选输出区。
 
 ## 8. 验证规则
 
@@ -148,6 +283,15 @@ v0.1 中，APU-IR 的 `program` 可以直接包含 Agent ISA JSON 指令。后�
 - ledger region 缺少 `ledger_type` 或访问权限过大。
 - context projection 输出区域未授权。
 - recovery anchor 指向不存在的 trace 或 artifact。
+- ledger delta 直接写入已提交 ledger 区域。
+- memory projection task 请求未授权 artifact 正文。
+- context projection 中关键判断没有 evidence 或 ledger 回指。
+- `context_budget_pack` 缺少 `budget.token_budget`。
+- `context_budget_pack` 的 `must_keep` 段无法在预算内保留。
+- `ledger_delta_extract` 的 `allowed_ops`、`allowed_ledgers` 或 delta `op` 不在 v0.1 集合内。
+- `ledger_delta_extract` 引用的 `base_versions` 与当前已提交版本不匹配。
+- `recovery_anchor_select` 输出缺少 `transcript`、`trace` 或 `ledger` 等必需恢复引用。
+- `recovery_anchor_select` 不能给出唯一下一步动作。
 
 ## 9. 最小示例
 

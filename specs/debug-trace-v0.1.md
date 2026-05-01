@@ -48,6 +48,17 @@ barrier stage0 release consumer,producer
 | `trap` | task 发生异常 | task, pc, reason, detail |
 | `deadlock` | 调度器检测到不可释放等待 | waiting_tasks |
 | `halt` | task 正常结束 | task, pc |
+| `ledger_read` | 读取已提交长期任务账本视图 | task, ledger_type, version |
+| `context_budget_pack_start` | 开始生成上下文预算投影 | task, token_budget, max_refs, include |
+| `ledger_delta_emit` | 生成候选账本增量 | task, ledgers, bytes, evidence_refs |
+| `ledger_delta_reject` | 候选账本增量被运行时拒绝 | task, reason, base_versions |
+| `context_projection_emit` | 生成下一轮上下文投影候选 | task, tokens_estimate, refs |
+| `context_projection_reject` | 上下文投影候选被运行时拒绝 | task, reason, tokens_estimate |
+| `artifact_preview_read` | 读取 artifact metadata 或 preview | task, artifact_ref, bytes |
+| `compact_boundary_check` | 检查 compact 边界和 transcript 链 | task, boundary_ref, status |
+| `recovery_anchor_select_start` | 开始选择恢复点候选 | task, strategy, required_refs |
+| `recovery_anchor_emit` | 生成恢复点候选 | task, recovery_ref, evidence_refs |
+| `recovery_anchor_reject` | 恢复点候选被运行时拒绝 | task, reason, missing_refs |
 
 ## 4. 结构化 Trace Schema
 
@@ -111,8 +122,120 @@ trap event 至少包含：
 - `deadlock`
 - `explicit_trap`
 - `misaligned_access`
+- `projection_budget_exhausted`
+- `context_ref_limit_exceeded`
+- `ledger_delta_too_large`
+- `ledger_ref_limit_exceeded`
+- `bad_ledger_type`
+- `bad_ledger_op`
+- `ledger_base_version_mismatch`
+- `missing_required_evidence`
+- `dangling_evidence_ref`
+- `compact_boundary_mismatch`
+- `unauthorized_memory_source`
+- `bad_context_section`
+- `bad_recovery_section`
+- `missing_recovery_ref`
+- `dirty_state_ambiguous`
+- `ambiguous_next_action`
+- `recovery_candidate_too_large`
+- `recovery_ref_limit_exceeded`
 
-## 6. 调试控制
+## 6. 长期记忆事件 detail
+
+长期记忆事件必须只记录可审计元数据，不默认记录大段正文。
+
+### `context_budget_pack_start`
+
+```json
+{
+  "event": "context_budget_pack_start",
+  "task": "pack_next_context",
+  "detail": {
+    "token_budget": 50000,
+    "max_refs": 64,
+    "include": ["active_goal", "current_phase", "pending_steps"],
+    "must_keep": ["active_goal", "user_constraints"],
+    "base_versions": {"goal": "goal:12", "plan": "plan:42"}
+  }
+}
+```
+
+### `context_projection_emit`
+
+```json
+{
+  "event": "context_projection_emit",
+  "task": "pack_next_context",
+  "detail": {
+    "output": "context_out",
+    "schema": "jiutian.context_projection.v0.1",
+    "tokens_estimate": 42000,
+    "token_budget": 50000,
+    "refs": 32,
+    "dropped_candidates": 7,
+    "base_versions": {"goal": "goal:12", "plan": "plan:42"}
+  }
+}
+```
+
+### `ledger_delta_emit`
+
+```json
+{
+  "event": "ledger_delta_emit",
+  "task": "extract_ledger_delta",
+  "detail": {
+    "output": "ledger_delta_out",
+    "schema": "jiutian.ledger_delta.v0.1",
+    "base_versions": {"plan": "plan:42", "evidence": "evidence:87"},
+    "ledgers": ["plan", "decision"],
+    "ops": ["mark_done", "append"],
+    "bytes": 8192,
+    "evidence_refs": ["trace:seq:188", "artifact:test-log:sha256:abcd"]
+  }
+}
+```
+
+### `recovery_anchor_emit`
+
+```json
+{
+  "event": "recovery_anchor_emit",
+  "task": "select_recovery_anchor",
+  "detail": {
+    "output": "recovery_candidate_out",
+    "schema": "jiutian.recovery_anchor.v0.1",
+    "strategy": "minimal_replay",
+    "recovery_ref": "recovery-candidate:0",
+    "refs": {
+      "transcript": "transcript:turn:19",
+      "trace": "trace:seq:188",
+      "ledger": ["plan:42", "evidence:87"]
+    },
+    "dirty_state": "clean",
+    "next_action_kind": "run_test"
+  }
+}
+```
+
+### `*_reject`
+
+拒绝类事件的 `detail` 至少包含：
+
+```json
+{
+  "reason": "ledger_base_version_mismatch",
+  "message": "plan base version is stale",
+  "output": "ledger_delta_out",
+  "base_versions": {"plan": "plan:41"},
+  "current_versions": {"plan": "plan:42"}
+}
+```
+
+`reason` 必须来自 Trap 记录中的 reason 集合。拒绝类事件可以与 `trap` 同时出现；如果 task 因候选无效而终止，必须同时写入 `trap`。
+
+## 7. 调试控制
 
 后续硬件或 runtime 应提供以下调试控制能力：
 
@@ -140,7 +263,7 @@ trap event 至少包含：
 
 读取 task 状态、pc、寄存器摘要、budget 剩余值和等待对象。
 
-## 7. Trace 与 Benchmark
+## 8. Trace 与 Benchmark
 
 benchmark 结果应能关联 trace：
 
@@ -150,10 +273,31 @@ benchmark 结果应能关联 trace：
 - waiting 步数。
 - trap 次数。
 - task 完成数。
+- ledger delta 数量和大小。
+- context projection 的引用数和预算使用率。
+- context projection 被拒绝次数与拒绝原因分布。
+- artifact preview 读取次数与正文读取请求次数。
+- compact boundary 检查成功率。
+- recovery anchor 数量和可解析率。
+- recovery anchor 被拒绝次数与拒绝原因分布。
 
 这些指标可以作为早期能耗 proxy 和瓶颈分析依据。
 
-## 8. 兼容性规则
+## 9. 长期记忆 Trace 约束
+
+长期记忆 trace 的目标不是泄露完整用户内容，而是让恢复和审计可解释。推荐规则：
+
+- trace 中记录引用、hash、byte size 和 reason code，默认不记录大型正文。
+- `ledger_delta_emit` 必须包含 `base_versions` 和 `evidence_refs` 摘要。
+- `context_budget_pack_start` 必须记录 token 预算、引用预算、include 和 must_keep 摘要。
+- `context_projection_emit` 必须记录 token 预算估计、实际引用数和被丢弃候选数。
+- `ledger_delta_reject`、`context_projection_reject` 和 `recovery_anchor_reject` 必须记录 reason code。
+- `compact_boundary_check` 必须能说明 parent 链是否连续。
+- `recovery_anchor_emit` 必须能指向可恢复的 transcript、artifact、trace 或 ledger 位置。
+- `recovery_anchor_emit` 必须记录 `dirty_state` 和 `next_action_kind`，用于判断恢复后动作是否确定。
+- 如果 trace 因隐私策略被裁剪，必须保留可诊断的 event id 和错误原因。
+
+## 10. 兼容性规则
 
 一旦 trace schema 进入版本化状态，应遵守：
 
@@ -162,7 +306,7 @@ benchmark 结果应能关联 trace：
 - 新增字段放入 `detail` 或作为可选顶层字段。
 - 工具必须忽略未知字段。
 
-## 9. v0.1 到 v0.2 的演进
+## 11. v0.1 到 v0.2 的演进
 
 建议下一步：
 
@@ -171,3 +315,4 @@ benchmark 结果应能关联 trace：
 - 增加 trace summary。
 - 增加 benchmark counters。
 - 增加 deadlock 诊断详情。
+- 增加长期记忆投影任务的 trace counters。

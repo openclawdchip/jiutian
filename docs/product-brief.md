@@ -61,9 +61,11 @@ Agent 任务经常访问小块、不连续、生命周期明确的数据。九�
 
 ### 长期任务记忆
 
-Claude Code 类 Agent 的共同短板是长任务执行到上下文窗口上限后，compact 会丢失结构化进度，导致重复探索甚至从头开始。九天把长期任务状态拆成目标、计划、证据、决策和恢复账本，由控制面持久化，由 Agent 执行面高速生成下一轮上下文投影。
+长任务 Agent 的共同短板是任务执行到上下文窗口上限后，compact 可能丢失结构化进度，导致重复探索甚至从头开始。九天把长期任务状态拆成目标、计划、证据、决策和恢复账本，由控制面持久化，由 Agent 执行面高速生成下一轮上下文投影。
 
 这让 Agent 不再依赖模型记住全部历史，而是每一轮都从可审计 ledger 恢复当前目标、已完成步骤、关键证据、失败路径和下一步动作。
+
+v0.1 对长期记忆的定位是规格闭环先行：Agent 执行面只生成候选 ledger delta、artifact preview 引用、context projection 和 recovery anchor；控制面保留 transcript、artifact 正文、已提交 ledger 和最终提交权。这样可以把长期记忆路径保持为无外部副作用的可验证任务，而不是把任意文件或历史记录交给生成代码直接修改。
 
 ## 技术组成
 
@@ -101,7 +103,10 @@ Agent cluster 内共享的近端 SRAM，用于任务之间的中间结果交换�
 - barrier 阻塞与释放。
 - capability 检查。
 - SPM、Cluster SRAM 和 host memory 模型。
+- 同步 DMA 搬运、trap、字符串 trace 和结果导出。
 - 单元测试。
+
+这构成 v0.1 的模拟器最小闭环：从 APU-IR 输入，到任务准入、授权检查、指令执行、显式数据搬运、同步、异常和 trace，再到可检查的输出。它不是周期精确模型，也不是完整外设或长期记忆实现；ledger、artifact、context projection 和 recovery anchor 目前主要由规格定义，后续按 coverage 矩阵逐步进入模拟器和 benchmark。
 
 最快运行：
 
@@ -116,8 +121,8 @@ python -m unittest discover simulator
 
 1. 先定义概念和术语。
 2. 再定义 specs。
-3. 用 simulator 验证语义。
-4. 用 benchmark 识别结构性优势。
+3. 用 simulator 跑通最小语义闭环。
+4. 用 trace 和 benchmark 识别结构性优势与规格过度复杂之处。
 5. 语义稳定后进入 RTL。
 
 这种路线避免过早把不成熟语义硬化进硬件。

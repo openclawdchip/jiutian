@@ -1,0 +1,85 @@
+{
+  "version": "0.1",
+  "name": "long_memory_loop",
+  "config": {
+    "host_bytes": 16384,
+    "cluster_bytes": 1024,
+    "spm_bytes": 1024
+  },
+  "host_init": [
+    {
+      "addr": 0,
+      "text": "[{\"kind\":\"goal\",\"text\":\"目标: 实现 simulator 最小长期记忆闭环\"},{\"kind\":\"plan\",\"text\":\"计划: 先实现 ledger delta, 再选择 recovery anchor\"},{\"kind\":\"evidence\",\"text\":\"测试: python -m unittest discover simulator\"},{\"kind\":\"decision\",\"text\":\"决定: 高层任务只写 candidate/projection 输出, 不提交 ledger\"},{\"kind\":\"recovery\",\"text\":\"恢复: last safe point 是现有 copy_add 和 cluster_barrier 通过\"}]"
+    },
+    {
+      "addr": 2048,
+      "text": "[{\"kind\":\"evidence\",\"text\":\"file: simulator/jiutian_sim.py\"},{\"kind\":\"evidence\",\"text\":\"file: simulator/examples/long_memory_loop.json\"}]"
+    },
+    {
+      "addr": 3072,
+      "text": "[{\"text\":\"clean test baseline before high-level task\"},{\"text\":\"safe recovery uses candidate ledger delta only\"}]"
+    }
+  ],
+  "dump_regions": [
+    {"name": "ledger_delta", "addr": 4096, "bytes": 4096},
+    {"name": "recovery_anchor", "addr": 8192, "bytes": 2048},
+    {"name": "context_projection", "addr": 10240, "bytes": 4096}
+  ],
+  "memory": [
+    {"name": "transcript_window", "space": "host", "base": 0, "bytes": 2048, "access": "read"},
+    {"name": "artifact_previews", "space": "host", "base": 2048, "bytes": 1024, "access": "read"},
+    {"name": "trace_window", "space": "host", "base": 3072, "bytes": 1024, "access": "read"},
+    {"name": "ledger_delta_out", "space": "host", "base": 4096, "bytes": 4096, "access": "read_write", "kind": "candidate_delta"},
+    {"name": "recovery_candidate_out", "space": "host", "base": 8192, "bytes": 2048, "access": "read_write", "kind": "candidate_recovery"},
+    {"name": "context_out", "space": "host", "base": 10240, "bytes": 4096, "access": "write", "kind": "context_projection"}
+  ],
+  "barriers": [],
+  "tasks": [
+    {
+      "name": "extract_ledger_delta",
+      "placement": {"cluster": 0, "core": 0},
+      "capabilities": ["transcript_window", "artifact_previews", "ledger_delta_out"],
+      "budget": {"cycles": 64, "spm_bytes": 1024, "cluster_bytes": 0},
+      "op_class": "ledger_delta_extract",
+      "ledger_delta": {
+        "base_versions": {
+          "goal": "goal:0",
+          "plan": "plan:0",
+          "evidence": "evidence:0",
+          "decision": "decision:0",
+          "recovery": "recovery:0"
+        },
+        "inputs": ["transcript_window", "artifact_previews"],
+        "output": "ledger_delta_out"
+      },
+      "program": []
+    },
+    {
+      "name": "select_recovery_anchor",
+      "placement": {"cluster": 0, "core": 1},
+      "capabilities": ["ledger_delta_out", "trace_window", "recovery_candidate_out"],
+      "budget": {"cycles": 64, "spm_bytes": 1024, "cluster_bytes": 0},
+      "op_class": "recovery_anchor_select",
+      "recovery": {
+        "strategy": "minimal_replay",
+        "inputs": ["ledger_delta_out", "trace_window"],
+        "max_anchors": 2,
+        "output": "recovery_candidate_out"
+      },
+      "program": []
+    },
+    {
+      "name": "pack_next_context",
+      "placement": {"cluster": 0, "core": 2},
+      "capabilities": ["ledger_delta_out", "recovery_candidate_out", "context_out"],
+      "budget": {"cycles": 64, "spm_bytes": 1024, "cluster_bytes": 0},
+      "op_class": "context_budget_pack",
+      "projection": {
+        "byte_budget": 1200,
+        "inputs": ["ledger_delta_out", "recovery_candidate_out"],
+        "output": "context_out"
+      },
+      "program": []
+    }
+  ]
+}

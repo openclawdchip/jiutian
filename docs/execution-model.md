@@ -106,6 +106,52 @@ Claude Code 类 Agent runtime 的 memory 体系把“历史”拆成 transcript�
 
 这些任务只产生引用、摘要候选、排序、风险标记和 trace。长期 memory 文件、transcript JSONL 和 artifact 全文的最终写入仍由 Super Domain 完成。
 
+### 长任务闭环
+
+长任务执行不是一次性 task，而是多轮 `DigitalTurn`、工具调用和 compact 组成的闭环。九天把这个闭环拆为四个阶段：
+
+1. **事件采集**：Super Domain 记录用户消息、工具调用、工具结果、diff、测试、子 Agent 输出和 compact boundary。
+2. **结构提取**：Agent Domain 在授权窗口中提取 goal、plan、evidence、decision 和 recovery 的候选 delta。
+3. **状态提交**：Super Domain 审核 delta，提交 ledger 新版本，并把大型内容保留为 artifact 引用。
+4. **上下文投影**：Agent Domain 在预算内生成下一轮 `ContextProjection`，Super Domain 审核后交给模型。
+
+这使得模型上下文只承担“下一步工作台”的角色。任务真实状态由 ledger、artifact、transcript 和 trace 共同承担。
+
+```text
+DigitalTurn N
+  ToolUse / ExecutionResult / diff / test log
+      |
+      v
+memory_projection tasks
+  ledger_delta_extract
+  recovery_anchor_select
+  context_budget_pack
+      |
+      v
+Super Domain commit
+  ledger version N+1
+  artifact refs
+  compact boundary
+      |
+      v
+DigitalTurn N+1
+  ContextProjection + active evidence
+```
+
+### Compact 事务语义
+
+compact 不应被视为普通摘要，而应被视为一次状态事务。一次 compact 至少包含：
+
+- 输入 transcript 范围。
+- 输入 ledger 基线版本。
+- artifact preview 集合。
+- 输出 ledger delta。
+- 输出 `ContextProjection`。
+- recovery anchor。
+- trace event。
+
+如果任一关键输出不可验证，Super Domain 可以只提交 transcript boundary，不提交 ledger delta。这样 compact 失败不会污染长期记忆。
+
 ## 任务状态机
 
 v0.1 任务状态如下：
@@ -243,5 +289,6 @@ trace 不是附属功能，而是验证 Agent 原生执行模型是否成立的�
 - 每个 trap 都能映射到规格中的错误类型。
 - DMA 和 barrier 的 trace 足以复现执行顺序。
 - 文档中的调度规则与 `simulator/jiutian_sim.py` 行为一致。
+- 长任务路径能表达 ledger delta、context projection 和 recovery anchor。
 
 这个模型足以支撑早期 benchmark 和架构讨论，也为后续异步 DMA、NoC 延迟和 RTL 固化保留空间。

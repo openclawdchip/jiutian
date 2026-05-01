@@ -52,13 +52,16 @@ python simulator\jiutian_sim.py simulator\examples\copy_add.json
 python -m unittest discover simulator
 ```
 
-当前仓库优先保证 v0.1 功能模型可运行、规格可讨论、trace 可解释。完整硬件实现将在语义稳定后推进。
+当前仓库优先保证 v0.1 功能模型可运行、规格可讨论、trace 可解释。v0.1 第一版不是完整芯片实现，而是一个可执行的参考语义闭环：APU-IR JSON 输入、运行时准入、capability 检查、任务调度、Agent ISA 执行、SPM/Cluster SRAM/host memory 数据搬运、barrier 同步、trap/trace 和结果导出。完整硬件实现将在语义稳定后推进。
+
+长期任务记忆是 v0.1 的一等工作负载方向，但在当前阶段按“规格先行、模拟器逐步覆盖”推进。规格层已经定义 ledger view、artifact preview、ledger delta、context projection 和 recovery anchor 的边界；当前模拟器先覆盖无外部副作用的最小执行闭环，后续再把长期记忆投影任务纳入结构化 trace 与 benchmark。
 
 ## 文档导航
 
 - 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
 - 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
 - 技术博客：[`docs/blog-agent-long-term-memory.md`](docs/blog-agent-long-term-memory.md)
+- 教材草案：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 - 数据手册：[`docs/datasheet.md`](docs/datasheet.md)
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
 - 环境要求：[`docs/environment.md`](docs/environment.md)
@@ -70,6 +73,7 @@ python -m unittest discover simulator
 - 最小外设模型：[`specs/peripheral-model-v0.1.md`](specs/peripheral-model-v0.1.md)
 - 模拟器指南：[`docs/simulator-guide.md`](docs/simulator-guide.md)
 - 实现覆盖矩阵：[`specs/v0.1/implementation-coverage.md`](specs/v0.1/implementation-coverage.md)
+- 发布说明与 v0.1 检查清单：[`docs/release-notes.md`](docs/release-notes.md)
 - 测试组织：[`docs/testcase-organization.md`](docs/testcase-organization.md)
 - Trace 与波形：[`docs/waveform-and-trace.md`](docs/waveform-and-trace.md)
 - 故障排查：[`docs/troubleshooting.md`](docs/troubleshooting.md)
@@ -98,6 +102,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `docs/` - 架构说明与设计依据。
 - `docs/product-brief.md` - 产品简介。
 - `docs/blog-agent-long-term-memory.md` - Agent 长期任务记忆技术博客。
+- `docs/textbook-agent-cpu-architecture.md` - 《Agent CPU 体系结构：基于多智能体方法的深度解析》教材草案。
 - `docs/datasheet.md` - v0.1 数据手册。
 - `docs/documentation-map.md` - 文档地图。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。
@@ -110,6 +115,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `docs/configuration-flow.md` - 配置与生成流程。
 - `docs/simulator-guide.md` - 模拟器使用说明。
 - `docs/testcase-organization.md` - 测试用例组织。
+- `docs/release-notes.md` - 发布说明与 v0.1 发布检查清单。
 - `specs/` - 版本化架构规格。
 - `specs/isa-v0.1.md` - Agent ISA v0.1 参考语义。
 - `specs/apu-ir-v0.1.md` - APU-IR v0.1 任务图格式。
@@ -146,15 +152,12 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 
 ## 当前状态
 
-本仓库处于架构种子阶段。第一个里程碑是一个可模拟的 v0.1 最小架构：
+本仓库处于架构种子阶段。第一个里程碑是一个可模拟、可测试、可解释的 v0.1 最小架构，而不是一次性完成全规模硬件。第一版目标分为两层：
 
-- 1-2 个超大核。
-- 8-16 个 Agent 核。
-- 每核 Scratchpad Memory。
-- 共享 Cluster SRAM。
-- 显式 DMA 与 Barrier。
-- APU-IR 原型。
-- 面向 Agentic 逻辑工作负载的 benchmark 框架。
+- 已可运行的模拟器最小闭环：APU-IR 示例、任务调度、SPM/Cluster SRAM/host memory、同步 DMA、barrier、capability 检查、trap、字符串 trace、结果导出和单元测试。
+- 规格层锁定的 v0.1 架构目标：1-2 个超大核、8-16 个 Agent 核、每核 Scratchpad Memory、共享 Cluster SRAM、显式 DMA 与 Barrier、APU-IR 契约、长期记忆投影语义和面向 Agentic 逻辑工作负载的 benchmark 框架。
+
+长期记忆闭环的第一版目标是：Super Domain 维护已提交 ledger、artifact 正文和最终权限；Agent Domain 只读取授权视图，生成候选 ledger delta、context projection、artifact preview 引用和 recovery anchor；提交、写文件、写 transcript 等真实副作用仍由 Super Domain 审核执行。
 
 ## 项目信息
 

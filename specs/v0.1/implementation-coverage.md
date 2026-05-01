@@ -30,8 +30,23 @@
 | memory | 已实现 | memory region 与 capability 来源 |
 | barriers | 已实现 | barrier 参与者声明 |
 | tasks | 已实现 | 任务列表 |
-| host_init | 已实现 | 初始化 host memory |
+| host_init | 已实现 | 支持 64-bit word、UTF-8 text 与 byte list 初始化 host memory |
 | dump_words | 已实现 | 输出指定地址结果 |
+| dump_regions | 已实现 | 输出 host 文本区域，供长期记忆候选结果校验 |
+| ledger_versions/evidence_refs | 部分实现 | 作为长期记忆高层任务的输入元数据 |
+
+## 长期任务记忆覆盖
+
+| 能力 | 状态 | 说明 |
+|---|---|---|
+| ledger_delta_extract | 已实现 | 从授权 transcript/artifact preview region 提取 goal/plan/evidence/decision/recovery 候选 delta |
+| recovery_anchor_select | 已实现 | 从授权 trace、artifact 或 candidate delta region 选择候选恢复点 |
+| context_budget_pack/context_projection | 已实现 | 在 byte/token 预算内生成下一轮上下文投影 |
+| candidate-only 安全边界 | 已实现 | 高层任务只写候选输出区，不修改 ledger_versions |
+| 输出 region 边界 | 已实现 | JSON payload 超出 region 时写入截断标记或触发 overflow trap |
+| evidence 强校验 | 部分实现 | 模拟器保留来源与引用结构；离线校验器会检查 benchmark 期望 delta 的 evidence 可解析 |
+| 长期记忆离线校验器 | 已实现 | `tools/validate_long_task_memory.py` 校验 benchmark 契约样例 |
+| Super Domain 提交流程 | 未实现 | 当前模拟器不执行 ledger commit，只模拟 Agent Domain 候选输出 |
 
 ## 未实现或待增强
 
