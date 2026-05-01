@@ -83,6 +83,8 @@ Agent CPU Architecture
 
 ## 第 1 章 Agentic Workload 的出现
 
+![第 1 章插图：从线性程序执行到 Agentic workload 循环](assets/agentic-workload-chapter-01.png)
+
 ### 本章导读
 
 计算机体系结构的发展，常常由新的工作负载推动。数值计算推动了早期算术部件和存储系统的发展，互联网服务推动了并发、缓存和 I/O 设计，深度学习推动了 GPU 与 NPU 的广泛使用。今天，智能体系统正在形成一种新的工作负载形态：系统围绕一个目标持续观察环境、调用工具、更新状态、选择下一步行动，并在多轮之后交付结果。本章把这种形态称为 Agentic workload。
