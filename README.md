@@ -45,6 +45,24 @@ NoC 直接表达数据流和执行意图。
 
 深入阅读：[`docs/whitepaper.md`](docs/whitepaper.md)
 
+## 教材：Agent CPU 体系结构
+
+![《Agent CPU 体系结构》教材封面](docs/assets/agent-cpu-textbook-cover.png)
+
+《Agent CPU 体系结构：基于多智能体方法的深度解析》是九天项目同步维护的第一版讲义草案，面向计算机体系结构、芯片设计、Agent 系统、编译器、操作系统和 AI 基础设施方向的研究者与工程师。
+
+这本教材把 Agent 生成代码视为新的体系结构研究对象：它不再只讨论传统程序如何在 CPU 上执行，而是讨论任务目标、证据链、工具调用、长期记忆、上下文投影、恢复点和副作用控制如何成为硬件、运行时与编译器共同管理的执行状态。
+
+教材正文分为五篇：
+
+- 学科基础：定义 Agentic workload，以及 Agent CPU 与 CPU、GPU、NPU 的边界。
+- 机器定义：讨论 Super Domain、Agent Domain、任务模型、APU-IR、Memory/NoC。
+- 运行时闭环：讨论任务型 Agent、工具调用、长期记忆、安全和恢复。
+- 架构映射：从 ISA、Cache、ROB、Branch Prediction 和 benchmark 方法映射到 Agent CPU。
+- 方法与实践：定义 benchmark、验证、课程实验和九天 APU v0.1 最小闭环。
+
+阅读入口：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
+
 ## 当前可运行路径
 
 ```powershell
