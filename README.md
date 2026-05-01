@@ -61,7 +61,9 @@ NoC 直接表达数据流和执行意图。
 - 架构映射：从 ISA、Cache、ROB、Branch Prediction 和 benchmark 方法映射到 Agent CPU。
 - 方法与实践：定义 benchmark、验证、课程实验和九天 APU v0.1 最小闭环。
 
-阅读入口：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
+网页导读：[`docs/textbook-agent-cpu-architecture.html`](docs/textbook-agent-cpu-architecture.html)
+
+完整正文：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 
 ## 当前可运行路径
 
@@ -79,6 +81,7 @@ python -m unittest discover simulator
 - 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
 - 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
 - 技术博客：[`docs/blog-agent-long-term-memory.md`](docs/blog-agent-long-term-memory.md)
+- 教材网页：[`docs/textbook-agent-cpu-architecture.html`](docs/textbook-agent-cpu-architecture.html)
 - 教材草案：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 - 数据手册：[`docs/datasheet.md`](docs/datasheet.md)
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)

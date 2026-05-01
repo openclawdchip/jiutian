@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent CPU 体系结构 | 九天 APU 教材</title>
+  <meta name="description" content="《Agent CPU 体系结构：基于多智能体方法的深度解析》九天 APU 在线教材导读页。">
+  <style>
+    :root {
+      --ink: #171513;
+      --paper: #f7f3ec;
+      --paper-deep: #ebe3d7;
+      --carbon: #252728;
+      --steel: #596066;
+      --line: rgba(23, 21, 19, 0.16);
+      --gold: #b98b45;
+      --gold-soft: #ead7ae;
+      --red: #a41622;
+      --red-deep: #671019;
+      --mist: rgba(255, 255, 255, 0.76);
+      --max: 1180px;
+      --serif: "Noto Serif SC", "Songti SC", "SimSun", Georgia, serif;
+      --sans: "LXGW WenKai", "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(185, 139, 69, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(23, 21, 19, 0.05) 1px, transparent 1px),
+        var(--paper);
+      background-size: 56px 56px, 56px 56px, auto;
+      font-family: var(--sans);
+      line-height: 1.75;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      z-index: 10;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--red), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: end;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(9, 9, 8, 0.82), rgba(9, 9, 8, 0.42) 46%, rgba(9, 9, 8, 0.14)),
+        linear-gradient(0deg, rgba(9, 9, 8, 0.82), rgba(9, 9, 8, 0.08) 44%),
+        url("assets/agent-cpu-textbook-cover.png") center right / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, transparent 0 28%, rgba(234, 215, 174, 0.32) 28.2%, transparent 29%),
+        linear-gradient(45deg, transparent 0 64%, rgba(255, 255, 255, 0.2) 64.2%, transparent 65%);
+      mix-blend-mode: screen;
+    }
+
+    .hero-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 92px 0 64px;
+      position: relative;
+      z-index: 1;
+      color: #fffaf1;
+    }
+
+    .seal {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 4px 12px;
+      background: var(--red);
+      color: #fff;
+      border-left: 4px solid var(--gold-soft);
+      font: 700 14px/1 var(--sans);
+    }
+
+    .hero h1 {
+      margin: 24px 0 14px;
+      max-width: 780px;
+      font-family: var(--serif);
+      font-size: clamp(54px, 10vw, 118px);
+      line-height: 0.96;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(23px, 4vw, 42px);
+      line-height: 1.18;
+    }
+
+    .hero-copy {
+      max-width: 710px;
+      margin: 30px 0 0;
+      color: rgba(255, 250, 241, 0.88);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .button.primary {
+      background: #fffaf1;
+      color: var(--red-deep);
+      border-color: #fffaf1;
+    }
+
+    .page-nav {
+      position: sticky;
+      top: 0;
+      z-index: 8;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 243, 236, 0.88);
+      backdrop-filter: blur(16px);
+    }
+
+    .page-nav-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .page-nav a {
+      flex: 0 0 auto;
+      padding: 15px 0 13px;
+      color: var(--carbon);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    main {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .footer-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 76px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-kicker {
+      margin: 0 0 10px;
+      color: var(--red);
+      font: 800 13px/1 var(--mono);
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0 0 22px;
+      font-family: var(--serif);
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.08;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: 25px;
+      line-height: 1.28;
+    }
+
+    .lead {
+      max-width: 830px;
+      margin: 0;
+      color: #3e3a34;
+      font-size: 20px;
+      line-height: 1.85;
+    }
+
+    .definition-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 42px;
+      align-items: start;
+    }
+
+    .quote-panel {
+      border-top: 4px solid var(--red);
+      background: rgba(255, 255, 255, 0.48);
+      padding: 28px;
+      box-shadow: 0 24px 70px rgba(37, 39, 40, 0.12);
+    }
+
+    .quote-panel p {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 26px;
+      line-height: 1.55;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .pill {
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.52);
+      color: var(--carbon);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .part-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .part {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(235, 227, 215, 0.72));
+    }
+
+    .part strong {
+      display: block;
+      color: var(--red);
+      font: 800 13px/1 var(--mono);
+    }
+
+    .part p {
+      margin: 16px 0 0;
+      color: #403d37;
+    }
+
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .chapter {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.5);
+      padding: 22px;
+      min-height: 210px;
+    }
+
+    .chapter .number {
+      color: var(--gold);
+      font: 800 13px/1 var(--mono);
+    }
+
+    .chapter p {
+      color: #48443d;
+      margin: 12px 0 0;
+    }
+
+    .abstraction-band {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+      padding: 34px;
+      background: var(--carbon);
+      color: #fffaf1;
+    }
+
+    .abstraction-band h2,
+    .abstraction-band .section-kicker {
+      color: #fffaf1;
+    }
+
+    .chip-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .chip-item {
+      min-height: 92px;
+      padding: 15px;
+      border: 1px solid rgba(255, 250, 241, 0.16);
+      background:
+        linear-gradient(135deg, rgba(185, 139, 69, 0.22), transparent 52%),
+        rgba(255, 255, 255, 0.04);
+    }
+
+    .chip-item strong {
+      display: block;
+      color: var(--gold-soft);
+      font-size: 18px;
+    }
+
+    .chip-item span {
+      display: block;
+      margin-top: 4px;
+      color: rgba(255, 250, 241, 0.74);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .reading-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 38px;
+      align-items: start;
+    }
+
+    .cover-frame {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.56);
+      padding: 12px;
+      box-shadow: 0 30px 80px rgba(37, 39, 40, 0.16);
+    }
+
+    .cover-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .reader-card {
+      border-left: 5px solid var(--gold);
+      padding: 26px 0 26px 28px;
+    }
+
+    .reader-card p {
+      margin: 0 0 18px;
+      color: #3f3b35;
+      font-size: 18px;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 12px;
+      margin: 28px 0 0;
+    }
+
+    .meta-list div {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-list dt {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .meta-list dd {
+      margin: 0;
+      color: #3f3b35;
+    }
+
+    .footer {
+      padding: 42px 0 58px;
+      color: #4d4840;
+    }
+
+    .footer a {
+      font-weight: 800;
+    }
+
+    @media (max-width: 920px) {
+      .hero {
+        min-height: 88vh;
+        background-position: center;
+      }
+
+      .definition-grid,
+      .abstraction-band,
+      .reading-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .part-grid,
+      .chapter-grid,
+      .chip-list {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hero-inner,
+      main,
+      .page-nav-inner {
+        width: min(100% - 28px, var(--max));
+      }
+
+      .hero h1 {
+        font-size: 50px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .part-grid,
+      .chapter-grid,
+      .chip-list {
+        grid-template-columns: 1fr;
+      }
+
+      .part,
+      .chapter {
+        min-height: auto;
+      }
+
+      .abstraction-band {
+        padding: 24px;
+      }
+
+      .meta-list div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <span class="seal">九天 APU 第一版讲义草案</span>
+      <h1>Agent CPU<br>体系结构</h1>
+      <p class="subtitle">基于多智能体方法的深度解析</p>
+      <p class="hero-copy">一门围绕 Agent 行为、任务流、长期记忆和显式执行状态建立的新体系结构方法。</p>
+      <div class="hero-actions" aria-label="教材阅读入口">
+        <a class="button primary" href="textbook-agent-cpu-architecture.md">阅读全文</a>
+        <a class="button" href="#chapters">浏览目录</a>
+        <a class="button" href="../README.md">返回项目首页</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="page-nav" aria-label="页面导航">
+    <div class="page-nav-inner">
+      <a href="#discipline">学科定义</a>
+      <a href="#structure">本书结构</a>
+      <a href="#chapters">章节导读</a>
+      <a href="#abstractions">七个抽象</a>
+      <a href="#reading">阅读方式</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="discipline">
+      <p class="section-kicker">Discipline</p>
+      <div class="definition-grid">
+        <div>
+          <h2>为什么需要一门新学科</h2>
+          <p class="lead">AI Agent 出现后，计算系统中出现了一类新的执行对象：由 Agent 围绕目标即时生成、即时验证、即时执行、即时回收的短生命周期逻辑。它们由任务流、证据链、工具调用图和状态变换共同组成。</p>
+          <div class="pill-row" aria-label="研究主题">
+            <span class="pill">Agentic Workload</span>
+            <span class="pill">APU-IR</span>
+            <span class="pill">长期任务记忆</span>
+            <span class="pill">Candidate Commit</span>
+            <span class="pill">Recovery Anchor</span>
+            <span class="pill">Trace</span>
+          </div>
+        </div>
+        <aside class="quote-panel">
+          <p>Agent CPU 体系结构学研究 Agent 生成的代码如何表达为可验证、可调度、可恢复的执行对象。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="structure">
+      <p class="section-kicker">Book Structure</p>
+      <h2>五篇结构</h2>
+      <p class="lead">教材从学科定义出发，逐步进入机器、运行时、传统架构映射和工程方法，目标是把“会回答”推进为“受约束、可检查、可改进地执行”。</p>
+      <div class="part-grid">
+        <article class="part">
+          <div>
+            <strong>PART I</strong>
+            <h3>学科基础</h3>
+            <p>定义 Agentic workload，解释 Agent CPU 与 CPU、GPU、NPU 的边界。</p>
+          </div>
+          <span>Chapter 1-2</span>
+        </article>
+        <article class="part">
+          <div>
+            <strong>PART II</strong>
+            <h3>机器定义</h3>
+            <p>讨论 Super Domain、Agent Domain、任务模型、APU-IR、Memory/NoC。</p>
+          </div>
+          <span>Chapter 3-5</span>
+        </article>
+        <article class="part">
+          <div>
+            <strong>PART III</strong>
+            <h3>运行时闭环</h3>
+            <p>讨论任务型 Agent、工具调用、长期记忆、安全边界和断点恢复。</p>
+          </div>
+          <span>Chapter 6-8</span>
+        </article>
+        <article class="part">
+          <div>
+            <strong>PART IV</strong>
+            <h3>架构映射</h3>
+            <p>从 ISA、Cache、ROB、Branch Prediction 到 Agent CPU 设计方法。</p>
+          </div>
+          <span>Chapter 9-13</span>
+        </article>
+        <article class="part">
+          <div>
+            <strong>PART V</strong>
+            <h3>方法与实践</h3>
+            <p>定义 benchmark、验证、课程实验和九天 APU v0.1 最小闭环。</p>
+          </div>
+          <span>Methods</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="chapters">
+      <p class="section-kicker">Selected Chapters</p>
+      <h2>章节导读</h2>
+      <div class="chapter-grid">
+        <article class="chapter">
+          <span class="number">01</span>
+          <h3>Agentic Workload 的出现</h3>
+          <p>从传统程序模型出发，说明目标、上下文、行动选择和反馈更新如何构成新的工作负载。</p>
+        </article>
+        <article class="chapter">
+          <span class="number">03</span>
+          <h3>双域架构</h3>
+          <p>把系统拆分为 Super Domain 与 Agent Domain，让治理、权限和执行吞吐各归其位。</p>
+        </article>
+        <article class="chapter">
+          <span class="number">04</span>
+          <h3>APU-IR</h3>
+          <p>把 Agent 意图、任务图、预算、权限和 trace 变成可检查的软硬件契约。</p>
+        </article>
+        <article class="chapter">
+          <span class="number">07</span>
+          <h3>长期任务记忆</h3>
+          <p>区分上下文与记忆，定义 ledger、compact 事务、artifact preview 和恢复锚点。</p>
+        </article>
+        <article class="chapter">
+          <span class="number">11</span>
+          <h3>Candidate Commit</h3>
+          <p>借鉴 ROB 提交思想，把 Agent 侧输出约束为候选结果，由 Super Domain 审核提交。</p>
+        </article>
+        <article class="chapter">
+          <span class="number">13</span>
+          <h3>Agentic Benchmark</h3>
+          <p>把工作负载、证据链、恢复质量和长期记忆一致性纳入体系结构评价语言。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="abstractions" class="abstraction-band">
+      <div>
+        <p class="section-kicker">Core Abstractions</p>
+        <h2>七个基本抽象</h2>
+        <p>任务启动执行，证据提供支撑，投影塑造视图，权限和预算形成边界，trace 保留过程，候选提交给出可审查结果。</p>
+      </div>
+      <div class="chip-list">
+        <div class="chip-item"><strong>任务</strong><span>为什么做，怎样算完成。</span></div>
+        <div class="chip-item"><strong>证据</strong><span>凭什么判断，如何被检查。</span></div>
+        <div class="chip-item"><strong>投影</strong><span>当前任务需要看见什么。</span></div>
+        <div class="chip-item"><strong>权限</strong><span>哪些动作被允许，哪些需要审核。</span></div>
+        <div class="chip-item"><strong>预算</strong><span>资源如何分配，何时收束。</span></div>
+        <div class="chip-item"><strong>Trace</strong><span>过程如何复盘，失败如何定位。</span></div>
+        <div class="chip-item"><strong>候选提交</strong><span>结果如何进入可审查状态。</span></div>
+      </div>
+    </section>
+
+    <section id="reading">
+      <p class="section-kicker">Read Online</p>
+      <div class="reading-layout">
+        <figure class="cover-frame">
+          <img src="assets/agent-cpu-textbook-cover.png" alt="《Agent CPU 体系结构：基于多智能体方法的深度解析》教材封面">
+        </figure>
+        <div class="reader-card">
+          <h2>在线阅读</h2>
+          <p>这版网页是教材的导读页，适合分享、索引和建立第一印象。完整正文继续保留在 Markdown 中，方便后续持续编辑、章节重排和版本化审阅。</p>
+          <p><a class="button primary" href="textbook-agent-cpu-architecture.md">打开完整教材 Markdown</a></p>
+          <dl class="meta-list">
+            <div>
+              <dt>书名</dt>
+              <dd>Agent CPU 体系结构：基于多智能体方法的深度解析</dd>
+            </div>
+            <div>
+              <dt>版本</dt>
+              <dd>第一版讲义草案</dd>
+            </div>
+            <div>
+              <dt>对象</dt>
+              <dd>计算机体系结构、芯片设计、Agent 系统、编译器、操作系统、AI 基础设施方向的研究者与工程师</dd>
+            </div>
+            <div>
+              <dt>项目</dt>
+              <dd>九天 APU，一个面向 Agentic workload 的开源 Agent 原生处理器架构项目</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>九天 APU / Agent CPU Architecture. 返回 <a href="../README.md">项目首页</a> 或阅读 <a href="whitepaper.md">九天 APU 白皮书</a>。</p>
+    </div>
+  </footer>
+
+  <script>
+    const progress = document.querySelector(".progress");
+    const updateProgress = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = max > 0 ? window.scrollY / max : 0;
+      progress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+    };
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+  </script>
+</body>
+</html>

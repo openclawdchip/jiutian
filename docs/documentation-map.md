@@ -7,6 +7,7 @@
 - `README.md`：项目首页、对标叙事、最快运行路径。
 - `docs/product-brief.md`：面向新读者的产品简介，说明 v0.1 第一版目标、模拟器最小闭环和长期记忆闭环边界。
 - `docs/blog-agent-long-term-memory.md`：面向 Agent 长任务记忆问题的技术博客。
+- `docs/textbook-agent-cpu-architecture.html`：《Agent CPU 体系结构》教材网页导读页。
 - `docs/textbook-agent-cpu-architecture.md`：Agent CPU 体系结构学科定义与教材草案。
 - `docs/datasheet.md`：v0.1 数据手册。
 - `docs/whitepaper.md`：完整架构叙事与技术主张。
