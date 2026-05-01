@@ -58,6 +58,7 @@ python -m unittest discover simulator
 
 - 快速开始：[`docs/quick-start.md`](docs/quick-start.md)
 - 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
+- 技术博客：[`docs/blog-agent-long-term-memory.md`](docs/blog-agent-long-term-memory.md)
 - 数据手册：[`docs/datasheet.md`](docs/datasheet.md)
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
 - 环境要求：[`docs/environment.md`](docs/environment.md)
@@ -96,6 +97,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 
 - `docs/` - 架构说明与设计依据。
 - `docs/product-brief.md` - 产品简介。
+- `docs/blog-agent-long-term-memory.md` - Agent 长期任务记忆技术博客。
 - `docs/datasheet.md` - v0.1 数据手册。
 - `docs/documentation-map.md` - 文档地图。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。

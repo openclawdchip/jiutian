@@ -83,8 +83,59 @@ v0.1 中，APU-IR 的 `program` 可以直接包含 Agent ISA JSON 指令。后�
 - `scatter_gather`
 - `prefetch_hint`
 - `task_spawn`
+- `memory_header_scan`
+- `artifact_preview_pack`
+- `context_budget_pack`
+- `ledger_delta_extract`
+- `recovery_anchor_select`
 
-## 7. 验证规则
+## 7. 长期记忆扩展草案
+
+为了支持 Claude Code 类 Agent 的长期任务，APU-IR 后续需要能表达“记忆账本”投影任务。v0.1 不要求模拟器实现这些高级操作，但字段命名和任务模型应保持兼容。
+
+### Ledger Region
+
+```json
+{
+  "name": "plan_ledger",
+  "space": "host",
+  "base": 4096,
+  "bytes": 8192,
+  "access": "read_write",
+  "kind": "ledger",
+  "ledger_type": "plan"
+}
+```
+
+`ledger_type` 可取：
+
+- `goal`：目标、成功标准、禁止事项。
+- `plan`：阶段、步骤、依赖和完成状态。
+- `evidence`：文件、命令、测试、工具结果的引用。
+- `decision`：路线选择和拒绝理由。
+- `recovery`：last safe point、回滚引用和 dirty state。
+
+### Memory Projection Task
+
+```json
+{
+  "name": "pack_next_context",
+  "placement": {"cluster": 0, "core": 0},
+  "capabilities": ["goal_ledger", "plan_ledger", "evidence_ledger", "context_out"],
+  "budget": {"cycles": 2000, "spm_bytes": 65536, "cluster_bytes": 65536},
+  "op_class": "context_projection",
+  "projection": {
+    "token_budget": 50000,
+    "include": ["active_goal", "current_phase", "pending_steps", "recent_evidence", "last_safe_point"],
+    "output": "context_out"
+  },
+  "program": []
+}
+```
+
+该任务只产生模型可见投影和引用列表，不直接改写长期 memory。长期 ledger 的提交由 Super Domain 完成。
+
+## 8. 验证规则
 
 运行时必须拒绝以下 IR：
 
@@ -94,8 +145,11 @@ v0.1 中，APU-IR 的 `program` 可以直接包含 Agent ISA JSON 指令。后�
 - 预算缺失。
 - 指令引用不存在的 label。
 - 未知 op。
+- ledger region 缺少 `ledger_type` 或访问权限过大。
+- context projection 输出区域未授权。
+- recovery anchor 指向不存在的 trace 或 artifact。
 
-## 8. 最小示例
+## 9. 最小示例
 
 ```json
 {
