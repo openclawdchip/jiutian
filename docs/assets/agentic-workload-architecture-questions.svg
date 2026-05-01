@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">五类体系结构问题</title>
+  <desc id="desc">以教材式关系图展示第一章引出的五类 Agent CPU 基础体系结构问题。</desc>
+  <defs>
+    <marker id="arrow-q" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <style>
+      .bg { fill: #fff; }
+      .shadow { fill: #999; }
+      .box { fill: #ececec; stroke: #4a4a4a; stroke-width: 2; }
+      .line { fill: none; stroke: #444; stroke-width: 1.8; marker-end: url(#arrow-q); }
+      .label { font: 700 26px "SimSun","Songti SC","Noto Serif SC",serif; fill: #222; }
+      .body { font: 400 20px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .small { font: 400 18px "SimSun","Songti SC","Noto Serif SC",serif; fill: #333; }
+      .num { font: 700 24px "SimSun","Songti SC","Noto Serif SC",serif; fill: #fff; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="900"/>
+
+  <g>
+    <rect class="shadow" x="625" y="350" width="356" height="112"/>
+    <rect class="box" x="618" y="343" width="356" height="112"/>
+    <text class="label" x="796" y="392" text-anchor="middle">Agent CPU</text>
+    <text class="body" x="796" y="430" text-anchor="middle">体系结构问题空间</text>
+  </g>
+
+  <g>
+    <circle cx="275" cy="202" r="34" fill="#666"/>
+    <text class="num" x="275" y="211" text-anchor="middle">1</text>
+    <rect class="shadow" x="331" y="144" width="310" height="114"/>
+    <rect class="box" x="324" y="137" width="310" height="114"/>
+    <text class="label" x="479" y="184" text-anchor="middle">控制流表示</text>
+    <text class="small" x="479" y="221" text-anchor="middle">检索、调用、验证、提交</text>
+    <text class="small" x="479" y="247" text-anchor="middle">如何成为可调度执行单元</text>
+  </g>
+
+  <g>
+    <circle cx="1315" cy="202" r="34" fill="#666"/>
+    <text class="num" x="1315" y="211" text-anchor="middle">2</text>
+    <rect class="shadow" x="971" y="144" width="310" height="114"/>
+    <rect class="box" x="964" y="137" width="310" height="114"/>
+    <text class="label" x="1119" y="184" text-anchor="middle">状态管理</text>
+    <text class="small" x="1119" y="221" text-anchor="middle">上下文、长期记忆、工具结果</text>
+    <text class="small" x="1119" y="247" text-anchor="middle">应如何分层放置与清理</text>
+  </g>
+
+  <g>
+    <circle cx="1315" cy="690" r="34" fill="#666"/>
+    <text class="num" x="1315" y="699" text-anchor="middle">3</text>
+    <rect class="shadow" x="971" y="634" width="330" height="114"/>
+    <rect class="box" x="964" y="627" width="330" height="114"/>
+    <text class="label" x="1129" y="674" text-anchor="middle">调度与资源分配</text>
+    <text class="small" x="1129" y="711" text-anchor="middle">CPU、GPU、NPU、网络、存储</text>
+    <text class="small" x="1129" y="737" text-anchor="middle">之间如何权衡延迟、吞吐与成本</text>
+  </g>
+
+  <g>
+    <circle cx="275" cy="690" r="34" fill="#666"/>
+    <text class="num" x="275" y="699" text-anchor="middle">4</text>
+    <rect class="shadow" x="331" y="634" width="320" height="114"/>
+    <rect class="box" x="324" y="627" width="320" height="114"/>
+    <text class="label" x="484" y="674" text-anchor="middle">推测与回滚</text>
+    <text class="small" x="484" y="711" text-anchor="middle">错误路径如何撤回，</text>
+    <text class="small" x="484" y="737" text-anchor="middle">外部副作用如何处理</text>
+  </g>
+
+  <g>
+    <circle cx="800" cy="812" r="34" fill="#666"/>
+    <text class="num" x="800" y="821" text-anchor="middle">5</text>
+    <rect class="shadow" x="603" y="706" width="394" height="114"/>
+    <rect class="box" x="596" y="699" width="394" height="114"/>
+    <text class="label" x="793" y="746" text-anchor="middle">可验证性</text>
+    <text class="small" x="793" y="783" text-anchor="middle">来源标注、权限控制、执行轨迹、结果校验</text>
+  </g>
+
+  <path class="line" d="M 634 250 C 670 280 700 315 720 343"/>
+  <path class="line" d="M 964 250 C 930 278 900 313 874 343"/>
+  <path class="line" d="M 964 627 C 930 590 895 540 865 455"/>
+  <path class="line" d="M 644 627 C 676 590 708 542 735 455"/>
+  <path class="line" d="M 793 699 L 793 455"/>
+</svg>

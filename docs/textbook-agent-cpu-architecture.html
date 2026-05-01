@@ -116,23 +116,27 @@
 <p>这里的行动可以有多种形式：发起一次模型推理、检索文档、查询数据库、运行程序、调用外部服务、写入中间记忆，或请求人工确认。关键不在某个单独动作，而在这些动作被组织成带反馈的多步决策过程。</p>
 <p>从体系结构角度看，Agentic workload 有几个突出特征。第一，控制流具有动态性，下一步行动常由模型输出和外部观察共同决定。第二，状态具有层次性，短期上下文、长期记忆、工具返回结果、用户约束和安全策略都会影响后续执行。第三，性能指标具有复合性，除了单次推理延迟，还要考虑推理轮数、工具等待、上下文搬运、失败重试和最终质量。第四，正确性依赖过程约束，系统需要在合适步骤中验证事实、维护权限，并保留可追踪的中间状态。</p>
 <p>因此，可以把 Agentic workload 理解为一种以推理为控制核心、以工具和记忆为执行支撑、以多步反馈循环推进目标的工作负载。</p>
+<figure class="chapter-figure"><img src="assets/agentic-workload-definition.png" alt="图 1-1：Agentic workload 的四个基本要素与体系结构特征示意图"><figcaption>图 1-1：Agentic workload 的四个基本要素与体系结构特征</figcaption></figure>
 <h3 id="1-3-贯穿例子-从研究问题到报告草稿">1.3 贯穿例子：从研究问题到报告草稿<a class="anchor" href="#1-3-贯穿例子-从研究问题到报告草稿" aria-label="章节链接">#</a></h3>
 <p>考虑一个学生科研助手。用户给出目标：“比较三种图像分类模型在小样本数据集上的表现，并写出一页报告草稿。”系统接到任务后，首先理解任务边界：三种模型是什么，数据集在哪里，评价指标采用准确率、F1 分数还是训练成本，报告面向课程作业还是实验论文。</p>
 <p>第一轮循环中，系统生成计划：读取实验记录，提取模型名称和指标，检查是否缺少数据，再组织结论。随后它调用数据读取工具，得到若干表格和日志。观察结果显示，其中一个模型缺少 F1 分数。第二轮循环中，系统决定根据混淆矩阵重新计算该指标，于是调用计算工具，并把新指标写回上下文。</p>
 <p>第三轮循环中，系统比较结果。它发现某个模型准确率最高，但训练时间更长；另一个模型准确率略低，却在小样本条件下更稳定。于是系统形成判断：不能只按单一指标排序，应从精度、稳定性和资源消耗三个维度分析。最后，系统生成报告草稿，并检查指标是否一致、结论是否过度推断、篇幅是否符合要求。</p>
 <p>这个例子展示了 Agentic workload 的典型结构。模型推理负责解释目标、制定计划和撰写文本；工具调用负责读取数据和执行计算；记忆状态保存任务约束、中间结果和自检结论；控制循环把这些环节连接起来。若数据完整，系统会直接比较；若数据缺失，系统会补算；若证据不足，系统会回到资料检查阶段。</p>
+<figure class="chapter-figure"><img src="assets/agentic-workload-research-assistant.png" alt="图 1-2：科研助手任务在模型推理、工具调用和记忆状态之间的多轮执行闭环"><figcaption>图 1-2：科研助手任务的多轮执行闭环</figcaption></figure>
 <h3 id="1-4-与-cpu-gpu-npu-的关系">1.4 与 CPU、GPU、NPU 的关系<a class="anchor" href="#1-4-与-cpu-gpu-npu-的关系" aria-label="章节链接">#</a></h3>
 <p>Agentic workload 的出现并不削弱 CPU、GPU 或 NPU 的作用，而是把它们放入更复杂的协作关系中。</p>
 <p>CPU 仍承担通用控制、操作系统调度、工具执行、数据预处理和外部 I/O 管理。智能体循环中有许多分支多、粒度小、依赖外部状态强的步骤，例如发起检索、解析返回结果、维护会话状态和检查权限规则，这些环节通常适合由 CPU 支撑。</p>
 <p>GPU 主要服务于大规模并行计算，尤其是语言模型和多模态模型中的矩阵乘法、注意力计算和批量推理。当系统同时服务大量智能体请求时，GPU 的吞吐、显存容量和互连带宽会直接影响总体效率。</p>
 <p>NPU 面向神经网络推理进行专门优化，强调能效和低延迟。在移动设备、边缘设备和专用服务器中，NPU 可以承担语音识别、意图理解、小模型推理等任务，使部分智能体能力更接近数据产生的位置。</p>
 <p>一次完整的 Agentic workload 可能包含多次模型推理、多次工具调用、多次状态读写和若干次验证。瓶颈可能出现在推理计算，也可能出现在上下文传输、工具等待、存储检索或调度排队。因此，研究它时不能只问哪种处理器更快，还要问不同计算单元如何共同支撑一个多步目标的完成。</p>
+<figure class="chapter-figure"><img src="assets/agentic-workload-cpu-gpu-npu.png" alt="图 1-3：CPU、GPU、NPU 与共享状态平面在 Agentic workload 中的协同分工"><figcaption>图 1-3：CPU、GPU、NPU 在 Agentic workload 中的协同分工</figcaption></figure>
 <h3 id="1-5-新的体系结构问题">1.5 新的体系结构问题<a class="anchor" href="#1-5-新的体系结构问题" aria-label="章节链接">#</a></h3>
 <p>第一个问题是控制流表示。传统 ISA 描述机器可执行的低层操作，而智能体系统中的行动还包括检索、调用、验证和提交等高层步骤。如何把这些行动表示为可调度、可观察、可恢复的执行单元，是新的基础问题。</p>
 <p>第二个问题是状态管理。智能体的状态包括上下文窗口中的短期信息、外部存储中的长期记忆、工具执行产生的临时结果以及权限记录。哪些状态应靠近模型，哪些应进入数据库，哪些应压缩或删除，都会影响性能、成本和可靠性。</p>
 <p>第三个问题是调度与资源分配。一个任务可能在 CPU、GPU、NPU、网络和存储之间不断切换。调度器需要在延迟、吞吐、成本和公平性之间权衡，特别是在多用户共享系统中避免长任务过度占用资源。</p>
 <p>第四个问题是推测与回滚。智能体可能并行尝试几种解决路径，或先假设某条资料有用并展开分析。若后来发现方向错误，系统需要回退到合适状态，丢弃无效中间结果，并处理外部工具带来的副作用。</p>
 <p>第五个问题是可验证性。Agentic workload 的输出质量依赖多步过程。如果某一步引用了错误数据，后续推理可能建立在错误基础上。执行轨迹记录、数据来源标注、工具权限控制和结果校验，都是支撑可靠智能体系统的重要机制。</p>
+<figure class="chapter-figure"><img src="assets/agentic-workload-architecture-questions.png" alt="图 1-4：第一章引出的五类 Agent CPU 基础体系结构问题"><figcaption>图 1-4：第一章引出的五类基础体系结构问题</figcaption></figure>
 <h3 id="1-6-小结">1.6 小结<a class="anchor" href="#1-6-小结" aria-label="章节链接">#</a></h3>
 <p>本章介绍了 Agentic workload 的出现及其基本含义。它以目标为牵引，通过模型推理、工具调用、记忆状态和反馈循环推进任务，是一类多步、动态、状态丰富的计算工作负载。</p>
 <p>从硬件关系看，CPU 处理控制和 I/O，GPU 提供大规模模型算力，NPU 支持高能效推理，系统软件则把这些能力组织成面向目标的执行过程。由此产生的控制流表示、状态管理、调度、推测恢复和可验证性问题，将成为后续讨论 Agent CPU 体系结构的重要出发点。</p>
@@ -145,6 +149,7 @@
 <ol><li>说明可验证性为什么重要，并给出一个中间步骤错误导致最终结果不可靠的例子。</li></ol>
 <hr>
 <h2 id="第-2-章-agent-cpu-的基本抽象">第 2 章 Agent CPU 的基本抽象<a class="anchor" href="#第-2-章-agent-cpu-的基本抽象" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-02-abstractions.png" alt="第 2 章插图：Agent CPU 的七个基本抽象"><figcaption>第 2 章插图：Agent CPU 的七个基本抽象</figcaption></figure>
 <h3 id="2-1-从回答到执行">2.1 从回答到执行<a class="anchor" href="#2-1-从回答到执行" aria-label="章节链接">#</a></h3>
 <p>传统 CPU 处理的是指令流，核心问题是怎样把一条条指令可靠地执行完。Agent CPU 面对的则是任务流：用户给出目标，环境不断变化，资料来源并不总是完整，结果还需要被解释、检查和修正。因此，Agent CPU 的基础不应只理解为若干模块，而应理解为一组能支撑智能执行的抽象。</p>
 <p>本章讨论七个基本抽象：任务、证据、投影、权限、预算、trace 和候选提交。它们对应一条执行链：任务说明为什么做，证据说明凭什么做，投影说明当前看见什么，权限说明能做什么，预算说明花多少资源，trace 说明怎样走到这里，候选提交说明准备交付什么。</p>
@@ -187,6 +192,7 @@
 <ol><li>选择一个日常任务，写出它的目标、上下文、成功条件和当前状态。</li><li>为同一任务列出三条证据，并判断它们的相关性、可靠性和时效性。</li><li>以“选择春游地点”为例，分别构造预算优先、安全优先和教学意义优先的三个投影。</li><li>举例说明“系统有能力做某事”与“系统被授权做某事”的区别。</li><li>为一个两小时写作任务设计预算分配，并说明最容易超出预算的环节。</li><li>写一段简短 trace，记录从任务理解到候选提交的关键步骤。</li><li>比较“草稿”“候选提交”和“最终结果”的区别。为什么开放任务需要候选提交？</li></ol>
 <hr>
 <h2 id="第-3-章-双域架构-super-domain-与-agent-domain">第 3 章 双域架构：Super Domain 与 Agent Domain<a class="anchor" href="#第-3-章-双域架构-super-domain-与-agent-domain" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-03-dual-domain.png" alt="第 3 章插图：Super Domain 与 Agent Domain 的双域架构"><figcaption>第 3 章插图：Super Domain 与 Agent Domain 的双域架构</figcaption></figure>
 <h3 id="3-1-从特权级到双域">3.1 从特权级到双域<a class="anchor" href="#3-1-从特权级到双域" aria-label="章节链接">#</a></h3>
 <p>现代计算机体系结构并不是把所有行为都放在同一个平面上执行。即使在最朴素的处理器中，也会区分普通程序能够做什么、操作系统能够做什么，以及硬件在异常、访存和中断时应当如何接管控制权。传统 CPU 中的用户态与内核态，是这种分层思想最典型的体现：用户态负责应用逻辑，内核态负责资源管理、隔离与仲裁。二者并非对立关系，而是同一台机器上两类职责的自然分工。</p>
 <p>随着计算任务从确定性程序扩展到具备目标理解、工具调用、长程规划和环境交互的智能任务，类似的分层需求再次出现。Agent CPU 面对的不只是“执行一串指令”，还包括“解释一个目标”“选择一组行动”“在不确定反馈中更新计划”。如果所有环节都处于同一控制层，就很难同时满足灵活性、可审计性和安全性。因此，Agent CPU 引入双域架构：Super Domain 与 Agent Domain。</p>
@@ -239,6 +245,7 @@
 <ol><li>结合本章内容，说明为什么双域架构不是削弱 Agent Domain 的能力，而是让其能力更适合在复杂系统中稳定发挥。</li></ol>
 <hr>
 <h2 id="第-4-章-apu-ir-agent-与硬件之间的契约">第 4 章 APU-IR：Agent 与硬件之间的契约<a class="anchor" href="#第-4-章-apu-ir-agent-与硬件之间的契约" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-04-apu-ir.png" alt="第 4 章插图：APU-IR 将 Agent 任务语义映射到硬件"><figcaption>第 4 章插图：APU-IR 将 Agent 任务语义映射到硬件</figcaption></figure>
 <p>在计算机体系结构课程中，指令集体系结构常被称为软件与硬件之间的契约。软件不必知道加法器如何布线、流水线如何旁路、缓存如何替换，只要处理器正确实现指令集，程序便能按约定运行。进入 Agent CPU 的语境后，系统要执行的不再只是单条算术指令或一次内存访问，而是带有目标、上下文、工具调用、权限边界、成本约束和可追溯证据的智能任务。因此，Agent 与底层执行平台之间也需要一种新的契约形式。本章讨论的 APU-IR，就是这种契约的核心表示。</p>
 <p>APU-IR 可以理解为面向 Agent Processing Unit 的中间表示。它不是某种聊天记录格式，也不是把自然语言简单包装成结构化文本；它是一种把“要做什么、可用什么、不能做什么、花费多少、依据何在、执行过程如何留下痕迹”同时表达出来的任务级表示。它使 Agent 的意图能够被编译、调度、审计和硬件加速，也使硬件平台能够在明确边界内执行开放任务。</p>
 <h3 id="4-1-从-isa-到-apu-ir">4.1 从 ISA 到 APU-IR<a class="anchor" href="#4-1-从-isa-到-apu-ir" aria-label="章节链接">#</a></h3>
@@ -306,6 +313,7 @@ trace:
 <ol><li>解释证据和 trace 的区别。请举例说明：一个输出有证据但 trace 不完整时会产生什么问题；一个 trace 完整但证据不足时又会产生什么问题。</li></ol>
 <hr>
 <h2 id="第-5-章-memory-与-noc-从状态到数据移动">第 5 章 Memory 与 NoC：从状态到数据移动<a class="anchor" href="#第-5-章-memory-与-noc-从状态到数据移动" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-05-memory-noc.png" alt="第 5 章插图：Memory 与 NoC 中的显式数据移动"><figcaption>第 5 章插图：Memory 与 NoC 中的显式数据移动</figcaption></figure>
 <p>处理器并不只是在执行指令，也在不断搬运状态。寄存器中的操作数、缓存中的数组元素、片上存储器中的中间块、主存中的对象图，以及外设产生的输入流，都要在恰当的时间到达恰当的计算单元。传统计算机体系结构把这一问题称为内存层次与互连设计；在 Agent CPU 中，它进一步扩展为 ledger、context、artifact 与 trace 等智能体状态的组织、定位、移动与提交。本章从经典内存系统出发，说明 Agent CPU 如何把“数据在哪里”和“数据如何流动”变成体系结构中的一等问题。</p>
 <h3 id="5-1-内存层次的基本动机">5.1 内存层次的基本动机<a class="anchor" href="#5-1-内存层次的基本动机" aria-label="章节链接">#</a></h3>
 <p>理想的存储器应当容量无限、访问立即完成、能耗为零，并且能够被所有计算单元同时使用。现实系统不可能满足这些条件，因此现代处理器采用分层结构：越靠近执行单元，速度越快、容量越小、单位比特成本越高；越靠近外部存储，容量越大、延迟越高、带宽与能耗压力越明显。</p>
@@ -346,6 +354,7 @@ trace:
 <ol><li>说明时间局部性和空间局部性分别如何影响缓存设计。请举出一个普通程序示例和一个智能体上下文访问示例。</li><li>比较缓存与 SPM 的区别。为什么 SPM 适合承载一个推理阶段的固定工作集？</li><li>传统 DMA 描述符通常包含源地址、目的地址和长度。若用于搬运 artifact 或 trace，还应增加哪些字段？说明理由。</li><li>为什么 ledger 流量不宜与普通大块 artifact 搬运完全共享同一优先级？</li><li>假设某候选动作依赖上下文版本 C3 和 artifact 版本 A7，但提交前 ledger 追加了新的约束 L9。设计一个简单的验证流程，判断该候选动作是否可以提交。</li></ol>
 <hr>
 <h2 id="第-6-章-任务型-agent-的执行模型">第 6 章 任务型 Agent 的执行模型<a class="anchor" href="#第-6-章-任务型-agent-的执行模型" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-06-agent-execution.png" alt="第 6 章插图：任务型 Agent 的执行循环"><figcaption>第 6 章插图：任务型 Agent 的执行循环</figcaption></figure>
 <p>任务型 Agent 是一种面向目标展开行动的智能计算结构。它接收任务，理解约束，组织可用信息，调用工具获得新的观察，并在执行过程中持续更新自身状态。与只回答一个问题的系统不同，任务型 Agent 的核心不在于一次性给出文本，而在于把“要达到的结果”转化为一连串可检查、可修正、可推进的行动。</p>
 <p>从体系结构角度看，任务型 Agent 可以被理解为运行在语义层上的执行单元。它既有类似处理器“取指、执行、提交”的节奏，又面对更开放的世界：目标可能含糊，环境可能变化，工具可能失败，观察可能不完整。本章讨论的重点不是某个具体实现，而是任务型 Agent 在一般意义上的执行模型。</p>
 <p>本章将围绕一个贯穿例子展开：某学校希望 Agent 协助教师准备一次“校园节能周”活动方案。任务包括整理活动目标、查找已有资料、拟定日程、生成宣传文案、检查预算约束，并形成一份可交付的计划书。这个例子足够简单，便于观察执行循环；同时又包含目标分解、信息补充、工具使用和状态更新，能够体现任务型 Agent 的典型特征。</p>
@@ -395,6 +404,7 @@ trace:
 <ol><li>说明任务型 Agent 与一次性问答系统的主要区别，并举一个课堂学习场景中的例子。</li><li>在“准备一次班级读书分享会”的任务中，分别写出目标、上下文、工具、观察、计划和状态变化各一项。</li><li>为什么工具调用的返回结果应被看作“观察”，而不应直接等同于“任务完成”？</li><li>选择一个你熟悉的复杂任务，画出至少三轮执行循环，并标明每一轮的状态变化。</li><li>如果 Agent 在执行中发现原计划无法满足预算约束，它应如何调整计划？请用本章的六个要素进行分析。</li></ol>
 <hr>
 <h2 id="第-7-章-长期任务记忆">第 7 章 长期任务记忆<a class="anchor" href="#第-7-章-长期任务记忆" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-07-long-memory.png" alt="第 7 章插图：长期任务记忆、Ledger 与恢复锚点"><figcaption>第 7 章插图：长期任务记忆、Ledger 与恢复锚点</figcaption></figure>
 <h3 id="7-1-上下文与记忆的分工">7.1 上下文与记忆的分工<a class="anchor" href="#7-1-上下文与记忆的分工" aria-label="章节链接">#</a></h3>
 <p>模型上下文是工作台，长期记忆是账本。工作台负责组织本轮推理所需的信息；账本负责保存可恢复、可审计、可追溯的任务状态。</p>
 <p>Agent 长任务需要五类账本：</p>
@@ -413,6 +423,7 @@ trace:
 <ol><li>为什么 <code>DecisionLedger</code> 对长任务很重要？</li><li>给出一个 compact 失败但不污染 ledger 的处理流程。</li><li>设计一个 recovery anchor 的最小字段。</li></ol>
 <hr>
 <h2 id="第-8-章-安全与权限">第 8 章 安全与权限<a class="anchor" href="#第-8-章-安全与权限" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-08-security.png" alt="第 8 章插图：Capability、安全边界与可审计 Trace"><figcaption>第 8 章插图：Capability、安全边界与可审计 Trace</figcaption></figure>
 <h3 id="8-1-agent-生成代码的安全边界">8.1 Agent 生成代码的安全边界<a class="anchor" href="#8-1-agent-生成代码的安全边界" aria-label="章节链接">#</a></h3>
 <p>Agent 生成代码具有明确的安全边界。系统通过 capability、预算、trace 和审核提交，把生成代码限制在可观察、可解释、可恢复的执行范围内。</p>
 <h3 id="8-2-capability">8.2 Capability<a class="anchor" href="#8-2-capability" aria-label="章节链接">#</a></h3>
@@ -435,6 +446,7 @@ trace:
 <hr>
 <h1 id="第四篇-传统体系结构映射">第四篇：传统体系结构映射<a class="anchor" href="#第四篇-传统体系结构映射" aria-label="章节链接">#</a></h1>
 <h2 id="第-9-章-从-isa-到-apu-ir">第 9 章 从 ISA 到 APU-IR<a class="anchor" href="#第-9-章-从-isa-到-apu-ir" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-09-isa-to-apu-ir.png" alt="第 9 章插图：从低层 ISA 流到结构化 APU-IR"><figcaption>第 9 章插图：从低层 ISA 流到结构化 APU-IR</figcaption></figure>
 <h3 id="9-1-isa-作为软硬件契约">9.1 ISA 作为软硬件契约<a class="anchor" href="#9-1-isa-作为软硬件契约" aria-label="章节链接">#</a></h3>
 <p>传统计算机体系结构中，ISA 是软件与硬件之间最重要的边界。编译器、操作系统和应用程序面对的是指令、寄存器、异常、内存模型和特权级；微架构则可以在这个边界之下自由选择流水线、乱序执行、缓存层次和预测机制。只要 ISA 语义不变，同一二进制程序就可以在不同实现上运行。</p>
 <p>RISC-V 的启发尤其清楚：一个好的 ISA 不只是指令表，而是一套可扩展、可验证、可教学的公共契约。基础整数指令集保持小而稳定，乘除法、原子操作、向量、压缩指令和自定义扩展则按需要组合。它把“什么必须稳定”和“什么可以扩展”分开，使学术原型、嵌入式小核和复杂 SoC 可以共享同一套思想。</p>
@@ -461,6 +473,7 @@ trace:
 <ol><li>解释为什么 RISC-V 的开放扩展思想适合启发 APU-IR，但 RISC-V 小核本身不能直接等同于 Agent Core。</li><li>为 <code>recovery_anchor_select</code> 设计一个最小 APU-IR task，至少包含 capability、budget、输入、输出和 trace_policy。</li><li>某 task 有合法 capability，但缺少 token budget。它应该在准入阶段被拒绝，还是运行时 trap？说明理由。</li><li>对比传统 ISA 异常和 Agent task trap：为什么后者需要同时记录 task id、pc、reason、capability 和 evidence ref？</li></ol>
 <hr>
 <h2 id="第-10-章-从-cache-到-ledger-aware-memory">第 10 章 从 Cache 到 Ledger-Aware Memory<a class="anchor" href="#第-10-章-从-cache-到-ledger-aware-memory" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-10-ledger-memory.png" alt="第 10 章插图：从 Cache 层次到 Ledger-Aware Memory"><figcaption>第 10 章插图：从 Cache 层次到 Ledger-Aware Memory</figcaption></figure>
 <h3 id="10-1-从传统-cache-出发">10.1 从传统 Cache 出发<a class="anchor" href="#10-1-从传统-cache-出发" aria-label="章节链接">#</a></h3>
 <p>传统计算机体系结构把内存层次建立在一个基本假设上：程序的访存局部性可以由硬件在运行时捕捉。寄存器、L1/L2 Cache、LLC、DRAM/HBM、外存构成了从近到远的容量与延迟梯度。Cache 通过 tag、替换、预取和一致性协议，尽量让程序觉得自己面对的是一片连续而快速的内存。</p>
 <p>这个模型对长期运行的人类软件很有效，因为循环、数组、栈帧、对象布局具有稳定模式。Agentic workload 的热路径呈现另一种局部性：Agent 任务常常在短生命周期内完成一次读取、归纳、生成、验证和提交；它访问的对象包括 goal、context section、artifact preview、trace event、candidate ledger delta 和 recovery anchor。硬件在 cache line 层面捕捉空间局部性的同时，也可以利用这些对象的任务语义。</p>
@@ -487,6 +500,7 @@ trace:
 <ol><li>为什么 context window 适合作为长期记忆的投影？请结合 ledger 和 artifact preview 说明。</li><li>比较传统 Cache line 与 artifact preview：二者的切分依据、替换策略和正确性责任有什么不同？</li><li>设计一个 <code>ledger_delta_extract</code> 任务的数据移动流程，要求显式使用 SPM、Cluster SRAM、HBM 和 DMA。</li><li>如果一个系统只记录最终 ledger，不记录 trace，会给调试、审计和恢复带来哪些问题？</li><li>选择三个指标，用来评价 ledger-aware memory 是否优于只依赖传统 Cache 的实现。</li></ol>
 <hr>
 <h2 id="第-11-章-从-rob-commit-到-candidate-commit">第 11 章 从 ROB Commit 到 Candidate Commit<a class="anchor" href="#第-11-章-从-rob-commit-到-candidate-commit" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-11-candidate-commit.png" alt="第 11 章插图：从 ROB Commit 到 Candidate Commit"><figcaption>第 11 章插图：从 ROB Commit 到 Candidate Commit</figcaption></figure>
 <h3 id="11-1-为什么从提交机制开始">11.1 为什么从提交机制开始<a class="anchor" href="#11-1-为什么从提交机制开始" aria-label="章节链接">#</a></h3>
 <p>在乱序 CPU 中，指令可以乱序执行，却必须表现得像顺序执行。这一矛盾由 ROB 承担：前端按程序顺序分配 ROB 项，后端允许指令乱序发射、执行和写回，但最终只有当最老指令完成且没有异常时，机器状态才按顺序提交。体系结构状态因此保持清晰：寄存器和内存看见的是一条严格顺序的历史，而不是执行单元内部的混乱过程。</p>
 <p>Agent CPU 面临相似但更宽的问题。Agent 可以并行搜索、调用工具、生成代码、试运行补丁、构造 ledger delta，也可以在不同候选路径之间切换。但用户真正关心的不是“中间想过什么”，而是哪些状态被正式写入：ledger 是否更新，文件是否改变，patch 是否进入工作区，外部工具是否产生真实副作用。因此，Agent CPU 也需要一个提交边界。这个边界不是传统 ROB 的 register commit，而是 Candidate Commit。</p>
@@ -515,6 +529,7 @@ trace:
 <ol><li>解释为什么 Agent Domain 可以并行生成多个 candidate，但不能并行直接提交外部副作用。</li><li>对比 ROB 的精确异常和 Agent CPU 的精确任务异常。二者分别要求保存哪些状态？</li><li>设计一个 candidate entry 字段表，至少包含权限、证据、ledger delta、patch 和 recovery 信息。</li><li>假设某 Agent 先修改文件再写 ledger，会破坏哪些 Candidate Commit 不变量？</li><li>为什么 recovery anchor 不等同于完整上下文窗口快照？请结合 ledger projection 说明。</li></ol>
 <hr>
 <h2 id="第-12-章-从-branch-prediction-到-task-state-recovery">第 12 章 从 Branch Prediction 到 Task-State Recovery<a class="anchor" href="#第-12-章-从-branch-prediction-到-task-state-recovery" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-12-task-recovery.png" alt="第 12 章插图：从分支预测到任务状态恢复"><figcaption>第 12 章插图：从分支预测到任务状态恢复</figcaption></figure>
 <h3 id="12-1-从控制流预测到任务流预测">12.1 从控制流预测到任务流预测<a class="anchor" href="#12-1-从控制流预测到任务流预测" aria-label="章节链接">#</a></h3>
 <p>传统 CPU 的分支预测解决一个朴素问题：当前端还不知道下一条真实指令在哪里时，是否可以先猜一个方向继续取指？现代高性能处理器通常由 BPU 给出方向与目标，FTQ 保存已经预测过的取指块，后端执行到分支指令后再验证预测是否正确。若预测正确，流水线几乎无感继续前进；若预测错误，机器清空错误路径上的指令，从正确 PC 重新取指。</p>
 <p>这个机制的本质不是“猜得准”四个字，而是三件事：第一，预测必须有边界；第二，预测路径必须留下足够元数据；第三，错误预测必须能恢复到架构上正确的状态。Agent CPU 面临的不是指令地址选择，而是任务路径选择。例如，Agent 在修复一个测试失败时，可能先判断是接口变更、配置错误、依赖版本问题，还是测试本身过期。每一种判断都会引出不同的工具调用、文件读取和代码修改。这里同样需要预测，但预测对象从 branch direction 变成了 task direction。</p>
@@ -539,6 +554,7 @@ trace:
 <ol><li>传统 CPU 中 FTQ 与 ROB 的分工是什么？请说明它们分别给 Agent CPU 的 TFQ 与 Candidate Ledger Buffer 带来什么启发。</li><li>为什么 Agent 任务预测错误的代价不能只用“浪费时间”衡量？请结合工具调用和文件修改举例。</li><li>设计一个 recovery anchor 的最小字段集合，要求支持 compact 后恢复。</li><li>若一次 compact 摘要遗漏了“某方案已被验证失败”的信息，系统应如何利用 trace 或 ledger 阻止 Agent 重复该路径？</li></ol>
 <hr>
 <h2 id="第-13-章-从-spec-到-agentic-benchmark">第 13 章 从 SPEC 到 Agentic Benchmark<a class="anchor" href="#第-13-章-从-spec-到-agentic-benchmark" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-13-agentic-benchmark.png" alt="第 13 章插图：从传统 Benchmark 到 Agentic Benchmark"><figcaption>第 13 章插图：从传统 Benchmark 到 Agentic Benchmark</figcaption></figure>
 <h3 id="13-1-benchmark-是体系结构的语言">13.1 Benchmark 是体系结构的语言<a class="anchor" href="#13-1-benchmark-是体系结构的语言" aria-label="章节链接">#</a></h3>
 <p>计算机体系结构不是只靠结构图前进的学科。一个新架构要被讨论，必须先说明它在什么工作负载上有意义，再说明如何测量这种意义。《Computer Architecture: A Quantitative Approach》建立的传统可以概括为四句话：定义 workload，选择 baseline，报告可测指标，解释性能与代价的取舍。</p>
 <p>SPEC 的价值正在这里。它并不声称一个整数或浮点程序代表全部计算，而是用一组相对稳定、可复现、可比较的程序，迫使处理器设计者面对真实编译器、真实内存层次和真实控制流。后来 MLPerf 把这种思想带到机器学习系统：不仅测算子峰值，也测训练、推理、数据输入、精度约束和系统提交规则。</p>
@@ -574,6 +590,7 @@ trace:
 <hr>
 <h1 id="第五篇-方法与实验">第五篇：方法与实验<a class="anchor" href="#第五篇-方法与实验" aria-label="章节链接">#</a></h1>
 <h2 id="第-14-章-benchmark-方法">第 14 章 Benchmark 方法<a class="anchor" href="#第-14-章-benchmark-方法" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-14-benchmark-method.png" alt="第 14 章插图：Agentic Benchmark 的实验方法"><figcaption>第 14 章插图：Agentic Benchmark 的实验方法</figcaption></figure>
 <h3 id="14-1-不以-flops-为中心">14.1 不以 FLOPS 为中心<a class="anchor" href="#14-1-不以-flops-为中心" aria-label="章节链接">#</a></h3>
 <p>Agent CPU 的第一版 benchmark 不应以 FLOPS 为中心，而应关注：</p>
 <ul><li>每 1000 条工具事件的处理延迟。</li><li>ledger delta 生成吞吐。</li><li>context projection 预算利用率。</li><li>recovery anchor 可恢复率。</li><li>artifact preview 去重率。</li><li>capability trap 可解释性。</li></ul>
@@ -617,6 +634,7 @@ trace:
 <ol><li>为什么 Agent CPU benchmark 要报告恢复准确率？</li><li>设计一个 1000 条 ToolUse 的 synthetic benchmark。</li><li>如何比较 Python reference 和 Agent Domain 的输出一致性？</li><li>用 Amdahl 定律解释：如果模型推理占 80% 时间，Agent CPU 仍可能在哪些方面有价值？</li></ol>
 <hr>
 <h2 id="第-15-章-九天-apu-v0-1-实验">第 15 章 九天 APU v0.1 实验<a class="anchor" href="#第-15-章-九天-apu-v0-1-实验" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-15-jiutian-v01.png" alt="第 15 章插图：九天 APU v0.1 的模拟器实验闭环"><figcaption>第 15 章插图：九天 APU v0.1 的模拟器实验闭环</figcaption></figure>
 <h3 id="15-1-实验目标">15.1 实验目标<a class="anchor" href="#15-1-实验目标" aria-label="章节链接">#</a></h3>
 <p>v0.1 的目标不是完整芯片，而是可运行、可测试、可解释的参考语义闭环。</p>
 <h3 id="15-2-实验一-copy-add">15.2 实验一：copy_add<a class="anchor" href="#15-2-实验一-copy-add" aria-label="章节链接">#</a></h3>
@@ -638,6 +656,7 @@ trace:
 <ol><li>修改 long_memory_loop 的输入，使 recovery anchor 选择不同记录。</li><li>缩小 context projection 的 byte budget，观察输出变化。</li><li>删除某个 capability，解释为什么会触发 trap。</li></ol>
 <hr>
 <h2 id="第-16-章-从教材到研究计划">第 16 章 从教材到研究计划<a class="anchor" href="#第-16-章-从教材到研究计划" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-16-research-plan.png" alt="第 16 章插图：从教材概念走向研究计划"><figcaption>第 16 章插图：从教材概念走向研究计划</figcaption></figure>
 <h3 id="16-1-研究问题">16.1 研究问题<a class="anchor" href="#16-1-研究问题" aria-label="章节链接">#</a></h3>
 <p>Agent CPU 体系结构还有大量开放问题：</p>
 <ul><li>Agent ISA 应该多低级？</li><li>APU-IR 应该采用 JSON、CBOR，还是二进制定长记录？</li><li>Agent 核是否需要分支预测？</li><li>SPM 由编译器静态分配还是运行时动态分配？</li><li>ContextProjection 的正确性如何定义？</li><li>RecoveryAnchor 的可恢复性如何自动验证？</li><li>多 Agent 并发时 ledger 如何处理冲突？</li></ul>
@@ -651,6 +670,7 @@ trace:
 <ol><li>为 Agent CPU 设计一个学术会议投稿摘要。</li><li>选择一个课程项目，写出输入、输出、评价指标。</li><li>说明 Agent CPU 与 Domain-Specific Architecture 的关系。</li></ol>
 <hr>
 <h2 id="第-17-章-学科建设纲领">第 17 章 学科建设纲领<a class="anchor" href="#第-17-章-学科建设纲领" aria-label="章节链接">#</a></h2>
+<figure class="chapter-figure"><img src="assets/agent-cpu-chapter-17-discipline.png" alt="第 17 章插图：Agent CPU 体系结构的学科建设"><figcaption>第 17 章插图：Agent CPU 体系结构的学科建设</figcaption></figure>
 <h3 id="17-1-本科课程">17.1 本科课程<a class="anchor" href="#17-1-本科课程" aria-label="章节链接">#</a></h3>
 <p>课程名：Agent CPU 体系结构导论</p>
 <p>内容：</p>

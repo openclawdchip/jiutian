@@ -169,6 +169,8 @@ NPU 面向神经网络推理进行专门优化，强调能效和低延迟。在�
 
 ## 第 2 章 Agent CPU 的基本抽象
 
+![第 2 章插图：Agent CPU 的七个基本抽象](assets/agent-cpu-chapter-02-abstractions.png)
+
 ### 2.1 从回答到执行
 
 传统 CPU 处理的是指令流，核心问题是怎样把一条条指令可靠地执行完。Agent CPU 面对的则是任务流：用户给出目标，环境不断变化，资料来源并不总是完整，结果还需要被解释、检查和修正。因此，Agent CPU 的基础不应只理解为若干模块，而应理解为一组能支撑智能执行的抽象。
@@ -266,6 +268,8 @@ trace 是执行过程留下的关键记录。它说明任务如何被理解，�
 ---
 
 ## 第 3 章 双域架构：Super Domain 与 Agent Domain
+
+![第 3 章插图：Super Domain 与 Agent Domain 的双域架构](assets/agent-cpu-chapter-03-dual-domain.png)
 
 ### 3.1 从特权级到双域
 
@@ -376,6 +380,8 @@ Agent Domain 是任务推进的主要场所。它的第一项职责是理解输�
 ---
 
 ## 第 4 章 APU-IR：Agent 与硬件之间的契约
+
+![第 4 章插图：APU-IR 将 Agent 任务语义映射到硬件](assets/agent-cpu-chapter-04-apu-ir.png)
 
 在计算机体系结构课程中，指令集体系结构常被称为软件与硬件之间的契约。软件不必知道加法器如何布线、流水线如何旁路、缓存如何替换，只要处理器正确实现指令集，程序便能按约定运行。进入 Agent CPU 的语境后，系统要执行的不再只是单条算术指令或一次内存访问，而是带有目标、上下文、工具调用、权限边界、成本约束和可追溯证据的智能任务。因此，Agent 与底层执行平台之间也需要一种新的契约形式。本章讨论的 APU-IR，就是这种契约的核心表示。
 
@@ -502,6 +508,8 @@ APU-IR 的核心价值在于显式化。它把隐含在提示词和工具循环�
 
 ## 第 5 章 Memory 与 NoC：从状态到数据移动
 
+![第 5 章插图：Memory 与 NoC 中的显式数据移动](assets/agent-cpu-chapter-05-memory-noc.png)
+
 处理器并不只是在执行指令，也在不断搬运状态。寄存器中的操作数、缓存中的数组元素、片上存储器中的中间块、主存中的对象图，以及外设产生的输入流，都要在恰当的时间到达恰当的计算单元。传统计算机体系结构把这一问题称为内存层次与互连设计；在 Agent CPU 中，它进一步扩展为 ledger、context、artifact 与 trace 等智能体状态的组织、定位、移动与提交。本章从经典内存系统出发，说明 Agent CPU 如何把“数据在哪里”和“数据如何流动”变成体系结构中的一等问题。
 
 ### 5.1 内存层次的基本动机
@@ -590,6 +598,8 @@ Agent CPU 的正向设计思路不是把所有状态都推向最快层，而是�
 ---
 
 ## 第 6 章 任务型 Agent 的执行模型
+
+![第 6 章插图：任务型 Agent 的执行循环](assets/agent-cpu-chapter-06-agent-execution.png)
 
 任务型 Agent 是一种面向目标展开行动的智能计算结构。它接收任务，理解约束，组织可用信息，调用工具获得新的观察，并在执行过程中持续更新自身状态。与只回答一个问题的系统不同，任务型 Agent 的核心不在于一次性给出文本，而在于把“要达到的结果”转化为一连串可检查、可修正、可推进的行动。
 
@@ -705,6 +715,8 @@ Agent CPU 的正向设计思路不是把所有状态都推向最快层，而是�
 
 ## 第 7 章 长期任务记忆
 
+![第 7 章插图：长期任务记忆、Ledger 与恢复锚点](assets/agent-cpu-chapter-07-long-memory.png)
+
 ### 7.1 上下文与记忆的分工
 
 模型上下文是工作台，长期记忆是账本。工作台负责组织本轮推理所需的信息；账本负责保存可恢复、可审计、可追溯的任务状态。
@@ -762,6 +774,8 @@ compact 是一次状态整理事务：
 
 ## 第 8 章 安全与权限
 
+![第 8 章插图：Capability、安全边界与可审计 Trace](assets/agent-cpu-chapter-08-security.png)
+
 ### 8.1 Agent 生成代码的安全边界
 
 Agent 生成代码具有明确的安全边界。系统通过 capability、预算、trace 和审核提交，把生成代码限制在可观察、可解释、可恢复的执行范围内。
@@ -812,6 +826,8 @@ Trace 必须回答：
 # 第四篇：传统体系结构映射
 
 ## 第 9 章 从 ISA 到 APU-IR
+
+![第 9 章插图：从低层 ISA 流到结构化 APU-IR](assets/agent-cpu-chapter-09-isa-to-apu-ir.png)
 
 ### 9.1 ISA 作为软硬件契约
 
@@ -884,6 +900,8 @@ RISC-V 通过标准扩展和自定义扩展解决“基础稳定、能力增长�
 
 ## 第 10 章 从 Cache 到 Ledger-Aware Memory
 
+![第 10 章插图：从 Cache 层次到 Ledger-Aware Memory](assets/agent-cpu-chapter-10-ledger-memory.png)
+
 ### 10.1 从传统 Cache 出发
 
 传统计算机体系结构把内存层次建立在一个基本假设上：程序的访存局部性可以由硬件在运行时捕捉。寄存器、L1/L2 Cache、LLC、DRAM/HBM、外存构成了从近到远的容量与延迟梯度。Cache 通过 tag、替换、预取和一致性协议，尽量让程序觉得自己面对的是一片连续而快速的内存。
@@ -951,6 +969,8 @@ Trace 则是内存系统的时间维度。传统内存层次主要保存“现�
 ---
 
 ## 第 11 章 从 ROB Commit 到 Candidate Commit
+
+![第 11 章插图：从 ROB Commit 到 Candidate Commit](assets/agent-cpu-chapter-11-candidate-commit.png)
 
 ### 11.1 为什么从提交机制开始
 
@@ -1023,6 +1043,8 @@ recovery anchor 至少要能回答三个问题：从哪个 base ledger 恢复，
 
 ## 第 12 章 从 Branch Prediction 到 Task-State Recovery
 
+![第 12 章插图：从分支预测到任务状态恢复](assets/agent-cpu-chapter-12-task-recovery.png)
+
 ### 12.1 从控制流预测到任务流预测
 
 传统 CPU 的分支预测解决一个朴素问题：当前端还不知道下一条真实指令在哪里时，是否可以先猜一个方向继续取指？现代高性能处理器通常由 BPU 给出方向与目标，FTQ 保存已经预测过的取指块，后端执行到分支指令后再验证预测是否正确。若预测正确，流水线几乎无感继续前进；若预测错误，机器清空错误路径上的指令，从正确 PC 重新取指。
@@ -1085,6 +1107,8 @@ compact 的危险在于它会把“状态”伪装成“文字”。如果摘要
 ---
 
 ## 第 13 章 从 SPEC 到 Agentic Benchmark
+
+![第 13 章插图：从传统 Benchmark 到 Agentic Benchmark](assets/agent-cpu-chapter-13-agentic-benchmark.png)
 
 ### 13.1 Benchmark 是体系结构的语言
 
@@ -1169,6 +1193,8 @@ Agentic Benchmark 的核心指标应分为三类：
 # 第五篇：方法与实验
 
 ## 第 14 章 Benchmark 方法
+
+![第 14 章插图：Agentic Benchmark 的实验方法](assets/agent-cpu-chapter-14-benchmark-method.png)
 
 ### 14.1 不以 FLOPS 为中心
 
@@ -1299,6 +1325,8 @@ Agent CPU 不一定能减少 `T_model_wait`，但它应显著降低：
 
 ## 第 15 章 九天 APU v0.1 实验
 
+![第 15 章插图：九天 APU v0.1 的模拟器实验闭环](assets/agent-cpu-chapter-15-jiutian-v01.png)
+
 ### 15.1 实验目标
 
 v0.1 的目标不是完整芯片，而是可运行、可测试、可解释的参考语义闭环。
@@ -1356,6 +1384,8 @@ python -m unittest discover -s simulator -v
 
 ## 第 16 章 从教材到研究计划
 
+![第 16 章插图：从教材概念走向研究计划](assets/agent-cpu-chapter-16-research-plan.png)
+
 ### 16.1 研究问题
 
 Agent CPU 体系结构还有大量开放问题：
@@ -1398,6 +1428,8 @@ Agent CPU 体系结构还有大量开放问题：
 ---
 
 ## 第 17 章 学科建设纲领
+
+![第 17 章插图：Agent CPU 体系结构的学科建设](assets/agent-cpu-chapter-17-discipline.png)
 
 ### 17.1 本科课程
 
