@@ -67,6 +67,8 @@ GitHub Pages：<https://openclawdchip.github.io/jiutian/textbook-agent-cpu-archi
 
 完整正文：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 
+正式压缩版 PDF：[`docs/textbook-agent-cpu-architecture-formal-compressed.pdf`](docs/textbook-agent-cpu-architecture-formal-compressed.pdf)
+
 ## 当前可运行路径
 
 ```powershell
@@ -84,6 +86,7 @@ python -m unittest discover simulator
 - 产品简介：[`docs/product-brief.md`](docs/product-brief.md)
 - 技术博客：[`docs/blog-agent-long-term-memory.md`](docs/blog-agent-long-term-memory.md)
 - 教材网页：[`docs/textbook-agent-cpu-architecture.html`](docs/textbook-agent-cpu-architecture.html)
+- 教材正式压缩版 PDF：[`docs/textbook-agent-cpu-architecture-formal-compressed.pdf`](docs/textbook-agent-cpu-architecture-formal-compressed.pdf)
 - 教材草案：[`docs/textbook-agent-cpu-architecture.md`](docs/textbook-agent-cpu-architecture.md)
 - 数据手册：[`docs/datasheet.md`](docs/datasheet.md)
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
