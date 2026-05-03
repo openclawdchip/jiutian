@@ -16,19 +16,35 @@ Agent Processing Unit，Agent 处理单元。九天中的 APU 指面向 Agent �
 
 ## Control Plane / 控制面
 
-由 Clawd-Super 超大核、操作系统、运行时和监管逻辑构成的执行域。控制面负责兼容性、安全、调度、I/O、异常处理和资源授权。
+由 Clawd-Super 超大核、操作系统、运行时和监管逻辑构成的执行域。控制面负责兼容性、安全、调度、I/O、异常处理、资源授权和最终副作用提交。在 Guardian-Execution 模式中，控制面可作为高熵任务协处理器按需唤醒。
 
 ## Agent Plane / Agent 执行面
 
-由 Clawd-Agent 核组成的执行域。Agent 执行面运行生成代码片段，不默认提供 POSIX 进程语义、标准 ABI 语义或全局硬件缓存一致性。
+由 Clawd-Agent 核组成的执行域。Agent 执行面运行生成代码片段，不默认提供 POSIX 进程语义、标准 ABI 语义或全局硬件缓存一致性。在 Guardian-Execution 模式中，它也是 Always-On 守护面，负责监听、心跳、意图分类、上下文投影和唤醒 Super 域。
 
 ## Clawd-Super
 
-九天控制面的高性能超大核。目标是承载传统软件栈和系统监护职责。
+九天控制面的高性能超大核。目标是承载传统软件栈、高熵任务爆发、复杂推理、重负载计算、系统恢复和最终副作用提交。它可被视为 Strategic Coprocessor for High-Entropy Tasks。
 
 ## Clawd-Agent
 
-九天 Agent 执行面的轻量执行核。目标是高吞吐、低控制开销、显式内存管理和可预测本地执行。
+九天 Agent 执行面的轻量执行核。目标是高吞吐、低控制开销、显式内存管理、可预测本地执行和低功耗常驻守护。
+
+## Guardian-Execution
+
+守护者-执行者模式。Clawd-Agent 作为 Always-On guardian 维持机器最低生命体征，处理监听、分类、上下文投影和短任务；Clawd-Super 作为高熵任务战略协处理器，在复杂人类任务、LLM 推理、编译、真实副作用或系统恢复时被 `WAKE_UP_SUPER` 唤醒。
+
+## Strategic Coprocessor for High-Entropy Tasks
+
+高熵任务战略协处理器。对 Clawd-Super 在 Guardian-Execution 模式中的定位：它不是持续在线的唯一主控，而是面向复杂、不可压缩、需要强兼容性或高性能爆发的任务按需工作。
+
+## WAKE_UP_SUPER
+
+Agent 域向电源管理器或 Super 域发出的唤醒语义。它表示当前任务超过 Agent 域的低功耗处理边界，需要 Super Core 上电或解门控。
+
+## Handoff Mailbox
+
+Agent 域与 Super 域之间的共享交接窗口。它保存任务描述符、输入引用、capability 请求、上下文投影、恢复点和唤醒原因。
 
 ## SPM
 

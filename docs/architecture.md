@@ -1,6 +1,6 @@
 # 架构概览
 
-九天 APU 采用分离式执行模型。它不是把“大核”和“小核”简单堆叠在同一颗芯片上，而是把两种软件范式在硬件层面分开：控制面负责兼容、监管和系统稳定，Agent 执行面负责运行有边界、有预算、显式描述数据流的生成代码。
+九天 APU 采用分离式执行模型。它不是把“大核”和“小核”简单堆叠在同一颗芯片上，而是把两种软件范式在硬件层面分开，并采用 Guardian-Execution（守护者-执行者）模式：Agent 执行面低功耗常驻，负责监听、维护和执行有界生成代码；控制面中的 Clawd-Super 在高熵任务出现时被按需唤醒，负责复杂人类软件、LLM 推理、重负载计算和最终副作用提交。
 
 本文档解释九天 v0.1 的顶层架构边界。更细的指令、任务、地址空间和 trace 语义分别定义在 `specs/` 目录中。
 
@@ -19,6 +19,8 @@
 - Agent 任务可以通过 APU-IR 显式声明资源、数据流和同步点。
 - Agent 核可以围绕 SPM、DMA、barrier 和弱一致性构建更简单的执行语义。
 - 控制面可以在不参与每条指令执行的情况下，对 Agent 任务进行准入、隔离、kill、trace 和回收。
+- Agent 域可以作为 Always-On 守护层，在低功耗状态下监听事件、分类意图，并通过 `WAKE_UP_SUPER` 唤醒 Super 域。
+- Super 域可以作为高熵任务战略协处理器，在复杂任务完成后重新进入 clock-gated 或 power-gated 状态。
 - 模拟器先建立功能正确性，再逐步加入延迟、队列、NoC 和能耗 proxy。
 
 ## 非目标
@@ -40,16 +42,21 @@
 - **Super Domain**：控制面与既有软件域。
 - **Agent Domain**：Agent 原生执行域。
 
-两个域可以共享某些物理内存资源，但它们不共享同一套软件假设。Super Domain 追求兼容性、精确异常和成熟工具链；Agent Domain 追求执行密度、显式数据搬运和有界并发。
+两个域可以共享某些物理内存资源，但它们不共享同一套软件假设。Agent Domain 追求执行密度、显式数据搬运、有界并发和低功耗常驻；Super Domain 追求兼容性、精确异常、成熟工具链和高熵任务爆发。
 
 ```text
 外部请求 / 人类软件 / Agent 平台
         |
         v
-Super Domain
-Linux / RTOS / runtime / scheduler / monitor
+Agent Domain
+Always-On guard / intent classification / memory projection
         |
-        | APU-IR admission, capability, dispatch
+        | WAKE_UP_SUPER, handoff mailbox
+        v
+Super Domain
+Linux / RTOS / LLM / compiler / high-entropy execution
+        |
+        | admission, final commit, side-effect authorization
         v
 Agent Domain
 Clawd-Agent cores / SPM / Cluster SRAM / DMA / barrier
@@ -58,9 +65,20 @@ Clawd-Agent cores / SPM / Cluster SRAM / DMA / barrier
 Host memory / HBM / device windows / trace buffers
 ```
 
+## Guardian-Execution 模式
+
+Guardian-Execution 模式把九天的非对称性定义为一条按需唤醒路径，而不是固定主从关系。
+
+- Clawd-Agent 是常驻守护核心，低电压/低频运行，负责后台心跳、环境监听、任务队列维护、简单意图识别、上下文投影和候选状态整理。
+- Clawd-Super 是高熵任务战略协处理器，默认可以 clock-gated 或 power-gated，只有在需要 LLM 推理、复杂 OS 路径、大规模编译、重度感知处理或真实外部副作用时被唤醒。
+- `WAKE_UP_SUPER` 是 Agent 域向电源管理器和 Super 域发出的唤醒语义；handoff mailbox 保存任务描述符、输入引用、capability 请求、上下文投影和 recovery anchor。
+- Super 域完成任务后把结果、提交状态和错误摘要写回共享窗口，然后回到低功耗状态；Agent 域继续守护系统并维护 trace。
+
+这种模式让九天拥有更大的动态功耗范围：无人交互时维持毫瓦级守护路径，有复杂人类任务时再释放 Super Core 的爆发性能。详细设计见 `docs/guardian-execution-mode.md`。
+
 ## 控制面
 
-控制面运行在少量高性能超大核上。完整产品设想为 8 个 Clawd-Super 核，v0.1 模拟器可以用 1-2 个逻辑控制核建模。
+控制面运行在少量高性能超大核上。完整产品设想为 8 个 Clawd-Super 核，v0.1 模拟器可以用 1-2 个逻辑控制核建模。在 Guardian-Execution 模式下，Clawd-Super 不是持续占用功耗预算的主控核，而是由 Agent 域按需唤醒的高熵任务协处理器。
 
 控制面负责：
 
@@ -73,16 +91,17 @@ Host memory / HBM / device windows / trace buffers
 - Agent 任务派发、暂停、kill、回收和结果提交。
 - 异常处理、任务重试策略和系统级降级。
 
-控制面优先考虑兼容性、精确异常、成熟工具链和标准软件语义。它必须能够运行常规系统软件，并作为 Agent 执行面的可信监管者。
+控制面优先考虑兼容性、精确异常、成熟工具链和标准软件语义。它必须能够运行常规系统软件，并作为 Agent 执行面的可信监管者；但在能效优先配置中，它应支持快速睡眠、快速恢复和可审计的唤醒原因记录。
 
 ### Clawd-Super 的职责边界
 
-Clawd-Super 不应承担大量 Agent 原生指令的逐条解释，也不应成为所有数据搬运的瓶颈。它的核心职责是控制和授权：
+Clawd-Super 不应承担大量 Agent 原生指令的逐条解释，也不应成为所有数据搬运的瓶颈。它的核心职责是高熵任务爆发、控制和授权：
 
 - 对任务图进行 admission，而不是执行任务图中的每个算子。
 - 为 Agent 核配置可访问区域，而不是让 Agent 核随意访问全局物理地址。
 - 响应异常和 trace，而不是把异常恢复逻辑分散到每个生成代码片段中。
 - 管理系统状态，而不是追求在 Agentic workload 中的峰值吞吐。
+- 在任务完成后主动释放功耗预算，而不是长期保持高性能在线状态。
 
 ## Agent 执行面
 
@@ -99,7 +118,7 @@ Agent 执行面负责：
 - 面向任务的 trace 事件生成。
 - capability 检查失败时快速 trap。
 
-Agent 执行面优先考虑执行密度、可预测的本地内存行为和低开销任务分发。它不假设每个任务都拥有完整进程语义，也不假设所有内存访问都自动被硬件一致性协议协调。
+Agent 执行面优先考虑执行密度、可预测的本地内存行为、低开销任务分发和常驻守护能力。它不假设每个任务都拥有完整进程语义，也不假设所有内存访问都自动被硬件一致性协议协调。
 
 ### Clawd-Agent 的职责边界
 
@@ -112,6 +131,7 @@ Clawd-Agent 核的最小职责是执行经过准入的 Agent ISA 指令片段。
 - barrier arrive/wait 能力。
 - flush、invalidate、fence 等显式可见性操作。
 - trap、yield、halt 等控制指令。
+- 低功耗监听、意图分类和 `WAKE_UP_SUPER` doorbell 发起能力。
 
 Clawd-Agent 不需要在 v0.1 中实现复杂乱序执行、庞大分支预测器、完整虚拟内存页表遍历或全局 cache snoop。后续硬件可以在不改变软件契约的前提下增强微架构。
 

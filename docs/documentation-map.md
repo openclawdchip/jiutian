@@ -11,10 +11,12 @@
 - `docs/textbook-agent-cpu-architecture.md`：Agent CPU 体系结构学科定义与教材草案。
 - `docs/datasheet.md`：v0.1 数据手册。
 - `docs/whitepaper.md`：完整架构叙事与技术主张。
+- `docs/guardian-execution-mode.md`：Guardian-Execution 守护者-执行者模式，定义 Agent 常驻守护与 Super 按需唤醒。
 
 ## 第二层：架构说明
 
 - `docs/architecture.md`：控制面与 Agent 执行面。
+- `docs/guardian-execution-mode.md`：Agent Core / Super Core 的按需唤醒协作协议。
 - `docs/memory-noc.md`：存储与 NoC。
 - `docs/security.md`：安全模型。
 - `docs/execution-model.md`：任务生命周期和调度模型。

@@ -5,10 +5,10 @@
 它探索一种后冯·诺依曼时代的软件执行模型：把人类编写的软件与
 Agent 生成的代码视为两类不同的执行域，并在硬件层面分别优化。
 
-- 8 个超大核负责运行操作系统、兼容层、运行时、调度、安全监管和
-  面向人类的软件。
-- 128 个 Agent 核负责运行高吞吐的 Agent 生成逻辑流，采用显式内存
-  放置、显式同步和弱一致性模型。
+- 128 个 Agent 核作为 Always-On 守护核心，负责后台心跳、环境监听、
+  任务队列、上下文投影和高吞吐的 Agent 生成逻辑流。
+- 8 个超大核作为按需唤醒的高熵任务战略协处理器，负责 LLM 推理、
+  大规模编译、复杂人类软件、重度感知处理和最终副作用提交。
 - 256 个 Agent 硬件线程面向碎片化、动态、短生命周期的工作负载，
   填补传统 CPU 控制流与 GPU 张量吞吐之间的空白。
 
@@ -25,19 +25,21 @@ OoO 核心、成熟的软件生态、硬件缓存一致性和 CPU-GPU 协同能�
 服务于人类软件时代的基本假设：复杂 ABI、操作系统分层、动态分支预测、
 硬件 Cache 一致性和通用兼容性。
 
-九天 APU 选择另一条路：保留 8 个超大核作为 Linux、I/O、调度和安全监管的
-入口，把主要硅片资源交给 128 个 Agent 原生核。Agent 生成的代码不必伪装成
-传统软件，它可以通过 APU-IR、显式 SPM、显式 DMA、弱一致性和 Honeycomb
-NoC 直接表达数据流和执行意图。
+九天 APU 选择另一条路：让 128 个 Agent 原生核保持低功耗常驻，负责监听、
+筛选、整理和维护机器最低生命体征；让 8 个 Clawd-Super 超大核在高熵任务
+出现时被 Agent 域唤醒，作为 Strategic Coprocessor for High-Entropy Tasks
+处理复杂推理、传统软件和真实副作用。Agent 生成的代码不必伪装成传统软件，
+它可以通过 APU-IR、显式 SPM、显式 DMA、弱一致性和 Honeycomb NoC 直接表达
+数据流和执行意图。
 
 | 维度 | Nvidia Grace/Vera | 九天 APU |
 | :--- | :--- | :--- |
 | 核心目标 | 通用 CPU 与 AI 系统调度顶峰 | Agent 生成代码的原生执行层 |
 | 软件假设 | 人类编写、ABI 稳定、系统分层深 | Agent 生成、短生命周期、可显式调度 |
-| 核心组织 | 大量高性能通用 OoO 核 | 8 个 Clawd-Super + 128 个 Clawd-Agent |
+| 核心组织 | 大量高性能通用 OoO 核 | 128 个常驻 Clawd-Agent + 8 个按需唤醒 Clawd-Super |
 | 内存模型 | 层次化 Cache + 硬件一致性 | SPM + Cluster SRAM + 显式软一致性 |
 | 主要开销 | 分支预测、ROB、TLB、Snoop、一致性协议 | 把控制开销压缩，把面积让给执行与数据搬运 |
-| 擅长场景 | 传统软件、系统调度、CPU-GPU 协同 | Agentic 逻辑、短 JIT 片段、碎片化并发任务 |
+| 擅长场景 | 传统软件、系统调度、CPU-GPU 协同 | 常驻 Agent 守护、短 JIT 片段、碎片化并发任务、高熵任务爆发 |
 | 开放路线 | 封闭商业生态 | 开源规格、模拟器、APU-IR 与未来 RTL |
 
 九天的对标重点不是传统 SPEC 跑分，而是 Agentic workload：指令执行密度、
@@ -92,6 +94,7 @@ python -m unittest discover simulator
 - 文档地图：[`docs/documentation-map.md`](docs/documentation-map.md)
 - 环境要求：[`docs/environment.md`](docs/environment.md)
 - 架构概览：[`docs/architecture.md`](docs/architecture.md)
+- Guardian-Execution 模式：[`docs/guardian-execution-mode.md`](docs/guardian-execution-mode.md)
 - 执行模型：[`docs/execution-model.md`](docs/execution-model.md)
 - 规格入口：[`specs/jiutian-apu-v0.1.md`](specs/jiutian-apu-v0.1.md)
 - 地址空间：[`specs/memory-map-v0.1.md`](specs/memory-map-v0.1.md)
@@ -112,13 +115,13 @@ python -m unittest discover simulator
 ```text
 人类软件
     |
-8x 九天超大核
-Linux / 运行时 / 安全 / 调度
-    |
-APU-IR 编译器与 Agent 运行时
-    |
 128x 九天 Agent 核
-SPM / 显式 DMA / 弱一致性 / Mesh NoC
+Always-On guard / listen / classify / memory projection
+    |
+WAKE_UP_SUPER / handoff mailbox
+    |
+8x 九天超大核
+High-entropy burst / Linux / LLM / compile / commit
     |
 分布式 SRAM / HBM / 主机内存
 ```
@@ -132,6 +135,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - `docs/datasheet.md` - v0.1 数据手册。
 - `docs/documentation-map.md` - 文档地图。
 - `docs/whitepaper.md` - 九天 APU 中文白皮书。
+- `docs/guardian-execution-mode.md` - Guardian-Execution 守护者-执行者模式。
 - `docs/glossary.md` - 项目术语表。
 - `docs/execution-model.md` - v0.1 执行模型。
 - `docs/benchmark-methodology.md` - benchmark 方法。
@@ -164,6 +168,7 @@ SPM / 显式 DMA / 弱一致性 / Mesh NoC
 - 面向研究与实现的开放架构。
 - 兼容 RISC-V 的控制面。
 - 采用显式 Scratchpad Memory 的 Agent 原生执行面。
+- Agent Core 常驻守护，Super Core 面向高熵任务按需唤醒。
 - 128 核集群化拓扑与分布式 SRAM 切片。
 - Agent 域内的软件控制一致性。
 - 硬件强制的沙箱、任务预算和 DMA 边界检查。

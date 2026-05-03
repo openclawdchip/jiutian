@@ -1,6 +1,6 @@
 # 执行模型
 
-九天 v0.1 的执行模型围绕一个核心边界展开：控制面负责授权和监管，Agent 执行面负责运行有界的生成代码任务。
+九天 v0.1 的执行模型围绕一个核心边界展开：Agent 执行面负责常驻守护、监听和运行有界的生成代码任务；控制面负责授权、监管、高熵任务爆发和真实副作用提交。这个边界在 Guardian-Execution 模式下表现为“Agent Core 常驻，Super Core 按需唤醒”。
 
 本文档定义任务生命周期、状态机、调度原则、同步语义、异常语义和 trace 要求。任务字段的规范化定义见 `specs/task-model-v0.1.md`，指令语义见 `specs/isa-v0.1.md`。
 
@@ -18,24 +18,51 @@
 
 一次完整执行分为 10 个阶段：
 
-1. Agent 或上层系统生成任务图。
-2. 任务图被降低为 APU-IR。
-3. 控制面运行时解析 APU-IR。
-4. 运行时验证资源声明、capability 请求、barrier 参与关系和预算。
-5. 运行时为任务分配 SPM、Cluster SRAM、DMA channel、barrier 和 trace 资源。
-6. APU-IR 被降低为 Agent 指令片段，或在 v0.1 中直接包含 JSON 指令。
-7. Clawd-Super 将任务派发到目标 Clawd-Agent 核。
-8. Clawd-Agent 执行指令，并通过显式 DMA、barrier、flush、invalidate 管理数据。
-9. 任务进入 completed、trapped、killed 或 timeout 状态。
-10. 控制面回收资源、提交结果、记录 trace，并决定是否重试或上报错误。
+1. Clawd-Agent 以 Always-On guard 状态监听人类输入、API 请求、传感器事件、timer 或 runtime 队列。
+2. Agent 域执行轻量意图分类，判断请求可在 Agent 域处理，还是需要高熵任务协处理。
+3. 对简单、无副作用、有界任务，Agent 域直接生成或接收 APU-IR 任务图。
+4. 对 LLM 推理、复杂 OS 路径、编译、重度感知或真实副作用任务，Agent 域写入 handoff mailbox 并发出 `WAKE_UP_SUPER`。
+5. Clawd-Super 上电或解门控后，控制面运行时解析 APU-IR、验证资源声明、capability 请求、barrier 参与关系和预算。
+6. 运行时为任务分配 SPM、Cluster SRAM、DMA channel、barrier 和 trace 资源。
+7. APU-IR 被降低为 Agent 指令片段，或在 v0.1 中直接包含 JSON 指令。
+8. Clawd-Agent 执行指令，并通过显式 DMA、barrier、flush、invalidate 管理数据；Clawd-Super 在后台承担授权、复杂计算或最终提交。
+9. 任务进入 completed、trapped、killed 或 timeout 状态，结果写回 handoff mailbox、trace buffer 或 candidate output。
+10. 控制面回收资源、提交结果、记录 trace，并决定是否重试、回眠或上报错误。
 
-生命周期强调准入和回收。Agent 代码不能绕过控制面直接进入执行面。
+生命周期强调准入、唤醒和回收。Agent 代码不能绕过控制面提交真实副作用；Super Core 也不应在无需高熵处理时长期占用功耗预算。
+
+### Guardian-Execution 唤醒路径
+
+```text
+Always-On Clawd-Agent
+  listen / heartbeat / classify / memory projection
+      |
+      | high-entropy request
+      v
+WAKE_UP_SUPER doorbell
+      |
+      v
+handoff mailbox
+  task descriptor / input refs / capability request / recovery anchor
+      |
+      v
+Clawd-Super burst
+  LLM / OS / compiler / final commit / recovery
+      |
+      v
+result + trace + sleep request
+      |
+      v
+Always-On Clawd-Agent
+```
+
+Trace 至少应能记录 wake reason、handoff latency、Super active time 和 return-to-guard time。后续能耗模型可以把这些字段作为动态功耗范围和 Super 占空比的 proxy。
 
 ## 从 Agent runtime 到 APU-IR
 
 Claude Code 类 Agent runtime 的已有分析给出一个重要结论：真正可执行的对象不是自然语言“意向”，而是 `ToolUse`、`CommandDescriptor`、`TaskDescriptor` 和 `ExecutionResult` 这类结构化对象。
 
-九天执行模型正是围绕这些对象工作。自然语言、系统提示、上下文投影和模型采样留在控制面；当模型输出结构化工具调用后，控制面才开始考虑是否把其中一部分降低为 APU-IR。
+九天执行模型正是围绕这些对象工作。低成本监听、上下文投影和简单规则预筛可以留在 Always-On Agent 域；自然语言深推理、系统提示展开、长上下文模型采样和真实副作用提交会触发 Super 域。当模型输出结构化工具调用后，控制面再决定是否把其中一部分降低为 APU-IR 交回 Agent 域。
 
 ```text
 DigitalTurn
@@ -77,6 +104,7 @@ ExecutionResult
 - 有真实外部副作用的动作只在控制面提交，Agent Domain 只产生判定、整理、摘要或候选结果。
 - 进入 Agent Domain 的任务必须能声明输入、输出、预算、capability 和失败语义。
 - APU-IR 的输出必须回到 `ExecutionResult` 或 `state_delta`，再由控制面决定是否进入 transcript、memory、compact 或恢复流程。
+- 高熵任务必须显式记录唤醒原因，避免 Super Core 被低价值后台工作频繁拉起。
 
 ### ToolUse 映射规则
 
@@ -110,7 +138,7 @@ Claude Code 类 Agent runtime 的 memory 体系把“历史”拆成 transcript�
 
 长任务执行不是一次性 task，而是多轮 `DigitalTurn`、工具调用和 compact 组成的闭环。九天把这个闭环拆为四个阶段：
 
-1. **事件采集**：Super Domain 记录用户消息、工具调用、工具结果、diff、测试、子 Agent 输出和 compact boundary。
+1. **事件采集**：Agent Domain 常驻监听并整理用户消息、工具调用、工具结果、diff、测试、子 Agent 输出和 compact boundary；需要复杂 OS 或模型路径时唤醒 Super Domain。
 2. **结构提取**：Agent Domain 在授权窗口中提取 goal、plan、evidence、decision 和 recovery 的候选 delta。
 3. **状态提交**：Super Domain 审核 delta，提交 ledger 新版本，并把大型内容保留为 artifact 引用。
 4. **上下文投影**：Agent Domain 在预算内生成下一轮 `ContextProjection`，Super Domain 审核后交给模型。

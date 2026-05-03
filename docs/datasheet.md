@@ -20,10 +20,12 @@ Agentic workload 具有以下特征：
 
 九天采用异构双平面架构：
 
-- 控制面负责操作系统、I/O、调度、安全、调试和异常处理。
-- Agent 执行面负责运行经过 APU-IR 描述和授权的生成代码片段。
+- Agent 执行面负责低功耗常驻、环境监听、任务队列维护、上下文投影，以及运行经过 APU-IR 描述和授权的生成代码片段。
+- 控制面负责按需唤醒后的操作系统、I/O、LLM 推理、编译、调度、安全、调试、异常处理和最终副作用提交。
 
 这种分离让人类软件继续运行在兼容域中，同时让 Agent 生成代码获得更低抽象、更高执行密度和更可控的数据搬运路径。
+
+v0.1 数据手册采用 Guardian-Execution（守护者-执行者）模式作为功耗与协作基线：Clawd-Agent 是 Always-On guardian，Clawd-Super 是 Strategic Coprocessor for High-Entropy Tasks。
 
 ## 2. 主要特性
 
@@ -33,13 +35,17 @@ Agentic workload 具有以下特征：
 
 - 启动系统。
 - 运行操作系统或轻量 runtime。
+- 被 Agent 域通过 `WAKE_UP_SUPER` 按需唤醒。
+- 执行 LLM 推理、大规模编译、重度感知处理和复杂人类软件路径。
 - 管理 Agent task admission。
 - 分配 capability。
 - 配置 DMA、barrier、trace 和 task doorbell。
 - 处理中断、trap、timeout 和 kill。
+- 执行真实外部副作用的最终提交。
 - 汇总 benchmark 和 trace 结果。
+- 任务完成后请求 clock-gated 或 power-gated 休眠。
 
-控制面保留传统软件语义，是系统可靠性的锚点。
+控制面保留传统软件语义，是系统可靠性的锚点，但不再被假设为始终满功耗在线的主控核。
 
 ### 2.2 Agent 执行面
 
@@ -47,6 +53,9 @@ Agent 执行面由多个 Clawd-Agent 核组成。每个核运行轻量 Agent ISA
 
 v0.1 的最小模型支持：
 
+- Always-On guard 语义。
+- 低成本监听、心跳和意图分类。
+- `WAKE_UP_SUPER` 唤醒请求和 handoff mailbox 语义。
 - 多 task round-robin 调度。
 - 每 core SPM。
 - 每 cluster 共享 SRAM。
@@ -58,7 +67,20 @@ v0.1 的最小模型支持：
 
 Agent 执行面默认不提供全局硬件缓存一致性。
 
-### 2.3 APU-IR
+### 2.3 Guardian-Execution 唤醒接口
+
+v0.1 先定义唤醒接口的语义，不绑定最终寄存器编码：
+
+| 信号或窗口 | 方向 | 语义 |
+|---|---|---|
+| `WAKE_UP_SUPER` | Agent -> Power/Super | 高熵任务唤醒请求 |
+| `SUPER_READY` | Super -> Agent | Super 域已恢复并可读取 handoff |
+| `HANDOFF_MAILBOX` | Shared | 任务指针、输入引用、capability 请求、上下文投影和恢复点 |
+| `SUPER_SLEEP_REQUEST` | Super -> Power/Agent | Super 域完成任务并请求回眠 |
+| `GUARD_HEARTBEAT` | Agent -> Trace/Power | Agent 常驻生命体征、队列深度和异常摘要 |
+| `WAKE_REASON` | Agent/Super -> Trace | 唤醒原因，用于功耗和调度分析 |
+
+### 2.4 APU-IR
 
 APU-IR 是 Agent 生成逻辑进入硬件前的任务图描述。它不是传统源代码格式，而是运行时可验证的执行契约。
 
@@ -73,7 +95,7 @@ APU-IR 至少描述：
 - Agent ISA program。
 - host 初始化和结果 dump。
 
-### 2.4 显式 SPM
+### 2.5 显式 SPM
 
 SPM 是 Agent core 本地 scratchpad。它不做 tag 比较，不执行自动替换策略，不参与默认硬件一致性。
 
@@ -84,7 +106,7 @@ SPM 的优势：
 - 编译器和运行时可显式安排数据生命周期。
 - 易于做 task 级隔离和清理。
 
-### 2.5 Cluster SRAM
+### 2.6 Cluster SRAM
 
 Cluster SRAM 是同一 Agent cluster 内的共享近端 SRAM，用于 task 间交换数据和复用中间结果。
 
@@ -95,13 +117,13 @@ Cluster SRAM 是同一 Agent cluster 内的共享近端 SRAM，用于 task 间�
 - DMA 汇聚缓冲。
 - barrier 阶段之间的数据暂存。
 
-### 2.6 显式 DMA
+### 2.7 显式 DMA
 
 DMA 用于在 host、cluster 和 spm 空间之间搬运数据。v0.1 中 `dma_copy` 可按同步完成建模，未来版本将加入异步队列、延迟、带宽和 fault 语义。
 
 DMA 操作必须经过 capability 检查。
 
-### 2.7 混合一致性
+### 2.8 混合一致性
 
 九天采用混合一致性：
 
@@ -113,9 +135,15 @@ DMA 操作必须经过 capability 检查。
 ## 3. 系统逻辑框图
 
 ```text
-控制面
+Agent 常驻守护面
+  Clawd-Agent cores
+  Listen / Heartbeat / Intent / Projection
+        |
+        | WAKE_UP_SUPER / HANDOFF_MAILBOX
+        v
+控制面 / 高熵任务协处理面
   Clawd-Super cores
-  OS / Runtime / Debug / Safety
+  OS / Runtime / LLM / Compiler / Safety
         |
         | task admission / capability / dispatch
         v
