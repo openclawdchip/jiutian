@@ -8,6 +8,18 @@
 2. 这个模块对外暴露什么接口和状态。
 3. 这个模块后续的行为模型和 RTL 应该落成什么样子。
 
+朱雀文档的推进主线是：
+
+```text
+foundation primitive
+  -> full-core 数据通路骨架
+  -> 控制通路覆盖层
+  -> 行为模型
+  -> RTL
+```
+
+所有阶段都同时维护 floorplan、面积、时延和 `4.0GHz` slack 账本。宽数据通路默认采用纵向 slice-based 结构，高频局部路径默认预留 latch-based 时间借用能力。
+
 ## 文档分层
 
 - `zhuque-architecture-overview.md`
@@ -18,8 +30,14 @@
   - 第一版 core / tile floorplan 草图和主脊柱示意
 - `zhuque-floorplan-core-v2.md`
   - core 级细化 floorplan 图，以及独立的 dispatch / redirect / writeback 分图
+- `zhuque-design-methodology.md`
+  - 从标准单元、存储宏单元和互连线网出发的朱雀设计方法学
 - `zhuque-engineering-principles.md`
   - 工程约束、接口风格、模型和 RTL 对齐规则
+- `foundation/`
+  - 朱雀底层部件层，承接底层需求和 N07 PPA 账本
+- `datapath/`
+  - 朱雀 full-core 数据通路骨架、slice/bank/latch 映射和 PPA 账本
 - `plans/zhuque-fullstack-roadmap.md`
   - 文档、行为模型、RTL 的全量推进顺序
 - `domains/*.md`

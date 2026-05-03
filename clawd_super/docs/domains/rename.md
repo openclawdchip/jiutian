@@ -32,7 +32,7 @@ rename 负责把架构寄存器映射到物理寄存器资源，同时建立依�
 | 输入 | 说明 |
 |---|---|
 | decoded uop | 来自 decode |
-| commit reclaim | 来自 commit 的旧物理寄存器回收 |
+| commit reclaim | 来自 commit 的 retired physical register 回收 |
 | recovery event | 来自 commit/branch/debug 的恢复事件 |
 
 | 输出 | 说明 |

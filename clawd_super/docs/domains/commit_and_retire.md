@@ -2,7 +2,7 @@
 
 ## 1. 角色
 
-commit and retire 负责维持精确架构状态。它观察执行完成、决定哪几条指令可以按顺序退休，并统一处理 trap、interrupt、debug entry、store commit 和旧物理资源回收。
+commit and retire 负责维持精确架构状态。它观察执行完成、决定哪几条指令可以按顺序退休，并统一处理 trap、interrupt、debug entry、store commit 和 retired physical resource 回收。
 
 ## 2. 核心结构
 

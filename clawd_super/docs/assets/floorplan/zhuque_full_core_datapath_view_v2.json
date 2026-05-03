@@ -1,0 +1,219 @@
+{
+  "n07": {
+    "inv_d1_area_um2": 0.04104,
+    "nd2_d1_area_um2": 0.05472,
+    "xor2_d1_area_um2": 0.15048,
+    "mux2_d1_area_um2": 0.15048,
+    "fa1_d1_area_um2": 0.2736,
+    "dff_d1_area_um2": 0.2736,
+    "latch_lhqd1_area_um2": 0.19152,
+    "site_w_um": 0.057,
+    "row_h_um": 0.24,
+    "bit_pitch_um": 0.456,
+    "lane64_w_um": 29.184,
+    "fo4_ps": 7.252,
+    "dff_clkq_ps": 25.87,
+    "m5_ps": 15.5,
+    "m10_ps": 4.421,
+    "m12_ps": 0.855,
+    "target_ps": 250.0,
+    "l1cache_36k_area_um2": 2429.431,
+    "hsspsram_36k_area_um2": 2774.188,
+    "prf_16k_area_um2": 1417.59,
+    "uhdspsram_156k_area_um2": 7595.191
+  },
+  "domains": {
+    "frontend_ifetch": {
+      "title": "Frontend IFetch",
+      "files": 51,
+      "modules": 46,
+      "lines": 69944,
+      "assigns": 5452,
+      "always": 4859,
+      "top_tokens": [
+        "data",
+        "cache",
+        "tag",
+        "way",
+        "valid",
+        "l1"
+      ]
+    },
+    "decode_and_uop": {
+      "title": "Decode And Uop",
+      "files": 11,
+      "modules": 5,
+      "lines": 36508,
+      "assigns": 983,
+      "always": 88,
+      "top_tokens": [
+        "data",
+        "bank",
+        "way",
+        "tag",
+        "replay",
+        "valid"
+      ]
+    },
+    "rename": {
+      "title": "Rename",
+      "files": 31,
+      "modules": 30,
+      "lines": 127495,
+      "assigns": 23618,
+      "always": 2428,
+      "top_tokens": [
+        "decode",
+        "valid",
+        "tag",
+        "data",
+        "mask",
+        "way"
+      ]
+    },
+    "issue": {
+      "title": "Issue",
+      "files": 33,
+      "modules": 32,
+      "lines": 65072,
+      "assigns": 10555,
+      "always": 1231,
+      "top_tokens": [
+        "tag",
+        "data",
+        "addr",
+        "way",
+        "issue",
+        "valid"
+      ]
+    },
+    "integer_execute": {
+      "title": "Integer Execute",
+      "files": 52,
+      "modules": 52,
+      "lines": 14842,
+      "assigns": 3009,
+      "always": 495,
+      "top_tokens": [
+        "data",
+        "l1",
+        "mask",
+        "l2",
+        "way",
+        "tag"
+      ]
+    },
+    "vector_execute": {
+      "title": "Vector Execute",
+      "files": 151,
+      "modules": 151,
+      "lines": 90790,
+      "assigns": 16799,
+      "always": 1511,
+      "top_tokens": [
+        "data",
+        "bank",
+        "mask",
+        "l1",
+        "addr",
+        "way"
+      ]
+    },
+    "loadstore_and_mmu": {
+      "title": "LoadStore And MMU",
+      "files": 52,
+      "modules": 50,
+      "lines": 99849,
+      "assigns": 14273,
+      "always": 3058,
+      "top_tokens": [
+        "way",
+        "data",
+        "l2",
+        "tlb",
+        "tag",
+        "cache"
+      ]
+    },
+    "commit_and_retire": {
+      "title": "Commit And Retire",
+      "files": 3,
+      "modules": 2,
+      "lines": 1882,
+      "assigns": 238,
+      "always": 42,
+      "top_tokens": [
+        "l2",
+        "mask",
+        "l1",
+        "vector",
+        "way",
+        "commit"
+      ]
+    },
+    "level2_cache": {
+      "title": "Level2 Cache",
+      "files": 19,
+      "modules": 17,
+      "lines": 31820,
+      "assigns": 2568,
+      "always": 1503,
+      "top_tokens": [
+        "l2",
+        "data",
+        "tag",
+        "cache",
+        "valid",
+        "way"
+      ]
+    },
+    "platform_control_debug": {
+      "title": "Platform Control Debug",
+      "files": 33,
+      "modules": 30,
+      "lines": 30818,
+      "assigns": 2924,
+      "always": 1424,
+      "top_tokens": [
+        "addr",
+        "data",
+        "way",
+        "l1",
+        "l2",
+        "mask"
+      ]
+    },
+    "top_integration": {
+      "title": "Top Integration Datapath",
+      "files": 4,
+      "modules": 4,
+      "lines": 18518,
+      "assigns": 22,
+      "always": 0,
+      "top_tokens": [
+        "l2",
+        "data",
+        "tag",
+        "valid",
+        "issue",
+        "addr"
+      ]
+    },
+    "shared_cells_and_models": {
+      "title": "Shared Cells And Models",
+      "files": 76,
+      "modules": 73,
+      "lines": 6931,
+      "assigns": 582,
+      "always": 123,
+      "top_tokens": [
+        "data",
+        "fifo",
+        "l2",
+        "ecc",
+        "addr",
+        "way"
+      ]
+    }
+  }
+}

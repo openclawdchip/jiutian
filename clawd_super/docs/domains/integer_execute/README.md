@@ -12,4 +12,3 @@
 
 - 先读 [INDEX.md](/D:/ai_brain/jiutian/clawd_super/docs/domains/integer_execute/INDEX.md)
 - 再按数据通路模块逐个进入
-- 当前不在这里混入旧内部文件名，也不把原始碎片直接当成模块

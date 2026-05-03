@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>朱雀 iexecute 数据通路结构图</title>
+  <style>
+    :root {
+      --paper: #f4f1e8;
+      --ink: #20292d;
+      --muted: #536068;
+      --line: #314c54;
+      --fast: #dff3ee;
+      --main: #e6edf9;
+      --stage: #ffe9bf;
+      --side: #f0e6d8;
+      --out: #e7eadb;
+      --special: #e4d8ff;
+      --panel: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255, 233, 191, 0.65), transparent 26rem),
+        radial-gradient(circle at 88% 20%, rgba(223, 243, 238, 0.7), transparent 30rem),
+        linear-gradient(135deg, #f7f3e8 0%, #ece8dd 100%);
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1680px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 34px 0 42px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 3vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .badge {
+      flex: none;
+      padding: 10px 14px;
+      border: 1px solid rgba(49, 76, 84, 0.24);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      font-weight: 700;
+    }
+
+    .canvas {
+      overflow: auto;
+      border: 1px solid rgba(49, 76, 84, 0.25);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: 0 24px 80px rgba(31, 42, 45, 0.12);
+    }
+
+    svg {
+      display: block;
+      width: 1600px;
+      height: 980px;
+    }
+
+    .node rect {
+      stroke: var(--ink);
+      stroke-width: 2;
+      rx: 16;
+    }
+
+    .node .title {
+      fill: var(--ink);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .node .body {
+      fill: var(--muted);
+      font-size: 13px;
+    }
+
+    .lane {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 4;
+      marker-end: url(#arrow);
+    }
+
+    .thin {
+      stroke-width: 2.5;
+      stroke-dasharray: 8 7;
+    }
+
+    .return {
+      stroke: #8a5b25;
+      stroke-width: 3.5;
+      stroke-dasharray: 12 8;
+      marker-end: url(#arrowReturn);
+      fill: none;
+    }
+
+    .label {
+      fill: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .domain {
+      fill: rgba(255, 255, 255, 0.35);
+      stroke: rgba(49, 76, 84, 0.18);
+      stroke-width: 1.5;
+      rx: 24;
+    }
+
+    .domain-title {
+      fill: rgba(32, 41, 45, 0.68);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .legend div {
+      min-height: 56px;
+      border: 1px solid rgba(49, 76, 84, 0.18);
+      border-radius: 16px;
+      padding: 10px 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.54);
+      font-size: 13px;
+    }
+
+    .legend strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        width: calc(100vw - 24px);
+        padding-top: 20px;
+      }
+
+      header {
+        display: block;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-top: 14px;
+      }
+
+      .legend {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>朱雀 iexecute 数据通路结构图</h1>
+        <div class="subtitle">八个数据通路模块连成一张完整结构图；只表达结构连接，不表达物理版图。</div>
+      </div>
+      <div class="badge">zhuque / integer execute</div>
+    </header>
+
+    <section class="canvas" aria-label="iexecute datapath structure canvas">
+      <svg viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+        <title id="title">朱雀 iexecute 数据通路结构图</title>
+        <desc id="desc">展示 result bypass router、fast ALU、compare branch assist、shift bitfield、multiply MAC、divide、special transform、result merge writeback 八个模块的数据流连接。</desc>
+
+        <defs>
+          <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+            <path d="M 0 1 L 11 6 L 0 11 z" fill="#314c54"></path>
+          </marker>
+          <marker id="arrowReturn" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+            <path d="M 0 1 L 11 6 L 0 11 z" fill="#8a5b25"></path>
+          </marker>
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#1f2a2d" flood-opacity="0.12"></feDropShadow>
+          </filter>
+        </defs>
+
+        <rect class="domain" x="42" y="80" width="1470" height="775"></rect>
+        <text class="domain-title" x="72" y="118">INTEGER EXECUTE DATA PATH</text>
+
+        <rect class="domain" x="90" y="152" width="280" height="596"></rect>
+        <text class="domain-title" x="118" y="184">ENTRY / BYPASS</text>
+
+        <rect class="domain" x="430" y="152" width="338" height="596"></rect>
+        <text class="domain-title" x="458" y="184">FAST PATH</text>
+
+        <rect class="domain" x="828" y="152" width="360" height="596"></rect>
+        <text class="domain-title" x="856" y="184">MAIN EXECUTION LANES</text>
+
+        <rect class="domain" x="1248" y="152" width="210" height="596"></rect>
+        <text class="domain-title" x="1276" y="184">MERGE / WB</text>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="130" y="275" width="210" height="150" fill="var(--fast)"></rect>
+          <text class="title" x="154" y="312">Result Bypass Router</text>
+          <text class="body" x="154" y="344">E1/E2/W0/W1 result</text>
+          <text class="body" x="154" y="366">predicate / response</text>
+          <text class="body" x="154" y="388">vmove / system sideband</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="470" y="225" width="240" height="128" fill="var(--fast)"></rect>
+          <text class="title" x="494" y="262">Fast ALU Flags Slice</text>
+          <text class="body" x="494" y="294">add/sub, logic, flags</text>
+          <text class="body" x="494" y="316">E1 fast result</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="470" y="432" width="240" height="128" fill="var(--side)"></rect>
+          <text class="title" x="494" y="469">Compare Branch Assist</text>
+          <text class="body" x="494" y="501">condition result</text>
+          <text class="body" x="494" y="523">branch assist payload</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="850" y="190" width="258" height="120" fill="var(--main)"></rect>
+          <text class="title" x="874" y="228">Shift Rotate Bitfield</text>
+          <text class="body" x="874" y="260">barrel stages</text>
+          <text class="body" x="874" y="282">mask merge / hash helper</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="850" y="354" width="258" height="120" fill="var(--stage)"></rect>
+          <text class="title" x="874" y="392">Multiply MAC Reduce</text>
+          <text class="body" x="874" y="424">partial product</text>
+          <text class="body" x="874" y="446">compressor tree</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="850" y="518" width="258" height="120" fill="var(--stage)"></rect>
+          <text class="title" x="874" y="556">Divide Remainder Iterative</text>
+          <text class="body" x="874" y="588">normalize / qbit</text>
+          <text class="body" x="874" y="610">remainder state</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="850" y="682" width="258" height="120" fill="var(--special)"></rect>
+          <text class="title" x="874" y="720">CRC Auth Special Transform</text>
+          <text class="body" x="874" y="752">CRC / auth / shuffle</text>
+          <text class="body" x="874" y="774">mask / TBI / fault</text>
+        </g>
+
+        <g class="node" filter="url(#softShadow)">
+          <rect x="1268" y="342" width="220" height="180" fill="var(--out)"></rect>
+          <text class="title" x="1292" y="380">Result Merge Writeback</text>
+          <text class="body" x="1292" y="412">local result mux</text>
+          <text class="body" x="1292" y="434">bypass packet</text>
+          <text class="body" x="1292" y="456">writeback packet</text>
+          <text class="body" x="1292" y="478">exception metadata</text>
+        </g>
+
+        <path class="lane" d="M 340 338 H 470"></path>
+        <text class="label" x="372" y="322">fast operands</text>
+
+        <path class="lane thin" d="M 340 392 C 388 434 416 477 470 492"></path>
+        <text class="label" x="355" y="450">compare operands</text>
+
+        <path class="lane" d="M 710 290 C 758 290 792 250 850 250"></path>
+        <path class="lane" d="M 710 305 C 774 344 790 414 850 414"></path>
+        <path class="lane" d="M 710 510 C 770 548 790 578 850 578"></path>
+        <path class="lane thin" d="M 710 524 C 774 626 790 742 850 742"></path>
+        <text class="label" x="735" y="248">ALU operand/result feed</text>
+        <text class="label" x="730" y="390">MAC feed</text>
+        <text class="label" x="725" y="608">iterative/special feed</text>
+
+        <path class="lane" d="M 1108 250 C 1176 250 1198 367 1268 390"></path>
+        <path class="lane" d="M 1108 414 H 1268"></path>
+        <path class="lane" d="M 1108 578 C 1176 578 1198 478 1268 478"></path>
+        <path class="lane" d="M 1108 742 C 1182 742 1196 500 1268 500"></path>
+        <text class="label" x="1132" y="232">shift result</text>
+        <text class="label" x="1132" y="399">MAC result</text>
+        <text class="label" x="1132" y="600">div result</text>
+        <text class="label" x="1132" y="724">special result</text>
+
+        <path class="lane" d="M 710 496 C 884 496 1080 360 1268 360"></path>
+        <text class="label" x="758" y="474">branch assist</text>
+
+        <path class="return" d="M 1268 352 C 1134 118 480 118 340 284"></path>
+        <text class="label" x="706" y="106">fast bypass return to E1 router</text>
+
+        <path class="return" d="M 1268 522 C 1185 854 288 858 230 425"></path>
+        <text class="label" x="624" y="884">W0/W1 response, predicate and writeback feedback</text>
+
+        <path class="lane" d="M 1488 432 H 1538"></path>
+        <text class="label" x="1496" y="416">WB</text>
+
+        <g>
+          <rect x="107" y="798" width="1320" height="38" rx="12" fill="rgba(255,255,255,0.64)" stroke="rgba(49,76,84,0.18)"></rect>
+          <text class="label" x="132" y="823">结构顺序：Result Bypass Router -> Fast ALU / Compare -> Shift / MAC / Divide / Special -> Result Merge Writeback -> Bypass / Writeback Feedback</text>
+        </g>
+      </svg>
+    </section>
+
+    <section class="legend">
+      <div><strong>结构图</strong>只表达模块级数据流连接，不表达尺寸和摆放。</div>
+      <div><strong>fast path</strong>保留 E1 快速旁路回环，避免经过慢速合并路径。</div>
+      <div><strong>main lanes</strong>把 shift、MAC、divide、special 作为并列执行结果输入。</div>
+      <div><strong>merge/writeback</strong>统一生成 bypass packet、writeback packet 和 exception metadata。</div>
+    </section>
+  </main>
+</body>
+</html>

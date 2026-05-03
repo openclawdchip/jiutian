@@ -2,7 +2,7 @@
 
 ## 1. 角色
 
-decode 负责把取指得到的原始指令转换成内部统一的 uop contract，并把架构层信息变成后端可消费的结构化字段。
+decode 负责把取指得到的 instruction packet 转换成内部统一的 uop contract，并把架构层信息变成后端可消费的结构化字段。
 
 ## 2. 范围
 

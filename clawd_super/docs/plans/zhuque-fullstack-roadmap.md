@@ -10,12 +10,15 @@
 
 三层都要求“全量覆盖”，但每层内部可以按依赖关系分批完成。
 
+所有阶段都受 `docs/zhuque-design-methodology.md` 约束。模块规格、行为模型和 RTL 需要同时检查功能语义、物理可实现性和验证可闭合性。
+
 ## 2. 文档阶段
 
 文档阶段的交付目标：
 
 - 顶层总体架构文档
 - 工程原则
+- foundation 底层部件层
 - 全设计域一级规格文档
 - 全设计域二级子模块规格文档
 - 域之间的依赖说明
@@ -31,19 +34,20 @@
 
 行为模型建议按以下顺序推进：
 
-1. shared cells and models
-2. decode and uop
-3. rename
-4. issue
-5. integer execute
-6. vector execute
-7. loadstore and mmu
-8. commit and retire
-9. ifetch
-10. level2 cache
-11. cluster fabric
-12. platform control and debug
-13. top integration
+1. foundation primitives
+2. shared cells and models
+3. decode and uop
+4. rename
+5. issue
+6. integer execute
+7. vector execute
+8. loadstore and mmu
+9. commit and retire
+10. ifetch
+11. level2 cache
+12. cluster fabric
+13. platform control and debug
+14. top integration
 
 这个顺序的目的不是先做“最小闭环”，而是先解决下游最容易形成语义 contract 的域，再把前端和集群级语义接上。
 
